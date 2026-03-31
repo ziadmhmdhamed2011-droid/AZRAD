@@ -144,3 +144,9 @@ body, html {
     text-align: center; margin: 20px 0; border-bottom: 1px solid #222; line-height: 0.1em;
 }
 .auth-divider span { background: var(--card-bg); padding: 0 10px; color: #444; font-size: 0.9rem; }
+.nav-btn .fa-sign-out-alt {
+    transition: var(--transition);
+}
+.nav-btn:hover .fa-sign-out-alt {
+    color: #ff4444; /* يقلب أحمر لما تقرب منه */
+}
