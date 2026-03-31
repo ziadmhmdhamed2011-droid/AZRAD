@@ -5,101 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>أَزْرَد | AZRAD OS</title>
     
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <section id="pioneer-gate" class="gate-overlay active">
-        <div class="glass-landing">
-            <h1 class="main-logo-landing">أَزْرَد</h1>
-            <p class="slogan-landing">سندك في كل مكان.. رادار الجدعنة الذكي</p>
+    <section id="pioneer-gate" class="full-page-overlay active">
+        <div class="video-bg-placeholder"></div> <div class="glass-content-box">
+            <div class="badge-250-top">🏆 إصدار المبدعين الأوائل</div>
+            <h1 class="hero-logo">أَزْرَد</h1>
+            <p class="hero-desc">أول نظام رادار اجتماعي للجدعنة والإنقاذ في الوطن العربي.</p>
             
-            <div class="auth-triggers">
-                <button onclick="openModal('signup')" class="btn-main-pioneer">ابدأ رحلتك (الـ 250 الأوائل)</button>
-                <button onclick="openModal('login')" class="btn-text-pioneer">لديك حساب؟ سجل دخول</button>
+            <div class="gate-actions">
+                <button class="btn-main-gold" onclick="openAuthModal('signup')">
+                    <i class="fas fa-bolt"></i> حجز مكان في الـ 250
+                </button>
+                <button class="btn-secondary-outline" onclick="openAuthModal('login')">
+                    تسجيل دخول المنقذين
+                </button>
+            </div>
+            
+            <div class="gate-footer">
+                <span>تطبيق آمن بنسبة 100%</span>
+                <div class="dot-separator"></div>
+                <span>مشفر ببروتوكول AZ-24</span>
             </div>
         </div>
     </section>
 
-    <div id="auth-modal" class="modal-overlay">
-        <div class="modal-card">
-            <button onclick="closeModal()" class="close-btn">&times;</button>
+    <div id="auth-modal" class="modal-blur-bg">
+        <div class="modal-cyber-card">
+            <button class="close-modal-btn" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
             
-            <div id="signup-content" class="modal-section active">
-                <h2>انضم للأوائل</h2>
-                <div class="input-group-cyber">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="user-name" placeholder="الاسم الكامل" class="input-cyber">
+            <div class="modal-body">
+                
+                <div id="signup-section" class="auth-section-content">
+                    <h2 class="section-title gold-gradient-text">انضم للقائمة الذهبية</h2>
+                    <p class="section-subtitle">سيتم توثيق حسابك بلقب "عضو مؤسس" للأبد.</p>
+                    
+                    <div class="cyber-input-wrapper">
+                        <i class="fas fa-id-badge"></i>
+                        <input type="text" id="reg-name" placeholder="الاسم الذي سيظهر للناس">
+                    </div>
+                    <div class="cyber-input-wrapper">
+                        <i class="fas fa-at"></i>
+                        <input type="email" id="reg-email" placeholder="البريد الإلكتروني">
+                    </div>
+                    <div class="cyber-input-wrapper">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="reg-pass" placeholder="كلمة المرور (6 أرقام على الأقل)">
+                    </div>
+                    <button class="btn-confirm-auth" onclick="runAuth('signup')">تأكيد وحجز الرقم #</button>
                 </div>
-                <div class="input-group-cyber">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="user-email-up" placeholder="البريد الإلكتروني" class="input-cyber">
-                </div>
-                <div class="input-group-cyber">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="user-pass-up" placeholder="كلمة المرور" class="input-cyber">
-                </div>
-                <button onclick="authDirect('signup')" class="btn-primary-gold-small">تسجيل جديد (🏆)</button>
-            </div>
 
-            <div id="login-content" class="modal-section">
-                <h2>عوداً حميداً</h2>
-                <div class="input-group-cyber">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="user-email-in" placeholder="البريد الإلكتروني" class="input-cyber">
+                <div id="login-section" class="auth-section-content" style="display: none;">
+                    <h2 class="section-title gold-gradient-text">مرحباً بعودتك</h2>
+                    <p class="section-subtitle">أدخل بياناتك لمتابعة عمليات الإنقاذ.</p>
+                    
+                    <div class="cyber-input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="log-email" placeholder="البريد الإلكتروني">
+                    </div>
+                    <div class="cyber-input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="log-pass" placeholder="كلمة المرور">
+                    </div>
+                    <button class="btn-confirm-auth" onclick="runAuth('login')">دخول النظام</button>
                 </div>
-                <div class="input-group-cyber">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="user-pass-in" placeholder="كلمة المرور" class="input-cyber">
-                </div>
-                <button onclick="authDirect('login')" class="btn-primary-gold-small">تسجيل الدخول</button>
-            </div>
 
-            <div class="separator">أو</div>
-            
-            <button onclick="loginGoogle()" class="btn-google-modal">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                متابعة باستخدام Google
-            </button>
+                <div class="auth-divider"><span>أو عبر الشبكات</span></div>
+
+                <div class="social-grid">
+                    <button class="social-btn google" onclick="runGoogleAuth()">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+                        جوجل
+                    </button>
+                    </div>
+            </div>
         </div>
     </div>
 
-    <main id="app-interface" class="interface-overlay" style="display: none;">
-        <header class="header-hud">
-            <div class="user-pill-hud">
-                <div class="avatar-box-hud">
-                    <img id="user-photo" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User">
-                    <div id="pioneer-badge" class="badge-hud">🏆</div>
+    <main id="app-interface" class="app-main-layout" style="display: none;">
+        
+        <header class="hud-top-bar">
+            <div class="profile-pill" onclick="openSettings()">
+                <div class="avatar-container">
+                    <img id="user-photo" src="https://ui-avatars.com/api/?name=User&background=D4AF37&color=fff" alt="User">
+                    <div id="pioneer-badge" class="pioneer-mini-crown" style="display: none;">🏆</div>
                 </div>
-                <div class="user-meta-hud">
-                    <strong id="display-name-hud">منقذ أَزْرَد</strong>
-                    <span id="pioneer-label" class="rank-hud">عضو مؤسس</span>
+                <div class="user-text-info">
+                    <strong id="display-name-hud">بطل مجهول</strong>
+                    <span id="pioneer-label" class="user-rank">منقذ متطوع</span>
                 </div>
             </div>
-            <div class="app-logo-mini-hud">AZRAD</div>
+            
+            <div class="hud-logo-center">AZRAD</div>
+            
+            <button class="notification-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-dot"></span>
+            </button>
         </header>
 
-        <div id="map"></div>
+        <section id="map-container">
+            <div id="map"></div>
+            <div class="map-overlay-tools">
+                <button title="موقعي الحالي"><i class="fas fa-location-crosshairs"></i></button>
+                <button title="تغيير نمط الخريطة"><i class="fas fa-layer-group"></i></button>
+            </div>
+        </section>
 
-        <div class="sos-center-hud">
-            <button id="sosBtn" class="sos-trigger-hud">
-                <div class="sos-rings-hud"></div>
-                <span class="sos-text-hud">SOS</span>
+        <div class="sos-action-wrapper">
+            <div class="sos-pulse-layer"></div>
+            <button class="sos-master-btn">
+                <span class="sos-label">SOS</span>
+                <small class="sos-sublabel">اطلب نجدة</small>
             </button>
         </div>
 
-        <nav class="bottom-hud-nav">
-            <button class="nav-btn-hud active"><i class="fas fa-satellite-dish"></i></button>
-            <button class="nav-btn-hud"><i class="fas fa-comments"></i></button>
-            <button class="nav-btn-hud"><i class="fas fa-user-gear"></i></button>
+        <nav class="hud-bottom-nav">
+            <button class="nav-item active" onclick="switchTab('map')">
+                <i class="fas fa-compass"></i>
+                <span>الرادار</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('chat')">
+                <i class="fas fa-message"></i>
+                <span>البلاغات</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('rank')">
+                <i class="fas fa-ranking-star"></i>
+                <span>العظماء</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profile')">
+                <i class="fas fa-user-shield"></i>
+                <span>حسابي</span>
+            </button>
         </nav>
+
+        <div id="app-loader" class="loader-overlay" style="display: none;">
+            <div class="cyber-spinner"></div>
+            <p>جاري مزامنة بيانات الرادار...</p>
+        </div>
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="app.js"></script>
-
 </body>
 </html>
