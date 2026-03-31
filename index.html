@@ -103,12 +103,16 @@
             <button class="sos-btn">SOS</button>
         </div>
 
-        <nav class="hud-nav">
-            <button class="nav-btn active"><i class="fas fa-satellite-dish"></i><span>الرادار</span></button>
-            <button class="nav-btn"><i class="fas fa-bullhorn"></i><span>البلاغات</span></button>
-            <button class="nav-btn"><i class="fas fa-medal"></i><span>الأوائل</span></button>
-            <button class="nav-btn"><i class="fas fa-cog"></i><span>الإعدادات</span></button>
-        </nav>
+      <nav class="hud-nav">
+    <button class="nav-btn active"><i class="fas fa-satellite-dish"></i><span>الرادار</span></button>
+    <button class="nav-btn"><i class="fas fa-bullhorn"></i><span>البلاغات</span></button>
+    <button class="nav-btn"><i class="fas fa-medal"></i><span>الأوائل</span></button>
+    
+    <button class="nav-btn" onclick="processLogout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>خروج</span>
+    </button>
+</nav>
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
