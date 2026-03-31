@@ -1,16 +1,18 @@
-/* --- Root Variables & Base Setup --- */
+/* --- 1. الأساسيات والمتغيرات الملكية --- */
 :root {
     --gold: #D4AF37;
     --gold-bright: #F9E27E;
     --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
     --dark-bg: #050505;
-    --glass: rgba(255, 255, 255, 0.04);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-heavy: rgba(0, 0, 0, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.08);
     --white: #ffffff;
+    --shadow-gold: 0 0 20px rgba(212, 175, 55, 0.2);
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
 body, html {
     margin: 0; padding: 0; width: 100%; height: 100%;
@@ -18,114 +20,138 @@ body, html {
     font-family: 'Cairo', sans-serif; overflow: hidden;
 }
 
-/* --- 1. شاشة البداية (The Gate) --- */
-.gate-overlay {
+/* --- 2. شاشة البوابة (The Hero Gate) --- */
+.full-page-overlay {
     position: fixed; inset: 0; z-index: 2000;
-    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    background: radial-gradient(circle at center, #151515 0%, #000 100%);
     display: none; align-items: center; justify-content: center;
 }
-.gate-overlay.active { display: flex; }
+.full-page-overlay.active { display: flex; animation: fadeIn 0.8s ease; }
 
-.glass-landing {
-    text-align: center; padding: 40px; border-radius: 40px;
-    background: var(--glass); backdrop-filter: blur(20px);
+.glass-content-box {
+    text-align: center; padding: 50px 30px; border-radius: 40px;
+    background: var(--glass); backdrop-filter: blur(25px);
     border: 1px solid var(--glass-border); width: 90%; max-width: 450px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-.main-logo-landing {
-    font-family: 'Orbitron', sans-serif; font-size: 4.5rem; margin: 0;
-    font-weight: 900; letter-spacing: -3px; background: var(--gold-gradient);
+.hero-logo {
+    font-family: 'Orbitron', sans-serif; font-size: 5rem; margin: 10px 0;
+    font-weight: 900; letter-spacing: -4px; background: var(--gold-gradient);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));
 }
 
-.btn-main-pioneer {
-    width: 100%; padding: 18px; margin-top: 30px; border-radius: 16px;
-    background: var(--gold-gradient); color: #000; border: none;
-    font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: var(--transition);
+.badge-250-top {
+    display: inline-block; padding: 6px 15px; border-radius: 20px;
+    background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold);
+    color: var(--gold); font-size: 0.8rem; font-weight: bold; margin-bottom: 15px;
 }
 
-.btn-text-pioneer {
-    background: none; border: none; color: #888; margin-top: 20px;
-    cursor: pointer; font-size: 1rem; text-decoration: underline;
+.btn-main-gold {
+    width: 100%; padding: 20px; border-radius: 18px; border: none;
+    background: var(--gold-gradient); color: #000; font-weight: 900;
+    font-size: 1.1rem; cursor: pointer; transition: var(--transition);
+    box-shadow: var(--shadow-gold); display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-main-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4); }
+
+.btn-secondary-outline {
+    width: 100%; padding: 18px; margin-top: 15px; border-radius: 18px;
+    background: none; border: 1px solid #333; color: #aaa;
+    font-weight: 600; cursor: pointer; transition: var(--transition);
 }
 
-/* --- 2. لوحات الـ Modals (الزجاجية المتحركة) --- */
-.modal-overlay {
-    position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center;
+/* --- 3. نافذة الـ Modal (The Cyber Modal) --- */
+.modal-blur-bg {
+    position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(15px); display: none; align-items: center; justify-content: center;
 }
-.modal-overlay.active { display: flex; }
+.modal-blur-bg.active { display: flex; }
 
-.modal-card {
-    background: #0f0f0f; border: 1px solid var(--gold); border-radius: 30px;
-    width: 90%; max-width: 400px; padding: 35px; position: relative;
-    box-shadow: 0 0 50px rgba(212, 175, 55, 0.15);
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.close-btn {
-    position: absolute; top: 20px; left: 20px; background: none; border: none;
-    color: #555; font-size: 2rem; cursor: pointer;
+.modal-cyber-card {
+    background: #0c0c0c; border: 1px solid var(--glass-border); border-radius: 35px;
+    width: 92%; max-width: 420px; padding: 40px 30px; position: relative;
+    box-shadow: 0 0 100px rgba(0,0,0,1); animation: modalIn 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
-.modal-section { display: none; }
-.modal-section.active { display: block; }
+.close-modal-btn {
+    position: absolute; top: 20px; left: 20px; background: #1a1a1a;
+    border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+}
 
-.input-group-cyber {
+.gold-gradient-text {
+    background: var(--gold-gradient); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; font-weight: 900;
+}
+
+.cyber-input-wrapper {
     position: relative; margin-bottom: 15px;
 }
-.input-group-cyber i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); }
-.input-cyber {
-    width: 100%; padding: 16px 45px 16px 15px; background: #000;
-    border: 1px solid #222; border-radius: 15px; color: white; transition: 0.3s;
+.cyber-input-wrapper i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); opacity: 0.7; }
+.cyber-input-wrapper input {
+    width: 100%; padding: 18px 45px 18px 15px; background: #111;
+    border: 1px solid #222; border-radius: 15px; color: white; font-family: 'Cairo'; transition: 0.3s;
 }
-.input-cyber:focus { border-color: var(--gold); background: #080808; }
+.cyber-input-wrapper input:focus { border-color: var(--gold); background: #151515; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
 
-.btn-primary-gold-small {
-    width: 100%; padding: 16px; border-radius: 12px; background: var(--gold-gradient);
-    color: #000; border: none; font-weight: bold; cursor: pointer;
-}
+/* --- 4. واجهة التطبيق (The HUD Interface) --- */
+.app-main-layout { height: 100vh; width: 100%; position: relative; }
 
-.btn-google-modal {
-    width: 100%; padding: 14px; border-radius: 12px; background: white; color: black;
-    border: none; display: flex; align-items: center; justify-content: center; gap: 10px;
-    font-weight: bold; cursor: pointer;
+.hud-top-bar {
+    position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+    width: 92%; display: flex; justify-content: space-between; align-items: center; z-index: 1000;
 }
 
-/* --- 3. واجهة التطبيق (HUD) --- */
-#map { width: 100%; height: 100vh; position: fixed; filter: brightness(0.7) contrast(1.2); }
+.profile-pill {
+    background: var(--glass-heavy); backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border); padding: 6px 15px 6px 6px;
+    border-radius: 50px; display: flex; align-items: center; gap: 12px;
+}
+.avatar-container { position: relative; width: 42px; height: 42px; }
+.avatar-container img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--gold); }
+.pioneer-mini-crown { position: absolute; top: -8px; right: -8px; font-size: 14px; }
 
-.header-hud {
-    position: fixed; top: 20px; width: 90%; left: 50%; transform: translateX(-50%);
-    display: flex; justify-content: space-between; align-items: center; z-index: 1000;
-}
-.user-pill-hud {
-    background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
-    padding: 8px 20px 8px 8px; border-radius: 50px; display: flex; align-items: center; gap: 15px;
-}
-.avatar-box-hud img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); }
+#map { width: 100%; height: 100vh; position: absolute; z-index: 1; filter: brightness(0.6) contrast(1.2) grayscale(0.3); }
 
-/* --- 4. زر الـ SOS النابض --- */
-.sos-center-hud { position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%); z-index: 1000; }
-.sos-trigger-hud {
-    width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--gold);
-    background: radial-gradient(#ff0000, #900); color: white; font-weight: 900;
-    font-size: 1.4rem; cursor: pointer; position: relative;
+/* --- 5. زر SOS الأسطوري --- */
+.sos-action-wrapper {
+    position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); z-index: 1001;
 }
-.sos-rings-hud {
-    position: absolute; inset: -15px; border: 2px solid #ff3131; border-radius: 50%;
-    animation: sosPulse 2s infinite;
+.sos-master-btn {
+    width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--gold);
+    background: radial-gradient(circle, #ff0000 0%, #8b0000 100%);
+    color: white; cursor: pointer; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(255,0,0,0.4);
+}
+.sos-label { font-size: 1.6rem; font-weight: 900; letter-spacing: 1px; }
+.sos-pulse-layer {
+    position: absolute; inset: -10px; border: 2px solid #ff4444; border-radius: 50%;
+    animation: sosRipple 2s infinite; pointer-events: none;
 }
 
-/* --- 5. البار السفلي --- */
-.bottom-hud-nav {
-    position: fixed; bottom: 25px; width: 85%; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.9); backdrop-filter: blur(25px); border: 1px solid var(--glass-border);
-    border-radius: 30px; padding: 12px; display: flex; justify-content: space-around; z-index: 1000;
+/* --- 6. البار السفلي الذكي --- */
+.hud-bottom-nav {
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 90%; background: var(--glass-heavy); backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border); border-radius: 28px;
+    padding: 12px; display: flex; justify-content: space-around; z-index: 1000;
 }
-.nav-btn-hud { background: none; border: none; color: #666; font-size: 1.5rem; transition: 0.3s; }
-.nav-btn-hud.active { color: var(--gold); transform: scale(1.2); }
+.nav-item {
+    background: none; border: none; color: #555; display: flex; flex-direction: column;
+    align-items: center; gap: 4px; cursor: pointer; transition: 0.3s;
+}
+.nav-item i { font-size: 1.4rem; }
+.nav-item span { font-size: 10px; font-weight: bold; }
+.nav-item.active { color: var(--gold); transform: translateY(-5px); }
 
-/* Animations */
-@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes sosPulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.7); opacity: 0; } }
+/* --- Animations --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn { from { transform: scale(0.8) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+@keyframes sosRipple { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.8); opacity: 0; } }
+
+/* Responsive Adjustments */
+@media (max-width: 380px) {
+    .hero-logo { font-size: 3.5rem; }
+    .sos-master-btn { width: 85px; height: 85px; }
+}
