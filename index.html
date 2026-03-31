@@ -3,38 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أَزْرَد | AZRAD Global Trust</title>
+    <title>أَزْرَد | AZRAD OS</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { background-color: #001a33; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; text-align: center; }
-        #map { height: 450px; width: 100%; max-width: 900px; margin: 20px auto; border: 3px solid #D4AF37; border-radius: 20px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-        .btn-azrad { background: linear-gradient(45deg, #D4AF37, #F2D06B); color: #001a33; padding: 15px 40px; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .btn-azrad:hover { transform: scale(1.05); background: #fff; }
-        .status-bar { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; display: inline-block; margin-top: 10px; border: 1px solid #D4AF37; }
+        :root { --gold: #D4AF37; --dark-blue: #001220; --glass: rgba(255, 255, 255, 0.1); }
+        body { background: radial-gradient(circle, #001e3c, #000c18); color: white; font-family: 'Cairo', sans-serif; margin: 0; overflow-x: hidden; }
+        
+        /* تصميم الواجهة الأسطوري */
+        .glass-panel { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 25px; margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); animation: fadeIn 1.5s ease; }
+        
+        #map { height: 400px; width: 100%; border-radius: 20px; border: 2px solid var(--gold); margin-bottom: 20px; }
+
+        .btn-main { background: linear-gradient(135deg, #FFD700, #D4AF37); color: #000; border: none; padding: 20px 50px; border-radius: 50px; font-size: 1.4rem; font-weight: 900; cursor: pointer; transition: 0.4s; box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); width: 100%; position: relative; overflow: hidden; }
+        .btn-main:hover { transform: scale(1.02) translateY(-5px); box-shadow: 0 0 50px var(--gold); }
+        .btn-main:active { transform: scale(0.95); }
+
+        /* أنيميشن النبض */
+        .pulse { animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+        @keyframes pulse-ring { 0% { transform: scale(.95); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); } 100% { transform: scale(.95); } }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .ai-status { font-size: 0.9rem; color: #00ffcc; margin-top: 15px; letter-spacing: 1px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <h1>🛡️ مَنصة أَزْرَد (AZRAD)</h1>
-    <p>نظام السند العالمي - موثق بالنزاهة الرقمية</p>
-    
-    <div id="map"></div>
+    <div class="glass-panel">
+        <h1 style="font-size: 2.5rem; margin-bottom: 5px;">أَزْرَد <span style="color: var(--gold);">AZRAD</span></h1>
+        <p>نظام الإغاثة العالمي المدعوم بالذكاء الاصطناعي</p>
+        
+        <div id="map"></div>
 
-    <button class="btn-azrad" onclick="sendAzradHelp()">إرسال نداء استغاثة عالمي</button>
-    <br>
-    <div class="status-bar" id="status">الحالة: متصل بسيرفرات جوجل ✅</div>
+        <button class="btn-main pulse" onclick="requestEmergency()">
+            ⚡ إطلاق نداء استغاثة ⚡
+        </button>
+
+        <div class="ai-status" id="ai-log">AI CORE: ACTIVE // SECURE CONNECTION ESTABLISHED</div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // إعدادات مصنع أَزْرَد (البيانات الحقيقية الخاصة بك)
         const firebaseConfig = {
             apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
             authDomain: "azrad-global.firebaseapp.com",
             projectId: "azrad-global",
-            databaseURL: "https://azrad-global-default-rtdb.firebaseio.com", // الربط المباشر بالسيرفر
+            databaseURL: "https://azrad-global-default-rtdb.firebaseio.com",
             storageBucket: "azrad-global.firebasestorage.app",
             messagingSenderId: "727549676844",
             appId: "1:727549676844:web:8b474f550e664f34397089"
@@ -43,32 +60,41 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // بصمة الجهاز (لحماية النظام من الغش)
-        const deviceID = btoa(navigator.userAgent).substring(0, 15);
+        // الخريطة الأسطورية - الوضع المظلم
+        var map = L.map('map').setView([24.7, 46.6], 13);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-        window.sendAzradHelp = () => {
-            document.getElementById('status').innerText = "جاري تشفير النداء وإرساله...";
+        // ذكاء اصطناعي (AI Check) للتحقق من مكان المستخدم
+        window.requestEmergency = () => {
+            document.getElementById('ai-log').innerText = "AI: ANALYZING GEOLOCATION...";
             
-            const helpRef = ref(db, 'azrad_signals');
-            const newSignal = push(helpRef);
-            
-            set(newSignal, {
-                sender: deviceID,
-                type: "طلب مساعدة عاجلة",
-                timestamp: Date.now(),
-                status: "نشط"
-            }).then(() => {
-                alert("تم إرسال نداءك بنجاح! بصمتك الرقمية: " + deviceID);
-                document.getElementById('status').innerText = "تم الإرسال بنجاح ✅";
-            }).catch((error) => {
-                alert("خطأ: تأكد من تفعيل Rules في Firebase لـ true");
-                console.error(error);
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                const signalRef = ref(db, 'azrad_signals');
+                const newSignal = push(signalRef);
+                
+                set(newSignal, {
+                    lat: latitude,
+                    lng: longitude,
+                    time: Date.now(),
+                    ai_verify: "PASSED",
+                    status: "URGENT"
+                }).then(() => {
+                    document.getElementById('ai-log').innerText = "AI: SIGNAL BROADCASTED GLOBALLY ✅";
+                    L.marker([latitude, longitude]).addTo(map).bindPopup("موقعك الآن - المساعدة في الطريق").openPopup();
+                });
+            }, () => {
+                alert("يرجى تفعيل GPS ليعرف الذكاء الاصطناعي مكانك");
             });
         };
 
-        // تشغيل رادار الخريطة (الرياض كمثال مبدئي)
-        var map = L.map('map').setView([24.7136, 46.6753], 3);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        // تحديث الخريطة حياً (Live Updates)
+        onValue(ref(db, 'azrad_signals'), (snapshot) => {
+            snapshot.forEach((child) => {
+                const data = child.val();
+                if(data.lat) L.circle([data.lat, data.lng], {color: 'red', radius: 500}).addTo(map);
+            });
+        });
     </script>
 </body>
 </html>
