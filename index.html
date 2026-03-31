@@ -1,0 +1,19 @@
+<div id="azrad-map" style="width: 100%; height: 400px; border-radius: 15px; border: 2px solid #D4AF37;"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<script>
+  // تشغيل الخريطة وتحديد موقع المستخدم (سواء في الرياض أو نيويورك)
+  const map = L.map('azrad-map').setView([24.7136, 46.6753], 3); // البداية من قلب الوطن العربي
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'AZRAD Global Trust Network'
+  }).addTo(map);
+
+  // وظيفة "رصد النداء" (تظهر نقطة زرقاء عند وجود طلب مساعدة)
+  window.addSignalToMap = (lat, lng, type) => {
+    const marker = L.marker([lat, lng]).addTo(map);
+    marker.bindPopup(`<b>نِداء أَزْرَد:</b> ${type}`).openPopup();
+  };
+</script>
