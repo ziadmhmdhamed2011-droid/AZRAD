@@ -1,223 +1,119 @@
-/* --- Root Variables & Fonts --- */
+/* --- الإعدادات الأساسية (الذهب والظلام) --- */
 :root {
     --gold: #D4AF37;
+    --gold-bright: #F9E27E;
     --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
     --dark-bg: #050505;
-    --card-bg: #111111;
-    --glass: rgba(255, 255, 255, 0.03);
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
     --white: #ffffff;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: 'Cairo', sans-serif; background-color: var(--dark-bg);
+    color: var(--white); overflow: hidden; display: flex; flex-direction: column;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--dark-bg);
-    color: var(--white);
-    font-family: 'Cairo', sans-serif;
-    overflow-x: hidden;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* --- 1. لوحة الـ 250 الأوائل (The Pioneer Card) --- */
+.gold-card-container {
+    width: 100%; display: flex; justify-content: center; padding: 20px;
+    position: absolute; top: 0; z-index: 100;
 }
+.pioneer-content {
+    background: linear-gradient(145deg, #111, #000);
+    border: 1px solid var(--gold); border-radius: 30px;
+    padding: 20px; text-align: center; width: 100%; max-width: 400px;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+    animation: slideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.crown-glow { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--gold)); }
+.gold-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
 
-/* --- 1. لوحة الـ 250 الأوائل (Pioneer Panel) --- */
-#pioneer-panel {
-    width: 90%;
-    max-width: 400px;
-    background: var(--card-bg);
-    border: 1px solid var(--gold);
-    border-radius: 24px;
-    padding: 25px;
-    text-align: center;
-    margin-top: 40px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    animation: slideDown 0.8s ease;
-}
+.slots-bar { width: 100%; height: 8px; background: #222; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+#progress-fill { height: 100%; background: var(--gold-gradient); width: 0%; transition: width 1.5s ease-in-out; }
 
-.gold-text {
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 900;
-}
+/* --- 2. واجهة الدخول (The Cinematic Auth) --- */
+.auth-section { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.auth-container { text-align: center; width: 100%; max-width: 400px; }
 
-.slots-bar {
-    width: 100%;
-    height: 8px;
-    background: #222;
-    border-radius: 10px;
-    margin: 20px 0 10px;
-    overflow: hidden;
-}
+.main-logo { font-family: 'Orbitron', sans-serif; font-size: 4.5rem; margin: 0; font-weight: 900; letter-spacing: -3px; color: #fff; text-shadow: 0 0 30px rgba(255,255,255,0.2); }
+.tagline { color: #888; font-size: 1rem; margin-bottom: 30px; }
 
-#progress-fill {
-    height: 100%;
-    background: var(--gold-gradient);
-    width: 0%; /* بيتغير بالـ JS */
-    transition: width 1.5s ease-in-out;
+/* الخانات الزجاجية (Cyber Inputs) */
+.input-group { position: relative; margin-bottom: 12px; }
+.input-group i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); }
+.cyber-input {
+    width: 100%; padding: 16px 45px 16px 15px; background: var(--glass);
+    border: 1px solid var(--glass-border); border-radius: 15px;
+    color: white; font-family: 'Cairo'; transition: 0.3s;
 }
+.cyber-input:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); background: rgba(255,255,255,0.08); }
 
-/* --- 2. منطقة الدخول (Auth Box) --- */
-.auth-box {
-    margin-top: auto;
-    margin-bottom: auto;
-    text-align: center;
-    width: 100%;
+.btn-primary-gold {
+    width: 100%; padding: 18px; margin-top: 15px; border-radius: 15px;
+    background: var(--gold-gradient); color: #000; border: none;
+    font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
 }
+.btn-primary-gold:hover { transform: scale(1.02); box-shadow: 0 0 25px var(--gold); }
 
-.logo {
-    font-size: 4.5rem;
-    font-weight: 900;
-    letter-spacing: -2px;
-    margin: 0;
-    background: linear-gradient(to bottom, #fff 50%, #888);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+.btn-text-link { background: none; border: none; color: #aaa; margin-top: 15px; cursor: pointer; font-family: 'Cairo'; text-decoration: underline; }
 
-.slogan {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 40px;
-}
-
-.auth-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-/* الأزرار النضيفة */
-.btn-google, .btn-facebook {
-    width: 85%;
-    max-width: 320px;
-    padding: 16px;
-    border-radius: 16px;
-    border: none;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: var(--transition);
-}
+.separator { margin: 25px 0; color: #444; position: relative; }
+.separator::before, .separator::after { content: ""; position: absolute; top: 50%; width: 30%; height: 1px; background: #333; }
+.separator::before { left: 0; } .separator::after { right: 0; }
 
 .btn-google {
-    background: #ffffff;
-    color: #000;
+    width: 100%; padding: 16px; border-radius: 15px; background: #fff; color: #000;
+    border: none; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer;
 }
 
-.btn-facebook {
-    background: #1877F2;
-    color: #fff;
+/* --- 3. واجهة التطبيق (HUD & Radar) --- */
+#map { width: 100%; height: 100vh; position: fixed; filter: brightness(0.6) contrast(1.2); }
+
+.app-header {
+    position: fixed; top: 20px; width: 90%; left: 50%; transform: translateX(-50%);
+    display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+}
+.user-pill {
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
+    padding: 8px 18px 8px 8px; border-radius: 50px; display: flex; align-items: center; gap: 12px;
+}
+.avatar-box { position: relative; width: 45px; height: 45px; }
+.avatar-box img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--gold); }
+.pioneer-indicator { position: absolute; bottom: -5px; right: -5px; font-size: 14px; background: #000; border-radius: 50%; padding: 2px; }
+
+/* --- 4. زر SOS الأسطوري --- */
+.sos-action-center { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); z-index: 1000; }
+.sos-main-trigger {
+    width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--gold);
+    background: radial-gradient(#ff0000, #900); color: #fff; font-weight: 900;
+    font-size: 1.5rem; cursor: pointer; position: relative;
+}
+.sos-rings {
+    position: absolute; inset: -10px; border: 2px solid #ff3131; border-radius: 50%;
+    animation: sosPulse 2s infinite;
 }
 
-.btn-google:hover, .btn-facebook:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+/* --- 5. البار السفلي (Cyber Nav) --- */
+.bottom-hud {
+    position: fixed; bottom: 20px; width: 90%; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border); border-radius: 25px;
+    padding: 15px; display: flex; justify-content: space-around; z-index: 1000;
 }
+.nav-btn { background: none; border: none; color: #777; display: flex; flex-direction: column; align-items: center; font-size: 11px; gap: 5px; }
+.nav-btn i { font-size: 20px; }
+.nav-btn:hover { color: var(--gold); }
 
-.btn-google:active, .btn-facebook:active {
-    transform: scale(0.96);
-}
+/* --- Animations --- */
+@keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes sosPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.8); opacity: 0; } }
 
-/* --- 3. واجهة التطبيق (App Interface) --- */
-#app-interface {
-    width: 100%;
-    height: 100vh;
-    position: relative;
-}
-
-#map {
-    width: 100%;
-    height: 100%;
-    background: #000;
-}
-
-/* اللقب الذهبي الأسطوري */
-.gold-pioneer-tag {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    background: var(--gold-gradient);
-    color: #000;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 900;
-    font-size: 0.85rem;
-    z-index: 1000;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    border: 1px solid rgba(0,0,0,0.1);
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* زر SOS النضيف */
-.sos-btn {
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 80px;
-    background: #ff3b30;
-    border: 4px solid var(--gold);
-    border-radius: 50%;
-    color: white;
-    font-weight: 900;
-    font-size: 1.2rem;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255, 59, 48, 0.4);
-    z-index: 1000;
-}
-
-/* شاشة الترحيب (Epic Thanks) */
-.epic-thanks-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.95);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    text-align: center;
-}
-
-.epic-thanks-overlay h1 {
-    font-size: 3rem;
-    margin: 0;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* Animations */
-@keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes popIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes fadeOut {
-    to { opacity: 0; visibility: hidden; }
-}
-
-/* Responsive */
+/* تعديلات للموبايل */
 @media (max-width: 480px) {
-    .logo { font-size: 3.5rem; }
-    .gold-card { width: 95%; }
+    .main-logo { font-size: 3.5rem; }
+    .pioneer-content h2 { font-size: 1.2rem; }
 }
