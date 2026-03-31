@@ -1,47 +1,223 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أَزْرَد | AZRAD</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-</head>
-<body>
+/* --- Root Variables & Fonts --- */
+:root {
+    --gold: #D4AF37;
+    --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+    --dark-bg: #050505;
+    --card-bg: #111111;
+    --glass: rgba(255, 255, 255, 0.03);
+    --white: #ffffff;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    <div id="pioneer-panel" class="gold-card" style="display: none;">
-        <div class="crown-icon">🏆</div>
-        <h2>فرصة الانضمام للأوائل</h2>
-        <p>سجل الآن لتحصل على <span class="gold-text">اللقب الذهبي</span> للأبد</p>
-        <div class="slots-bar">
-            <div id="progress-fill" style="width: 0%;"></div>
-        </div>
-        <small>المقاعد المتبقية: <span id="slots-left">250</span></small>
-    </div>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-    <div class="auth-box">
-        <h1 class="logo">أَزْرَد</h1>
-        <p class="slogan">سندك في كل مكان</p>
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--dark-bg);
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    overflow-x: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        <div class="auth-buttons">
-            <button onclick="login('google')" class="btn-google">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
-                دخول عبر جوجل
-            </button>
+/* --- 1. لوحة الـ 250 الأوائل (Pioneer Panel) --- */
+#pioneer-panel {
+    width: 90%;
+    max-width: 400px;
+    background: var(--card-bg);
+    border: 1px solid var(--gold);
+    border-radius: 24px;
+    padding: 25px;
+    text-align: center;
+    margin-top: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    animation: slideDown 0.8s ease;
+}
 
-            <button onclick="login('facebook')" class="btn-facebook">
-                <i class="fab fa-facebook"></i> 
-                دخول عبر فيسبوك
-            </button>
-        </div>
-    </div>
+.gold-text {
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+}
 
-    <div id="app-interface" style="display: none;">
-        <div id="map"></div>
-        <button class="sos-btn">SOS</button>
-    </div>
+.slots-bar {
+    width: 100%;
+    height: 8px;
+    background: #222;
+    border-radius: 10px;
+    margin: 20px 0 10px;
+    overflow: hidden;
+}
 
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
-    <script type="module" src="app.js"></script>
-</body>
-</html>
+#progress-fill {
+    height: 100%;
+    background: var(--gold-gradient);
+    width: 0%; /* بيتغير بالـ JS */
+    transition: width 1.5s ease-in-out;
+}
+
+/* --- 2. منطقة الدخول (Auth Box) --- */
+.auth-box {
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+    width: 100%;
+}
+
+.logo {
+    font-size: 4.5rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin: 0;
+    background: linear-gradient(to bottom, #fff 50%, #888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.slogan {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* الأزرار النضيفة */
+.btn-google, .btn-facebook {
+    width: 85%;
+    max-width: 320px;
+    padding: 16px;
+    border-radius: 16px;
+    border: none;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: var(--transition);
+}
+
+.btn-google {
+    background: #ffffff;
+    color: #000;
+}
+
+.btn-facebook {
+    background: #1877F2;
+    color: #fff;
+}
+
+.btn-google:hover, .btn-facebook:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.btn-google:active, .btn-facebook:active {
+    transform: scale(0.96);
+}
+
+/* --- 3. واجهة التطبيق (App Interface) --- */
+#app-interface {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+/* اللقب الذهبي الأسطوري */
+.gold-pioneer-tag {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: var(--gold-gradient);
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 0.85rem;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    border: 1px solid rgba(0,0,0,0.1);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* زر SOS النضيف */
+.sos-btn {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    background: #ff3b30;
+    border: 4px solid var(--gold);
+    border-radius: 50%;
+    color: white;
+    font-weight: 900;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 59, 48, 0.4);
+    z-index: 1000;
+}
+
+/* شاشة الترحيب (Epic Thanks) */
+.epic-thanks-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    text-align: center;
+}
+
+.epic-thanks-overlay h1 {
+    font-size: 3rem;
+    margin: 0;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Animations */
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; visibility: hidden; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .logo { font-size: 3.5rem; }
+    .gold-card { width: 95%; }
+}
