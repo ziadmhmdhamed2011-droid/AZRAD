@@ -4,117 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>أَزْرَد | AZRAD OS</title>
-    
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div id="loader">
-        <div class="dna-spinner"></div>
-        <div class="loading-bar-container">
-            <div class="loading-bar"></div>
+    <div id="welcome-sequence">
+        <div class="welcome-slide active" id="slide-1">
+            <div class="glow-circle"></div>
+            <h1 class="hero-text">أَهْلاً بِكَ فِي <span class="gold-text">أَزْرَد</span></h1>
+            <p class="fade-in">نظام النجدة العالمي الذي لا ينام</p>
         </div>
-        <p class="loading-text">INITIALIZING AZRAD GLOBAL NETWORK...</p>
-    </div>
 
-    <section id="auth-screen">
-        <div class="video-bg-overlay"></div>
-        <div class="auth-container">
-            <div class="glass-box">
-                <div class="pioneer-tag">أول 250 منقذ</div>
-                <h1 class="brand-logo">أَزْرَد</h1>
-                <p class="brand-slogan">رادار النجدة الذكي | الإصدار العالمي</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span id="pioneer-count">250</span>
-                        <small>مقعد متبقي</small>
-                    </div>
-                    <div class="stat-item">
-                        <span id="live-users">--</span>
-                        <small>نشط الآن</small>
-                    </div>
+        <div class="welcome-slide" id="slide-2">
+            <h2 class="feature-title">نَادِي الـ <span class="gold-text">250 الأَوَائِل</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-crown"></i>
+                    <h3>لقب ذهبي أسطوري</h3>
+                    <p>يظهر بجانب اسمك في الرادار للأبد</p>
                 </div>
-
-                <div class="auth-actions">
-                    <button id="loginBtn" class="btn-main-gold">
-                        <i class="fab fa-google"></i>
-                        <span>دخول آمن عبر جوجل</span>
-                    </button>
-                    <button id="guestBtn" class="btn-outline-white">
-                        <i class="fas fa-eye"></i>
-                        <span>تصفح كضيف</span>
-                    </button>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>أولوية الاستجابة</h3>
+                    <p>إشاراتك تصل للمنقذين بوميض خاص</p>
                 </div>
-
-                <div class="security-info">
-                    <i class="fas fa-user-shield"></i>
-                    <span>بياناتك مشفرة ولا تظهر لأحد</span>
+                <div class="feature-card">
+                    <i class="fas fa-shield-heart"></i>
+                    <h3>شارة السند</h3>
+                    <p>بروفايل مخصص بمميزات "الداعم الأول"</p>
                 </div>
             </div>
         </div>
-    </section>
+
+        <div class="welcome-slide" id="slide-3">
+            <div class="auth-box-final">
+                <h2 class="final-text">جاهز لتكون <br> <span class="gold-text">سنداً للعالم؟</span></h2>
+                <button id="loginBtn" class="grand-google-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="25">
+                    ابدأ رحلتك الآن بجوجل
+                </button>
+                <p class="remaining-spots">المقاعد المتبقية: <span id="pioneer-counter">--</span></p>
+            </div>
+        </div>
+
+        <div class="nav-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
 
     <section id="app-interface" style="display: none;">
-        <header class="hud-header">
-            <div class="user-pill" onclick="openProfile()">
-                <div class="avatar-box">
-                    <img id="user-photo" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
-                    <div id="pioneer-badge" class="badge-icon">🏆</div>
-                </div>
-                <div class="user-text">
-                    <strong id="display-name">بطل أَزْرَد</strong>
-                    <span id="user-rank">الرتبة: منقذ</span>
-                </div>
-            </div>
-            <div class="system-time" id="clock">00:00:00</div>
-        </header>
-
-        <main id="map-container">
-            <div id="map"></div>
-            <div class="map-controls">
-                <button onclick="locateMe()" class="map-btn"><i class="fas fa-location-crosshairs"></i></button>
-                <button onclick="toggleMapMode()" class="map-btn"><i class="fas fa-layer-group"></i></button>
-            </div>
-            <div id="ai-notif-area"></div>
-        </main>
-
-        <footer class="bottom-nav">
-            <div class="nav-item" onclick="showTab('chat')">
-                <i class="fas fa-message"></i>
-                <span>الدردشة</span>
-            </div>
-
-            <div class="sos-trigger">
-                <button id="sosBtn" class="sos-circle">
-                    <div class="sos-pulse"></div>
-                    <div class="sos-inner">SOS</div>
-                </button>
-            </div>
-
-            <div class="nav-item" onclick="showTab('rankings')">
-                <i class="fas fa-ranking-star"></i>
-                <span>المتصدرين</span>
-            </div>
-        </footer>
+        <div id="map"></div>
+        <div class="sos-center">
+            <button id="sosBtn" class="sos-main-btn">SOS</button>
+        </div>
     </section>
 
-    <div id="chat-panel" class="side-drawer">
-        <div class="drawer-header">
-            <h3>رادار الدردشة الحي</h3>
-            <button onclick="closeTab()"><i class="fas fa-chevron-down"></i></button>
-        </div>
-        <div id="chat-msgs" class="chat-content"></div>
-        <div class="chat-input">
-            <input type="text" id="msgInput" placeholder="اكتب رسالة للمنقذين...">
-            <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="app.js"></script>
 </body>
 </html>
