@@ -1,8 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    GoogleAuthProvider,
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getDatabase, ref, set, get, child, update, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// 1. إعدادات Firebase (من الصورة اللي بعتها يا مدير)
+// 1. إعدادات Firebase الخاصة بمشروعك (تأكد من مطابقتها لبياناتك)
 const firebaseConfig = {
     apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
     authDomain: "azrad-global.firebaseapp.com",
@@ -17,97 +24,133 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// --- وظائف النظام ---
+let map;
+let isLoginMode = false; // للتبديل بين إنشاء حساب وتسجيل دخول
 
-// فحص حالة الـ 250 مستخدم أول ما الصفحة تفتح
-const updatePioneerStatus = async () => {
+// --- [وظيفة 1] فحص عداد الـ 250 عند التشغيل ---
+async function checkPioneers() {
     const dbRef = ref(db);
-    try {
-        const snapshot = await get(child(dbRef, 'stats/usersCount'));
-        const count = snapshot.val() || 0;
-        
-        if (count < 250) {
-            document.getElementById('pioneer-panel').style.display = 'block';
-            document.getElementById('slots-left').innerText = 250 - count;
-            document.getElementById('progress-fill').style.width = (count / 250 * 100) + "%";
-        } else {
-            document.getElementById('pioneer-panel').remove(); // احذف اللوحة لو كملوا 250
-        }
-    } catch (e) { console.error("Error fetching stats", e); }
+    const snap = await get(child(dbRef, 'stats/usersCount'));
+    const count = snap.val() || 0;
+    
+    if (count < 250) {
+        document.getElementById('slots-left').innerText = 250 - count;
+        document.getElementById('progress-fill').style.width = (count / 250 * 100) + "%";
+    } else {
+        document.getElementById('pioneer-panel').style.display = 'none';
+    }
+}
+
+// --- [وظيفة 2] التبديل بين وضع التسجيل والدخول ---
+window.toggleAuthMode = () => {
+    isLoginMode = !isLoginMode;
+    const nameField = document.getElementById('user-name').parentElement;
+    const btn = document.querySelector('.btn-primary-gold');
+    const toggleTxt = document.getElementById('toggleText');
+
+    if (isLoginMode) {
+        nameField.style.display = 'none';
+        btn.innerText = "تسجيل الدخول الآن";
+        toggleTxt.innerText = "ليس لديك حساب؟ أنشئ حساباً جديداً";
+    } else {
+        nameField.style.display = 'block';
+        btn.innerText = "إنشاء حساب جديد";
+        toggleTxt.innerText = "لديك حساب؟ سجل دخول من هنا";
+    }
 };
 
-// الدخول (جوجل أو فيسبوك)
-window.login = async (providerName) => {
-    const provider = providerName === 'google' ? new GoogleAuthProvider() : new FacebookAuthProvider();
-    
+// --- [وظيفة 3] التسجيل بالإيميل والباسورد ---
+window.authWithEmail = async (type) => {
+    const name = document.getElementById('user-name').value;
+    const email = document.getElementById('user-email').value;
+    const pass = document.getElementById('user-pass').value;
+
+    if (!email || !pass) return alert("يرجى ملء الخانات الأساسية!");
+
+    try {
+        let userCredential;
+        if (!isLoginMode) { // إنشاء حساب
+            if (!name) return alert("يرجى كتابة اسمك للقب الذهبي!");
+            userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+            await handleUserRegistration(userCredential.user, name);
+        } else { // تسجيل دخول
+            userCredential = await signInWithEmailAndPassword(auth, email, pass);
+            await fetchUserData(userCredential.user.uid);
+        }
+    } catch (error) {
+        alert("عذراً: " + error.message);
+    }
+};
+
+// --- [وظيفة 4] الدخول السريع عبر جوجل ---
+window.loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        handleUserRegistration(user);
+        await handleUserRegistration(result.user, result.user.displayName);
     } catch (error) {
-        console.error("Login Failed", error);
-        alert("فشل تسجيل الدخول: تأكد من تفعيل الخدمة في Firebase");
+        alert("فشل الاتصال بجوجل!");
     }
 };
 
-// معالجة بيانات المستخدم واللقب الذهبي
-const handleUserRegistration = async (user) => {
-    const dbRef = ref(db);
-    const userPath = `users/${user.uid}`;
-    
-    const userSnap = await get(child(dbRef, userPath));
-    
-    if (!userSnap.exists()) {
-        // مستخدم جديد - نتحقق هل هو من الـ 250؟
-        const statsSnap = await get(child(dbRef, 'stats/usersCount'));
-        let count = statsSnap.val() || 0;
-        
-        const isPioneer = count < 250;
+// --- [وظيفة 5] تسجيل المنقذ في الـ Database والـ 250 الأوائل ---
+async function handleUserRegistration(user, displayName) {
+    const userRef = ref(db, 'users/' + user.uid);
+    const snap = await get(userRef);
+
+    if (!snap.exists()) {
+        const statsRef = ref(db, 'stats');
+        const statsSnap = await get(statsRef);
+        let currentCount = (statsSnap.val() && statsSnap.val().usersCount) || 0;
+
+        const isPioneer = currentCount < 250;
         const userData = {
-            name: user.displayName,
+            uid: user.uid,
+            name: displayName,
             email: user.email,
             isPioneer: isPioneer,
-            joinOrder: count + 1,
-            pioneerTitle: isPioneer ? "🏆 داعم ذهبي" : "منقذ"
+            joinOrder: isPioneer ? currentCount + 1 : null,
+            role: "منقذ"
         };
 
-        await set(ref(db, userPath), userData);
-        await update(ref(db, 'stats'), { usersCount: increment(1) });
-        
+        await set(userRef, userData);
+        if (isPioneer) {
+            await update(statsRef, { usersCount: increment(1) });
+        }
         launchApp(userData);
     } else {
-        // مستخدم قديم - اسحب بياناته
-        launchApp(userSnap.val());
+        launchApp(snap.val());
     }
-};
+}
 
-// تشغيل الواجهة النهائية
+// --- [وظيفة 6] تشغيل الواجهة النهائية والرادار ---
 function launchApp(userData) {
-    document.querySelector('.auth-box').style.display = 'none';
-    if(document.getElementById('pioneer-panel')) document.getElementById('pioneer-panel').style.display = 'none';
+    document.querySelector('.auth-section').style.display = 'none';
+    document.getElementById('pioneer-panel').style.display = 'none';
     document.getElementById('app-interface').style.display = 'block';
 
-    // إظهار اللقب الذهبي لو يستحق
+    document.getElementById('display-name-hud').innerText = userData.name;
+
+    // تشغيل الخريطة (الرادار)
+    map = L.map('map', { zoomControl: false }).setView([24.7136, 46.6753], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+    // تفعيل اللقب الذهبي
     if (userData.isPioneer) {
-        const badge = document.createElement('div');
-        badge.className = 'gold-pioneer-tag';
-        badge.innerText = `${userData.pioneerTitle} | #${userData.joinOrder}`;
-        document.body.appendChild(badge);
-        
-        showCelebration();
+        document.getElementById('pioneer-badge').style.display = 'block';
+        document.getElementById('pioneer-label').innerText = `عضو مؤسس رقم #${userData.joinOrder}`;
+        showWelcomeToast(userData.name);
     }
 }
 
-function showCelebration() {
-    const overlay = document.createElement('div');
-    overlay.className = 'epic-thanks-overlay';
-    overlay.innerHTML = `<h1>شكراً لثقتك!</h1><p>أنت العضو رقم ${document.body.innerText.match(/#(\d+)/)?.[1] || ''} في قائمة العظماء</p>`;
-    document.body.appendChild(overlay);
-    setTimeout(() => {
-        overlay.style.animation = "fadeOut 1s forwards";
-        setTimeout(() => overlay.remove(), 1000);
-    }, 3000);
+function showWelcomeToast(name) {
+    const toast = document.createElement('div');
+    toast.className = 'gold-pioneer-tag'; // يستخدم نفس ستايل التاج
+    toast.style.top = '50%'; toast.style.left = '50%'; toast.style.transform = 'translate(-50%, -50%)';
+    toast.innerHTML = `مرحباً بك يا ${name} في قائمة العظماء!`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
 }
 
-// تشغيل الفحص عند البداية
-updatePioneerStatus();
+// البدء بالفحص
+checkPioneers();
