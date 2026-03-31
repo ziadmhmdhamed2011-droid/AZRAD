@@ -181,7 +181,17 @@ function handleSystemErrors(error) {
     if (error.code === 'auth/user-not-found') msg = "هذا الحساب غير موجود";
     alert("⚠️ " + msg);
 }
-
+window.processLogout = async () => {
+    if (confirm("هل تريد تسجيل الخروج من نظام أَزْرَد؟")) {
+        try {
+            await signOut(auth);
+            // إعادة ضبط الواجهة
+            location.reload(); // أسرع طريقة لتنظيف الذاكرة والرجوع للبداية
+        } catch (error) {
+            alert("فشل تسجيل الخروج: " + error.message);
+        }
+    }
+};
 // مراقبة حالة المستخدم (Session Persistence)
 onAuthStateChanged(auth, (user) => {
     if (user) syncUserData(user.uid);
