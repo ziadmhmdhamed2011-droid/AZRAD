@@ -1,3 +1,4 @@
+// استيراد مكتبات Firebase الأساسية
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
     getAuth, 
@@ -16,7 +17,7 @@ import {
     increment 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// --- [1] إعدادات فايربيز (تأكد من مطابقتها لبياناتك) ---
+// [1] إعدادات الاتصال بـ Firebase (تأكد من مطابقتها لمشروعك)
 const firebaseConfig = {
     apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
     authDomain: "azrad-global.firebaseapp.com",
@@ -27,11 +28,14 @@ const firebaseConfig = {
     appId: "1:727549676844:web:8b474f550e664f34397089"
 };
 
+// تهيئة النظام
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// --- [2] التحكم في المودال والتبديل (UI Logic) ---
+// --- [2] إدارة الواجهة والأنيميشن (UI Logic) ---
+
+// دالة فتح وإغلاق النوافذ المنبثقة
 window.handleModal = (action, type) => {
     const modal = document.getElementById('auth-modal');
     const signupBox = document.getElementById('signup-box');
@@ -51,42 +55,47 @@ window.handleModal = (action, type) => {
     }
 };
 
-// --- [3] منطق التسجيل والدخول (Auth Logic) ---
+// --- [3] محرك الهوية (Authentication Engine) ---
+
+// التسجيل والدخول بالبريد
 window.processAuth = async (type) => {
     try {
         if (type === 'signup') {
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
             const pass = document.getElementById('reg-pass').value;
 
-            if (!name || !email || !pass) return alert("البيانات ناقصة يا بطل!");
-            if (pass.length < 6) return alert("الباسورد لازم يكون 6 أرقام أو حروف على الأقل");
+            if (!name || !email || !pass) throw new Error("يرجى ملء جميع الخانات");
+            if (pass.length < 6) throw new Error("كلمة المرور قصيرة جداً (6 خانات)");
 
             const res = await createUserWithEmailAndPassword(auth, email, pass);
-            await checkAndSavePioneer(res.user, name);
+            await registerPioneerStatus(res.user, name);
         } else {
-            const email = document.getElementById('log-email').value;
+            const email = document.getElementById('log-email').value.trim();
             const pass = document.getElementById('log-pass').value;
+            
             const res = await signInWithEmailAndPassword(auth, email, pass);
-            loadUserData(res.user.uid);
+            await syncUserData(res.user.uid);
         }
-    } catch (e) {
-        alert("خطأ في العملية: " + e.message);
+    } catch (error) {
+        handleSystemErrors(error);
     }
 };
 
+// الدخول عبر جوجل
 window.processGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
         const res = await signInWithPopup(auth, provider);
-        await checkAndSavePioneer(res.user, res.user.displayName);
-    } catch (e) {
-        alert("فشل تسجيل جوجل");
+        await registerPioneerStatus(res.user, res.user.displayName);
+    } catch (error) {
+        handleSystemErrors(error);
     }
 };
 
-// --- [4] إدارة نظام الـ 250 الأوائل ---
-async function checkAndSavePioneer(user, displayName) {
+// --- [4] نظام الـ 250 الأوائل (Database Logic) ---
+
+async function registerPioneerStatus(user, displayName) {
     const userRef = ref(db, 'users/' + user.uid);
     const snap = await get(userRef);
 
@@ -102,54 +111,77 @@ async function checkAndSavePioneer(user, displayName) {
             email: user.email,
             isPioneer: isPioneer,
             joinOrder: isPioneer ? count + 1 : null,
-            regDate: new Date().toISOString()
+            joinDate: new Date().getTime()
         };
 
         await set(userRef, userData);
         if (isPioneer) await update(statsRef, { usersCount: increment(1) });
-        enterTheApp(userData);
+        activateApp(userData);
     } else {
-        enterTheApp(snap.val());
+        activateApp(snap.val());
     }
 }
 
-async function loadUserData(uid) {
+async function syncUserData(uid) {
     const snap = await get(ref(db, 'users/' + uid));
-    if (snap.exists()) enterTheApp(snap.val());
+    if (snap.exists()) activateApp(snap.val());
 }
 
-// --- [5] تشغيل واجهة التطبيق (HUD Activation) ---
-function enterTheApp(data) {
-    document.getElementById('pioneer-gate').classList.remove('active');
-    handleModal('close');
-    document.getElementById('main-app').classList.add('active');
-    
-    document.getElementById('u-name').innerText = data.name;
-    
-    if (data.isPioneer) {
-        document.getElementById('pioneer-icon').style.display = 'block';
-        document.getElementById('u-rank').innerText = `عضو مؤسس #${data.joinOrder}`;
-        document.getElementById('u-rank').style.color = "#D4AF37";
-    }
+// --- [5] تشغيل واجهة المستخدم النهائية (Launch App) ---
 
-    startRadar();
+function activateApp(data) {
+    // أنيميشن الخروج من البوابة
+    const gate = document.getElementById('pioneer-gate');
+    gate.style.transition = "all 0.6s ease";
+    gate.style.opacity = "0";
+    gate.style.transform = "scale(1.1)";
+
+    setTimeout(() => {
+        gate.classList.remove('active');
+        handleModal('close');
+        
+        const mainApp = document.getElementById('main-app');
+        mainApp.classList.add('active');
+        
+        // تحديث البيانات في الـ HUD
+        document.getElementById('u-name').innerText = data.name;
+        
+        if (data.isPioneer) {
+            const pIcon = document.getElementById('pioneer-icon');
+            if (pIcon) pIcon.style.display = 'block';
+            const uRank = document.getElementById('u-rank');
+            uRank.innerText = `عضو مؤسس #${data.joinOrder}`;
+            uRank.classList.add('gold-text');
+        }
+        
+        initializeRadar();
+    }, 600);
 }
 
-function startRadar() {
-    // إحداثيات افتراضية (تقدر تخليها GPS بالـ Navigator API)
-    const map = L.map('map', { zoomControl: false }).setView([24.7136, 46.6753], 13);
+function initializeRadar() {
+    // إحداثيات الخريطة (الرادار السري)
+    const map = L.map('map', { zoomControl: false }).setView([30.0444, 31.2357], 13);
     
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: 'AZRAD OS'
+        attribution: 'AZRAD RADAR OS'
     }).addTo(map);
 
-    // ماركر الموقع الحالي بشكل راداري
-    L.circleMarker([24.7136, 46.6753], {
-        radius: 12, fillColor: "#D4AF37", color: "#fff", weight: 2, fillOpacity: 0.8
-    }).addTo(map).bindPopup("رادارك يعمل بنجاح").openPopup();
+    // إضافة ماركر المستخدم بنبض ذهبي
+    L.circleMarker([30.0444, 31.2357], {
+        radius: 10, fillColor: "#D4AF37", color: "#fff", weight: 2, fillOpacity: 0.9
+    }).addTo(map).bindPopup("<b>أنت الآن متصل بالرادار</b>").openPopup();
 }
 
-// فحص الجلسة (لو المستخدم مسجل دخول أصلاً افتح له التطبيق)
+// معالجة الأخطاء وترجمتها للعربية
+function handleSystemErrors(error) {
+    let msg = "حدث خطأ غير متوقع";
+    if (error.code === 'auth/email-already-in-use') msg = "هذا البريد مسجل بالفعل!";
+    if (error.code === 'auth/wrong-password') msg = "كلمة المرور غير صحيحة";
+    if (error.code === 'auth/user-not-found') msg = "هذا الحساب غير موجود";
+    alert("⚠️ " + msg);
+}
+
+// مراقبة حالة المستخدم (Session Persistence)
 onAuthStateChanged(auth, (user) => {
-    if (user) loadUserData(user.uid);
+    if (user) syncUserData(user.uid);
 });
