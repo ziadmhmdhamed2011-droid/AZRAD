@@ -1,119 +1,183 @@
-    <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>أَزْرَد | AZRAD OS</title>
-    
+    <title>أَزْرَد | AZRAD RADAR OS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;600;700;900&family=Orbitron:wght@400;600;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <section id="pioneer-gate" class="app-page active">
-        <div class="hero-overlay">
-            <div class="badge-250">🏆 إصدار المبدعين الأوائل</div>
-            <h1 class="hero-logo">أَزْرَد</h1>
-            <p class="hero-slogan">رادار الجدعنة والإنقاذ الذكي</p>
+    <div id="prime-gate" class="screen active">
+        <canvas id="bg-stars"></canvas> <div class="gate-content">
+            <div class="pioneer-tag">
+                <span class="pulse-dot"></span>
+                إصدار الـ 250 الأوائل المعتمد
+            </div>
             
-            <div class="gate-buttons">
-                <button class="btn-primary" onclick="handleModal('open', 'signup')">
-                    <i class="fas fa-bolt"></i> حجز مكان (الـ 250 الأوائل)
+            <div class="main-logo-container">
+                <h1 class="glitch-logo" data-text="أَزْرَد">أَزْرَد</h1>
+                <div class="logo-sub">RADAR INTELLIGENCE</div>
+            </div>
+
+            <p class="hero-description">
+                النظام الأول في الوطن العربي للإنقاذ والجدعنة الرقمية. 
+                مشفر، ذكي، ومبني لمجتمع الأبطال.
+            </p>
+
+            <div class="gate-actions">
+                <button class="btn-mega primary" onclick="ui.showModal('signup')">
+                    <div class="btn-inner">
+                        <i class="fas fa-id-badge"></i>
+                        <span>حجز مكان في النخبة</span>
+                    </div>
                 </button>
-                <button class="btn-link" onclick="handleModal('open', 'login')">
-                    تسجيل دخول المنقذين
+                
+                <button class="btn-mega secondary" onclick="ui.showModal('login')">
+                    <div class="btn-inner">
+                        <i class="fas fa-fingerprint"></i>
+                        <span>تسجيل دخول المنقذين</span>
+                    </div>
                 </button>
             </div>
-            
-            <footer class="gate-footer">
-                <p><i class="fas fa-shield-halved"></i> نظام مشفر وآمن بالكامل</p>
-            </footer>
-        </div>
-    </section>
 
-    <div id="auth-modal" class="modal-wrapper">
-        <div class="modal-content">
-            <button class="close-modal" onclick="handleModal('close')"><i class="fas fa-times"></i></button>
-            
-            <div id="signup-box" class="auth-box">
-                <h2 class="gold-text">انضم للقائمة الذهبية</h2>
-                <p class="sub-text">سجل اسمك كعضو مؤسس في نظام أَزْرَد</p>
-                
-                <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="reg-name" placeholder="الاسم الذي سيظهر للناس">
-                </div>
-                <div class="input-field">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="reg-email" placeholder="البريد الإلكتروني">
-                </div>
-                <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="reg-pass" placeholder="كلمة المرور">
-                </div>
-                <button class="btn-submit" onclick="processAuth('signup')">تأكيد وحجز الرقم #</button>
+            <div class="security-info">
+                <i class="fas fa-shield-virus"></i>
+                بروتوكول تشفير AZ-24 مُفعل
             </div>
-
-            <div id="login-box" class="auth-box" style="display: none;">
-                <h2 class="gold-text">مرحباً بعودتك</h2>
-                <p class="sub-text">أدخل بياناتك للدخول إلى الرادار</p>
-                
-                <div class="input-field">
-                    <i class="fas fa-at"></i>
-                    <input type="email" id="log-email" placeholder="البريد الإلكتروني">
-                </div>
-                <div class="input-field">
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="log-pass" placeholder="كلمة المرور">
-                </div>
-                <button class="btn-submit" onclick="processAuth('login')">دخول النظام</button>
-            </div>
-
-            <div class="auth-divider"><span>أو عبر</span></div>
-            <button class="btn-google" onclick="processGoogle()">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
-                جوجل
-            </button>
         </div>
     </div>
 
-    <main id="main-app" class="app-page">
-        <header class="hud-header">
-            <div class="user-profile">
-                <div class="avatar-wrap">
-                    <img id="u-img" src="https://ui-avatars.com/api/?name=Hero&background=D4AF37&color=fff">
-                    <span id="pioneer-icon" class="crown" style="display:none">🏆</span>
+    <div id="modal-overlay" class="overlay">
+        <div class="modal-card">
+            <button class="modal-close" onclick="ui.closeModal()">
+                <i class="fas fa-xmark"></i>
+            </button>
+
+            <div id="signup-form" class="auth-sub-form">
+                <h2 class="form-title">وثّق هويتك</h2>
+                <p class="form-desc">كن جزءاً من أول 250 بطل في النظام</p>
+                
+                <div class="cyber-input-group">
+                    <label><i class="fas fa-user-ninja"></i> الاسم الحركي</label>
+                    <input type="text" id="reg-name" placeholder="مثال: صقر القاهرة">
                 </div>
-                <div class="user-info">
-                    <strong id="u-name">منقذ أَزْرَد</strong>
-                    <span id="u-rank">رتبة: متطوع</span>
+
+                <div class="cyber-input-group">
+                    <label><i class="fas fa-envelope-open-text"></i> البريد المشفر</label>
+                    <input type="email" id="reg-email" placeholder="hero@azrad.com">
+                </div>
+
+                <div class="cyber-input-group">
+                    <label><i class="fas fa-key"></i> كود العبور</label>
+                    <input type="password" id="reg-pass" placeholder="••••••••">
+                </div>
+
+                <button class="btn-execute" onclick="auth.run('signup')">
+                    إرسال البيانات للرادار
+                </button>
+            </div>
+
+            <div id="login-form" class="auth-sub-form" style="display:none;">
+                <h2 class="form-title">تأكيد البصمة</h2>
+                <p class="form-desc">عد إلى مركز العمليات</p>
+                
+                <div class="cyber-input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="log-email" placeholder="بريدك المسجل">
+                </div>
+
+                <div class="cyber-input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="log-pass" placeholder="••••••••">
+                </div>
+
+                <div class="form-helpers">
+                    <span onclick="auth.resetPass()">فقدت كود العبور؟</span>
+                </div>
+
+                <button class="btn-execute" onclick="auth.run('login')">
+                    فتح الرادار
+                </button>
+            </div>
+
+            <div class="social-auth">
+                <div class="divider"><span>أو عبر الربط العصبي</span></div>
+                <button class="btn-google-sync" onclick="auth.google()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+                    مزامنة عبر Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="os-interface" class="screen">
+        <header class="os-header">
+            <div class="user-pill">
+                <div class="status-indicator online"></div>
+                <div class="avatar-container">
+                    <img id="user-avatar" src="" alt="">
+                    <div id="pioneer-crown" class="pioneer-crown" style="display:none;">🏆</div>
+                </div>
+                <div class="user-meta">
+                    <span id="user-display-name">جاري التحميل...</span>
+                    <small id="user-status-label">متصل بالرادار</small>
                 </div>
             </div>
-            <div class="app-title-mini">AZRAD</div>
+            
+            <div class="os-clock" id="live-clock">00:00:00</div>
+
+            <button class="os-notif-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notif-count">0</span>
+            </button>
         </header>
 
-        <div id="map"></div>
+        <div id="main-radar-map"></div>
 
-        <div class="sos-zone">
-            <div class="sos-pulse"></div>
-            <button class="sos-btn">SOS</button>
+        <div class="radar-scan-line"></div>
+        <div class="compass-ring"></div>
+
+        <div class="sos-container">
+            <div class="sos-rings">
+                <div class="ring r1"></div>
+                <div class="ring r2"></div>
+                <div class="ring r3"></div>
+            </div>
+            <button class="sos-trigger" id="sos-btn">
+                <span class="sos-text">SOS</span>
+                <span class="sos-subtext">استغاثة</span>
+            </button>
         </div>
 
-      <nav class="hud-nav">
-    <button class="nav-btn active"><i class="fas fa-satellite-dish"></i><span>الرادار</span></button>
-    <button class="nav-btn"><i class="fas fa-bullhorn"></i><span>البلاغات</span></button>
-    <button class="nav-btn"><i class="fas fa-medal"></i><span>الأوائل</span></button>
-    
-    <button class="nav-btn" onclick="processLogout()">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>خروج</span>
-    </button>
-</nav>
-    </main>
+        <nav class="os-dock">
+            <div class="dock-item active" data-tab="radar">
+                <i class="fas fa-crosshairs"></i>
+                <span>الرادار</span>
+            </div>
+            <div class="dock-item" data-tab="reports">
+                <i class="fas fa-list-check"></i>
+                <span>البلاغات</span>
+            </div>
+            <div class="dock-item" data-tab="rankings">
+                <i class="fas fa-award"></i>
+                <span>النخبة</span>
+            </div>
+            <div class="dock-item" onclick="auth.logout()">
+                <i class="fas fa-power-off"></i>
+                <span>خروج</span>
+            </div>
+        </nav>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="app.js"></script>
