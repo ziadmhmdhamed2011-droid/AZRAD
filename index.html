@@ -2,67 +2,46 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>أَزْرَد | AZRAD OS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أَزْرَد | AZRAD</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="welcome-sequence">
-        <div class="welcome-slide active" id="slide-1">
-            <div class="glow-circle"></div>
-            <h1 class="hero-text">أَهْلاً بِكَ فِي <span class="gold-text">أَزْرَد</span></h1>
-            <p class="fade-in">نظام النجدة العالمي الذي لا ينام</p>
+    <div id="pioneer-panel" class="gold-card" style="display: none;">
+        <div class="crown-icon">🏆</div>
+        <h2>فرصة الانضمام للأوائل</h2>
+        <p>سجل الآن لتحصل على <span class="gold-text">اللقب الذهبي</span> للأبد</p>
+        <div class="slots-bar">
+            <div id="progress-fill" style="width: 0%;"></div>
         </div>
+        <small>المقاعد المتبقية: <span id="slots-left">250</span></small>
+    </div>
 
-        <div class="welcome-slide" id="slide-2">
-            <h2 class="feature-title">نَادِي الـ <span class="gold-text">250 الأَوَائِل</span></h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-crown"></i>
-                    <h3>لقب ذهبي أسطوري</h3>
-                    <p>يظهر بجانب اسمك في الرادار للأبد</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-bolt"></i>
-                    <h3>أولوية الاستجابة</h3>
-                    <p>إشاراتك تصل للمنقذين بوميض خاص</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-shield-heart"></i>
-                    <h3>شارة السند</h3>
-                    <p>بروفايل مخصص بمميزات "الداعم الأول"</p>
-                </div>
-            </div>
-        </div>
+    <div class="auth-box">
+        <h1 class="logo">أَزْرَد</h1>
+        <p class="slogan">سندك في كل مكان</p>
 
-        <div class="welcome-slide" id="slide-3">
-            <div class="auth-box-final">
-                <h2 class="final-text">جاهز لتكون <br> <span class="gold-text">سنداً للعالم؟</span></h2>
-                <button id="loginBtn" class="grand-google-btn">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="25">
-                    ابدأ رحلتك الآن بجوجل
-                </button>
-                <p class="remaining-spots">المقاعد المتبقية: <span id="pioneer-counter">--</span></p>
-            </div>
-        </div>
+        <div class="auth-buttons">
+            <button onclick="login('google')" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+                دخول عبر جوجل
+            </button>
 
-        <div class="nav-dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+            <button onclick="login('facebook')" class="btn-facebook">
+                <i class="fab fa-facebook"></i> 
+                دخول عبر فيسبوك
+            </button>
         </div>
     </div>
 
-    <section id="app-interface" style="display: none;">
+    <div id="app-interface" style="display: none;">
         <div id="map"></div>
-        <div class="sos-center">
-            <button id="sosBtn" class="sos-main-btn">SOS</button>
-        </div>
-    </section>
+        <button class="sos-btn">SOS</button>
+    </div>
 
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
     <script type="module" src="app.js"></script>
 </body>
 </html>
