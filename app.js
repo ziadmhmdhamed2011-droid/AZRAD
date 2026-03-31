@@ -12,7 +12,7 @@ import {
     getDatabase, 
     ref, 
     set, 
-    get, 
+    get,  
     update, 
     increment 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
