@@ -2,49 +2,104 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أَزْرَد | AZRAD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>أَزْرَد | AZRAD OS</title>
+    
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div id="auth-page" class="page active">
-        <div class="auth-card">
-            <h1 class="logo">أَزْرَد</h1>
-            <p class="subtitle">نظام النجدة الذكي</p>
+    <section id="pioneer-gate" class="gate-overlay active">
+        <div class="glass-landing">
+            <h1 class="main-logo-landing">أَزْرَد</h1>
+            <p class="slogan-landing">سندك في كل مكان.. رادار الجدعنة الذكي</p>
             
-            <div class="input-group">
-                <input type="email" id="email" placeholder="البريد الإلكتروني">
-                <input type="password" id="pass" placeholder="كلمة المرور">
-                <button onclick="handleAuth('login')" class="btn-main">تسجيل الدخول</button>
-                <button onclick="handleAuth('signup')" class="btn-outline">إنشاء حساب جديد</button>
+            <div class="auth-triggers">
+                <button onclick="openModal('signup')" class="btn-main-pioneer">ابدأ رحلتك (الـ 250 الأوائل)</button>
+                <button onclick="openModal('login')" class="btn-text-pioneer">لديك حساب؟ سجل دخول</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button onclick="closeModal()" class="close-btn">&times;</button>
+            
+            <div id="signup-content" class="modal-section active">
+                <h2>انضم للأوائل</h2>
+                <div class="input-group-cyber">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="user-name" placeholder="الاسم الكامل" class="input-cyber">
+                </div>
+                <div class="input-group-cyber">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="user-email-up" placeholder="البريد الإلكتروني" class="input-cyber">
+                </div>
+                <div class="input-group-cyber">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="user-pass-up" placeholder="كلمة المرور" class="input-cyber">
+                </div>
+                <button onclick="authDirect('signup')" class="btn-primary-gold-small">تسجيل جديد (🏆)</button>
             </div>
 
-            <div class="divider">أو</div>
+            <div id="login-content" class="modal-section">
+                <h2>عوداً حميداً</h2>
+                <div class="input-group-cyber">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="user-email-in" placeholder="البريد الإلكتروني" class="input-cyber">
+                </div>
+                <div class="input-group-cyber">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="user-pass-in" placeholder="كلمة المرور" class="input-cyber">
+                </div>
+                <button onclick="authDirect('login')" class="btn-primary-gold-small">تسجيل الدخول</button>
+            </div>
 
-            <button onclick="loginGoogle()" class="btn-google">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
-                متابعة باستخدام جوجل
+            <div class="separator">أو</div>
+            
+            <button onclick="loginGoogle()" class="btn-google-modal">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                متابعة باستخدام Google
             </button>
         </div>
     </div>
 
-    <div id="main-app" class="page">
-        <div class="top-bar">
-            <div class="user-info">
-                <span id="user-name">أهلاً بك</span>
-                <div id="pioneer-tag" style="display:none">🏆 لقب ذهبي</div>
+    <main id="app-interface" class="interface-overlay" style="display: none;">
+        <header class="header-hud">
+            <div class="user-pill-hud">
+                <div class="avatar-box-hud">
+                    <img id="user-photo" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User">
+                    <div id="pioneer-badge" class="badge-hud">🏆</div>
+                </div>
+                <div class="user-meta-hud">
+                    <strong id="display-name-hud">منقذ أَزْرَد</strong>
+                    <span id="pioneer-label" class="rank-hud">عضو مؤسس</span>
+                </div>
             </div>
-            <button onclick="logout()" class="btn-logout">خروج</button>
-        </div>
-        
-        <div class="radar-space">
-            <div id="map"></div>
-            <button class="sos-button">SOS</button>
-        </div>
-    </div>
+            <div class="app-logo-mini-hud">AZRAD</div>
+        </header>
 
+        <div id="map"></div>
+
+        <div class="sos-center-hud">
+            <button id="sosBtn" class="sos-trigger-hud">
+                <div class="sos-rings-hud"></div>
+                <span class="sos-text-hud">SOS</span>
+            </button>
+        </div>
+
+        <nav class="bottom-hud-nav">
+            <button class="nav-btn-hud active"><i class="fas fa-satellite-dish"></i></button>
+            <button class="nav-btn-hud"><i class="fas fa-comments"></i></button>
+            <button class="nav-btn-hud"><i class="fas fa-user-gear"></i></button>
+        </nav>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="app.js"></script>
+
 </body>
 </html>
