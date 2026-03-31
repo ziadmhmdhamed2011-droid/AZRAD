@@ -2,99 +2,49 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>أَزْرَد | AZRAD OS</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أَزْرَد | AZRAD</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <section id="pioneer-panel" class="gold-card-container">
-        <div class="pioneer-content">
-            <div class="crown-glow">🏆</div>
-            <h2>نادي الـ <span class="gold-text">250 الأوائل</span></h2>
-            <p>سجل الآن واحجز مكانك للحصول على <strong class="gold-text">اللقب الذهبي</strong> للأبد</p>
-            <div class="slots-wrapper">
-                <div class="slots-bar"><div id="progress-fill"></div></div>
-                <small>المقاعد المتبقية: <span id="slots-left">250</span></small>
-            </div>
-        </div>
-    </section>
-
-    <section class="auth-section">
-        <div class="auth-container">
-            <h1 class="main-logo">أَزْرَد</h1>
-            <p class="tagline">سندك في كل مكان.. رادار الجدعنة الذكي</p>
-
-            <div class="manual-auth" id="auth-form">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="user-name" placeholder="الاسم الكامل" class="cyber-input">
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="user-email" placeholder="البريد الإلكتروني" class="cyber-input">
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="user-pass" placeholder="كلمة المرور" class="cyber-input">
-                </div>
-                
-                <button onclick="authWithEmail('signup')" class="btn-primary-gold">إنشاء حساب جديد</button>
-                <button onclick="toggleAuthMode()" class="btn-text-link" id="toggleText">لديك حساب؟ سجل دخول من هنا</button>
+    <div id="auth-page" class="page active">
+        <div class="auth-card">
+            <h1 class="logo">أَزْرَد</h1>
+            <p class="subtitle">نظام النجدة الذكي</p>
+            
+            <div class="input-group">
+                <input type="email" id="email" placeholder="البريد الإلكتروني">
+                <input type="password" id="pass" placeholder="كلمة المرور">
+                <button onclick="handleAuth('login')" class="btn-main">تسجيل الدخول</button>
+                <button onclick="handleAuth('signup')" class="btn-outline">إنشاء حساب جديد</button>
             </div>
 
-            <div class="separator">
-                <span>أو الدخول السريع</span>
-            </div>
+            <div class="divider">أو</div>
 
-            <div class="social-auth">
-                <button onclick="loginWithGoogle()" class="btn-google">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                    <span>متابعة باستخدام Google</span>
-                </button>
-            </div>
-
-            <p class="security-note"><i class="fas fa-shield-alt"></i> بياناتك مشفرة ومحمية بالكامل</p>
-        </div>
-    </section>
-
-    <main id="app-interface" style="display: none;">
-        <header class="app-header">
-            <div class="user-pill">
-                <div class="avatar-box">
-                    <img id="user-photo" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User">
-                    <div id="pioneer-badge" class="pioneer-indicator">🏆</div>
-                </div>
-                <div class="user-meta">
-                    <strong id="display-name-hud">بطل أَزْرَد</strong>
-                    <span id="pioneer-label" class="gold-text-rank">عضو مؤسس</span>
-                </div>
-            </div>
-            <div class="app-logo-mini">AZRAD</div>
-        </header>
-
-        <div id="map"></div>
-
-        <div class="sos-action-center">
-            <button id="sosBtn" class="sos-main-trigger">
-                <div class="sos-rings"></div>
-                <span class="sos-label">SOS</span>
+            <button onclick="loginGoogle()" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+                متابعة باستخدام جوجل
             </button>
         </div>
+    </div>
 
-        <nav class="bottom-hud">
-            <button class="nav-btn"><i class="fas fa-satellite-dish"></i><span>الرادار</span></button>
-            <button class="nav-btn"><i class="fas fa-comments"></i><span>الدردشة</span></button>
-            <button class="nav-btn"><i class="fas fa-user-gear"></i><span>حسابي</span></button>
-        </nav>
-    </main>
+    <div id="main-app" class="page">
+        <div class="top-bar">
+            <div class="user-info">
+                <span id="user-name">أهلاً بك</span>
+                <div id="pioneer-tag" style="display:none">🏆 لقب ذهبي</div>
+            </div>
+            <button onclick="logout()" class="btn-logout">خروج</button>
+        </div>
+        
+        <div class="radar-space">
+            <div id="map"></div>
+            <button class="sos-button">SOS</button>
+        </div>
+    </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="app.js"></script>
-
 </body>
 </html>
