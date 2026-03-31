@@ -16,24 +16,25 @@
 <body>
 
     <h1>🛡️ مَنصة أَزْرَد (AZRAD)</h1>
-    <p>نظام السند العالمي - موثق بالذكاء الاصطناعي</p>
+    <p>نظام السند العالمي - موثق بالنزاهة الرقمية</p>
     
     <div id="map"></div>
 
     <button class="btn-azrad" onclick="sendAzradHelp()">إرسال نداء استغاثة عالمي</button>
     <br>
-    <div class="status-bar" id="status">النظام: متصل بسيرفرات جوجل عالمياً ✅</div>
+    <div class="status-bar" id="status">الحالة: متصل بسيرفرات جوجل ✅</div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // بياناتك الحقيقية التي أحضرتها
+        // إعدادات مصنع أَزْرَد (البيانات الحقيقية الخاصة بك)
         const firebaseConfig = {
             apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
             authDomain: "azrad-global.firebaseapp.com",
             projectId: "azrad-global",
+            databaseURL: "https://azrad-global-default-rtdb.firebaseio.com", // الربط المباشر بالسيرفر
             storageBucket: "azrad-global.firebasestorage.app",
             messagingSenderId: "727549676844",
             appId: "1:727549676844:web:8b474f550e664f34397089"
@@ -42,11 +43,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // خوارزمية "بصمة الجهاز" لمنع الغش (النزاهة الرقمية)
+        // بصمة الجهاز (لحماية النظام من الغش)
         const deviceID = btoa(navigator.userAgent).substring(0, 15);
 
         window.sendAzradHelp = () => {
-            document.getElementById('status').innerText = "جاري تشفير النداء...";
+            document.getElementById('status').innerText = "جاري تشفير النداء وإرساله...";
             
             const helpRef = ref(db, 'azrad_signals');
             const newSignal = push(helpRef);
@@ -55,16 +56,17 @@
                 sender: deviceID,
                 type: "طلب مساعدة عاجلة",
                 timestamp: Date.now(),
-                location: "جاري التحديد..."
+                status: "نشط"
             }).then(() => {
-                alert("تم إرسال نداءك! بصمة جهازك الموثقة هي: " + deviceID);
+                alert("تم إرسال نداءك بنجاح! بصمتك الرقمية: " + deviceID);
                 document.getElementById('status').innerText = "تم الإرسال بنجاح ✅";
             }).catch((error) => {
-                alert("خطأ: تأكد من تفعيل Rules في Firebase إلى true");
+                alert("خطأ: تأكد من تفعيل Rules في Firebase لـ true");
+                console.error(error);
             });
         };
 
-        // تشغيل الخريطة
+        // تشغيل رادار الخريطة (الرياض كمثال مبدئي)
         var map = L.map('map').setView([24.7136, 46.6753], 3);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
     </script>
