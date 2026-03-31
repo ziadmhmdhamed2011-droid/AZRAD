@@ -12,12 +12,11 @@ import {
     ref, 
     set, 
     get, 
-    child, 
     update, 
     increment 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// --- 1. إعدادات Firebase (تأكد من مطابقتها لمشروعك) ---
+// --- [1] إعدادات فايربيز (تأكد من مطابقتها لبياناتك) ---
 const firebaseConfig = {
     apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
     authDomain: "azrad-global.firebaseapp.com",
@@ -32,159 +31,125 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// --- 2. تحكم الواجهة (UI Management) ---
-
-// فتح وإغلاق الـ Modal
-window.openAuthModal = (mode) => {
+// --- [2] التحكم في المودال والتبديل (UI Logic) ---
+window.handleModal = (action, type) => {
     const modal = document.getElementById('auth-modal');
-    const signupSec = document.getElementById('signup-section');
-    const loginSec = document.getElementById('login-section');
+    const signupBox = document.getElementById('signup-box');
+    const loginBox = document.getElementById('login-box');
 
-    modal.classList.add('active');
-    if (mode === 'signup') {
-        signupSec.style.display = 'block';
-        loginSec.style.display = 'none';
+    if (action === 'open') {
+        modal.classList.add('active');
+        if (type === 'signup') {
+            signupBox.style.display = 'block';
+            loginBox.style.display = 'none';
+        } else {
+            signupBox.style.display = 'none';
+            loginBox.style.display = 'block';
+        }
     } else {
-        signupSec.style.display = 'none';
-        loginSec.style.display = 'block';
+        modal.classList.remove('active');
     }
 };
 
-window.closeAuthModal = () => {
-    document.getElementById('auth-modal').classList.remove('active');
-};
-
-// التبديل بين التبويبات (Map, Chat, etc.)
-window.switchTab = (tabName) => {
-    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    console.log("Switched to:", tabName);
-    // هنا هنضيف مستقبلاً إظهار وإخفاء الشاشات
-};
-
-// --- 3. نظام الدخول (Authentication Logic) ---
-
-window.runAuth = async (type) => {
+// --- [3] منطق التسجيل والدخول (Auth Logic) ---
+window.processAuth = async (type) => {
     try {
         if (type === 'signup') {
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
 
-            if (!name || !email || !pass) return alert("يا بطل، الخانات دي أمانة.. املأها كلها!");
-            
+            if (!name || !email || !pass) return alert("البيانات ناقصة يا بطل!");
+            if (pass.length < 6) return alert("الباسورد لازم يكون 6 أرقام أو حروف على الأقل");
+
             const res = await createUserWithEmailAndPassword(auth, email, pass);
-            await processPioneerRegistration(res.user, name);
+            await checkAndSavePioneer(res.user, name);
         } else {
             const email = document.getElementById('log-email').value;
             const pass = document.getElementById('log-pass').value;
-            
             const res = await signInWithEmailAndPassword(auth, email, pass);
-            loadUserAndLaunch(res.user.uid);
+            loadUserData(res.user.uid);
         }
-    } catch (error) {
-        alert("عذراً، فيه مشكلة: " + error.message);
+    } catch (e) {
+        alert("خطأ في العملية: " + e.message);
     }
 };
 
-window.runGoogleAuth = async () => {
+window.processGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
         const res = await signInWithPopup(auth, provider);
-        await processPioneerRegistration(res.user, res.user.displayName);
-    } catch (error) {
-        alert("فشل الدخول بجوجل!");
+        await checkAndSavePioneer(res.user, res.user.displayName);
+    } catch (e) {
+        alert("فشل تسجيل جوجل");
     }
 };
 
-// --- 4. معالجة الـ 250 الأوائل والـ Database ---
-
-async function processPioneerRegistration(user, name) {
+// --- [4] إدارة نظام الـ 250 الأوائل ---
+async function checkAndSavePioneer(user, displayName) {
     const userRef = ref(db, 'users/' + user.uid);
     const snap = await get(userRef);
 
     if (!snap.exists()) {
         const statsRef = ref(db, 'stats');
         const statsSnap = await get(statsRef);
-        let currentCount = (statsSnap.val() && statsSnap.val().usersCount) || 0;
+        let count = (statsSnap.val() && statsSnap.val().usersCount) || 0;
 
-        const isPioneer = currentCount < 250;
+        const isPioneer = count < 250;
         const userData = {
             uid: user.uid,
-            name: name,
+            name: displayName,
             email: user.email,
             isPioneer: isPioneer,
-            joinOrder: isPioneer ? currentCount + 1 : null,
-            level: 1,
-            points: 0
+            joinOrder: isPioneer ? count + 1 : null,
+            regDate: new Date().toISOString()
         };
 
         await set(userRef, userData);
-        if (isPioneer) {
-            await update(statsRef, { usersCount: increment(1) });
-        }
-        launchApp(userData);
+        if (isPioneer) await update(statsRef, { usersCount: increment(1) });
+        enterTheApp(userData);
     } else {
-        launchApp(snap.val());
+        enterTheApp(snap.val());
     }
 }
 
-async function loadUserAndLaunch(uid) {
+async function loadUserData(uid) {
     const snap = await get(ref(db, 'users/' + uid));
-    if (snap.exists()) {
-        launchApp(snap.val());
-    } else {
-        alert("بياناتك مش موجودة في الرادار!");
-    }
+    if (snap.exists()) enterTheApp(snap.val());
 }
 
-// --- 5. تشغيل الواجهة (Launch HUD) ---
-
-function launchApp(userData) {
-    // إخفاء شاشات الدخول
+// --- [5] تشغيل واجهة التطبيق (HUD Activation) ---
+function enterTheApp(data) {
     document.getElementById('pioneer-gate').classList.remove('active');
-    closeAuthModal();
+    handleModal('close');
+    document.getElementById('main-app').classList.add('active');
     
-    // إظهار الواجهة الرئيسية
-    const appUI = document.getElementById('app-interface');
-    appUI.style.display = 'block';
+    document.getElementById('u-name').innerText = data.name;
     
-    // تحديث بيانات الـ HUD
-    document.getElementById('display-name-hud').innerText = userData.name;
-    
-    if (userData.isPioneer) {
-        document.getElementById('pioneer-badge').style.display = 'block';
-        document.getElementById('pioneer-label').innerText = `عضو مؤسس #${userData.joinOrder}`;
-        document.getElementById('pioneer-label').classList.add('gold-gradient-text');
+    if (data.isPioneer) {
+        document.getElementById('pioneer-icon').style.display = 'block';
+        document.getElementById('u-rank').innerText = `عضو مؤسس #${data.joinOrder}`;
+        document.getElementById('u-rank').style.color = "#D4AF37";
     }
 
-    // تشغيل الخريطة (الرادار)
-    initRadarMap();
+    startRadar();
 }
 
-function initRadarMap() {
-    // إحداثيات افتراضية (مصر مثلاً، وتقدر تخليها GPS لاحقاً)
-    const map = L.map('map', { zoomControl: false }).setView([30.0444, 31.2357], 13);
+function startRadar() {
+    // إحداثيات افتراضية (تقدر تخليها GPS بالـ Navigator API)
+    const map = L.map('map', { zoomControl: false }).setView([24.7136, 46.6753], 13);
     
-    // ستايل الخريطة الأسود الفخم من CartoDB
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: 'AZRAD RADAR OS'
+        attribution: 'AZRAD OS'
     }).addTo(map);
 
-    // إضافة ماركر لموقعك الحالي
-    L.circleMarker([30.0444, 31.2357], {
-        radius: 10,
-        fillColor: "#D4AF37",
-        color: "#fff",
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.8
-    }).addTo(map).bindPopup("أنت هنا (الرادار يعمل)");
+    // ماركر الموقع الحالي بشكل راداري
+    L.circleMarker([24.7136, 46.6753], {
+        radius: 12, fillColor: "#D4AF37", color: "#fff", weight: 2, fillOpacity: 0.8
+    }).addTo(map).bindPopup("رادارك يعمل بنجاح").openPopup();
 }
 
-// فحص حالة الدخول تلقائياً (Session Persistence)
+// فحص الجلسة (لو المستخدم مسجل دخول أصلاً افتح له التطبيق)
 onAuthStateChanged(auth, (user) => {
-    if (user) {
-        loadUserAndLaunch(user.uid);
-    }
+    if (user) loadUserData(user.uid);
 });
