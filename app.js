@@ -6,7 +6,8 @@ import {
     signInWithEmailAndPassword, 
     signInWithPopup, 
     GoogleAuthProvider,
-    onAuthStateChanged 
+    onAuthStateChanged,
+    signOut // <--- ضيف دي هنا
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
     getDatabase, 
