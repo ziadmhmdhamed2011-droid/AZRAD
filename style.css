@@ -65,10 +65,11 @@ body {
     overflow: hidden;
 }
 
+/* تأكيد ظهور الشاشات النشطة */
 .screen.active {
-    display: flex;
-    flex-direction: column;
-    animation: screenEnter 0.8s forwards;
+    display: flex !important; 
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 @keyframes screenEnter {
