@@ -1,17 +1,18 @@
 /**
- * AZRAD RADAR OS - THE MASTER CORE
- * نظام تشغيل أزرد - الإصدار الملكي
+ * AZRAD OS - THE MASTER CORE ARCHITECTURE
+ * نظام تشغيل أزرد - الإصدار السيادي المتكامل
+ * المبرمج: Gemini AI Collaborative Engine
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
     getAuth, 
+    onAuthStateChanged, 
     signInWithEmailAndPassword, 
     createUserWithEmailAndPassword, 
-    onAuthStateChanged, 
-    signOut,
-    GoogleAuthProvider,
-    signInWithPopup
+    signOut, 
+    GoogleAuthProvider, 
+    signInWithPopup 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
     getDatabase, 
@@ -23,7 +24,7 @@ import {
     increment 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// [1] إعدادات Firebase (مستخرجة من ملفاتك)
+// [1] الإعدادات المركزية (Firebase Config)
 const firebaseConfig = {
     apiKey: "AIzaSyBDWT4ygUDKlmuelK6EXcyigkeNyQNCFtjW",
     authDomain: "azrad-global.firebaseapp.com",
@@ -34,178 +35,171 @@ const firebaseConfig = {
     appId: "1:727549676844:web:8b474f550e664f34397089"
 };
 
-// تشغيل الخدمات
+// [2] تشغيل المحركات الأساسية
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 const googleProvider = new GoogleAuthProvider();
 
 /**
- * [2] المحرك الرئيسي للواجهة (UI Engine)
+ * [3] فئة إدارة النظام (System Control Class)
  */
-const ui = {
-    screens: document.querySelectorAll('.screen'),
-    loader: document.getElementById('bootloader'),
-    
-    // الانتقال بين الشاشات بسلاسة
-    showScreen(screenId) {
+class AzradOS {
+    constructor() {
+        this.loader = document.getElementById('bootloader');
+        this.screens = document.querySelectorAll('.screen');
+        this.init();
+    }
+
+    init() {
+        this.handleAuth();
+        this.startClock();
+        this.syncPioneers();
+    }
+
+    // الانتقال السلس بين الشاشات
+    switchScreen(screenId) {
         this.screens.forEach(s => s.classList.remove('active'));
         const target = document.getElementById(screenId);
-        if (target) target.classList.add('active');
-    },
-
-    // نظام التنبيهات (Toasts)
-    showToast(message, type = 'info') {
-        const container = document.getElementById('os-toast-container');
-        const toast = document.createElement('div');
-        toast.className = `os-toast ${type}`;
-        toast.innerHTML = `<i class="fas fa-info-circle"></i> <span>${message}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
-    },
-
-    // فتح وغلق نافذة الدخول
-    showAuthModal(mode) {
-        const overlay = document.getElementById('auth-modal-overlay');
-        overlay.style.display = 'flex';
-        document.getElementById('signup-form-section').classList.toggle('active', mode === 'signup');
-        document.getElementById('login-form-section').classList.toggle('active', mode === 'login');
-    },
-
-    closeAuthModal() {
-        document.getElementById('auth-modal-overlay').style.display = 'none';
-    }
-};
-
-/**
- * [3] محرك الخريطة والرادار (Radar Engine)
- */
-let map;
-function initRadar(lat = 30.0444, lng = 31.2357) {
-    if (map) return; // منع إعادة التحميل
-    
-    map = L.map('map', {
-        zoomControl: false,
-        attributionControl: false
-    }).setView([lat, lng], 13);
-
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-    // إضافة تأثير نبض لموقع المستخدم
-    const userIcon = L.divIcon({
-        className: 'user-radar-pulse',
-        html: '<div class="radar-dot"></div>',
-        iconSize: [20, 20]
-    });
-    L.marker([lat, lng], { icon: userIcon }).addTo(map);
-}
-
-/**
- * [4] نظام الـ 250 بطل (Pioneer Logic)
- */
-function syncPioneerCount() {
-    const countRef = ref(db, 'system/pioneer_slots');
-    onValue(countRef, (snapshot) => {
-        const count = snapshot.val() || 250;
-        document.getElementById('pioneer-count').innerText = count;
-    });
-}
-
-/**
- * [5] محرك المصادقة (Auth Engine)
- */
-window.authLogic = {
-    async processAuth(mode) {
-        const email = mode === 'signup' ? document.getElementById('reg-email').value : document.getElementById('log-email').value;
-        const pass = mode === 'signup' ? document.getElementById('reg-pass').value : document.getElementById('log-pass').value;
-        const name = mode === 'signup' ? document.getElementById('reg-name').value : "";
-
-        try {
-            if (mode === 'signup') {
-                const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-                await set(ref(db, `users/${userCred.user.uid}`), {
-                    name: name,
-                    email: email,
-                    rank: "بطل مؤسس",
-                    joinedAt: Date.now()
-                });
-                await update(ref(db, 'system'), { pioneer_slots: increment(-1) });
-                ui.showToast("تم توثيق انضمامك للنخبة!", "success");
-            } else {
-                await signInWithEmailAndPassword(auth, email, pass);
-                ui.showToast("تم تأكيد البصمة.. مرحباً بك", "success");
-            }
-            ui.closeAuthModal();
-        } catch (error) {
-            ui.showToast(`خطأ: ${error.message}`, "error");
+        if (target) {
+            target.classList.add('active');
+            console.log(`System: Switched to ${screenId}`);
         }
-    },
+    }
 
-    async processGoogle() {
+    // إخفاء شاشة التحميل (Bootloader)
+    terminateLoader() {
+        if (this.loader) {
+            this.loader.style.transition = "opacity 1s ease";
+            this.loader.style.opacity = "0";
+            setTimeout(() => this.loader.style.display = 'none', 1000);
+        }
+    }
+
+    // إدارة حالة المستخدم
+    handleAuth() {
+        onAuthStateChanged(auth, async (user) => {
+            setTimeout(async () => {
+                if (user) {
+                    await this.loadUserProfile(user);
+                    this.switchScreen('os-interface');
+                    this.initRadar();
+                } else {
+                    this.switchScreen('prime-gate');
+                }
+                this.terminateLoader();
+            }, 2500); // وقت التحميل الفخم
+        });
+    }
+
+    async loadUserProfile(user) {
+        const userRef = ref(db, `users/${user.uid}`);
+        const snapshot = await get(userRef);
+        const userData = snapshot.val();
+
+        document.getElementById('u-name').innerText = userData?.name || user.displayName || "بطل أزرد";
+        document.getElementById('u-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=D4AF37&color=001f3f`;
+    }
+
+    // مزامنة عدد الـ 250 المتبقي
+    syncPioneers() {
+        const pRef = ref(db, 'system/pioneer_slots');
+        onValue(pRef, (snap) => {
+            const count = snap.val() || 250;
+            const element = document.getElementById('pioneer-count');
+            if (element) element.innerText = count;
+        });
+    }
+
+    // محرك الساعة الرقمية
+    startClock() {
+        setInterval(() => {
+            const clock = document.getElementById('os-clock');
+            if (clock) {
+                clock.innerText = new Date().toLocaleTimeString('ar-EG', { hour12: false });
+            }
+        }, 1000);
+    }
+
+    // تشغيل الرادار (Leaflet Map)
+    initRadar() {
+        if (typeof L === 'undefined') return;
+        const mapContainer = document.getElementById('map');
+        if (!mapContainer || mapContainer._leaflet_id) return;
+
+        const map = L.map('map', { zoomControl: false }).setView([30.0444, 31.2357], 13);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+        
+        // جلب موقع المستخدم الحقيقي
+        navigator.geolocation.getCurrentPosition(pos => {
+            const { latitude, longitude } = pos.coords;
+            map.setView([latitude, longitude], 15);
+            L.circle([latitude, longitude], {
+                color: '#D4AF37',
+                fillColor: '#D4AF37',
+                fillOpacity: 0.2,
+                radius: 500
+            }).addTo(map);
+        });
+    }
+}
+
+/**
+ * [4] فئة العمليات الأمنية (Authentication & Logic)
+ */
+window.authManager = {
+    // الدخول بجوجل (بعد تفعيل الـ Project Name في Firebase)
+    async signInWithGoogle() {
         try {
             await signInWithPopup(auth, googleProvider);
-            ui.closeAuthModal();
         } catch (error) {
-            ui.showToast("فشل الربط مع جوجل");
+            console.error("Google Auth Error:", error);
+            alert("خطأ: تأكد من تفعيل Project Name في إعدادات Firebase");
         }
     },
 
-    processLogout() {
+    // إنشاء حساب جديد
+    async signUp() {
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-pass').value;
+
+        if (!email || !pass) return alert("برجاء إدخال البيانات");
+
+        try {
+            const res = await createUserWithEmailAndPassword(auth, email, pass);
+            await set(ref(db, `users/${res.user.uid}`), {
+                name: name,
+                email: email,
+                role: "Pioneer",
+                joinedAt: Date.now()
+            });
+            await update(ref(db, 'system'), { pioneer_slots: increment(-1) });
+        } catch (e) { alert(e.message); }
+    },
+
+    // تسجيل الدخول العادي
+    async login() {
+        const email = document.getElementById('log-email').value;
+        const pass = document.getElementById('log-pass').value;
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch (e) { alert("خطأ في البيانات"); }
+    },
+
+    // تسجيل الخروج
+    logout() {
         signOut(auth).then(() => location.reload());
     }
 };
 
-/**
- * [6] إدارة حالة النظام (System State)
- */
-/**
- * [6] إدارة حالة النظام المطورة - حل مشكلة الاختفاء
- */
-onAuthStateChanged(auth, async (user) => {
-    console.log("Current User State:", user ? "Logged In" : "Logged Out");
-
-    // ندي وقت للأنيميشن بتاع الـ Bootloader
-    setTimeout(async () => {
-        const loader = document.getElementById('bootloader');
-        if (loader) loader.style.setProperty('display', 'none', 'important');
-
-        if (user) {
-            // لو المستخدم مسجل دخول
-            ui.showScreen('os-interface');
-            ui.showToast("تم الاتصال بالقاعدة المركزية", "success");
-            
-            try {
-                const userRef = ref(db, `users/${user.uid}`);
-                const snap = await get(userRef);
-                const data = snap.val();
-
-                // تحديث البيانات في الـ HUD
-                document.getElementById('u-name').innerText = data?.name || user.displayName || "بطل مجهول";
-                if(user.photoURL) document.getElementById('u-avatar').src = user.photoURL;
-
-                // تشغيل الخريطة
-                navigator.geolocation.getCurrentPosition(
-                    p => initRadar(p.coords.latitude, p.coords.longitude),
-                    () => initRadar() // لو رفض اللوكيشن يشغل الخريطة الافتراضية
-                );
-            } catch (e) {
-                console.error("Error fetching user data:", e);
-            }
-        } else {
-            // لو مش مسجل دخول أو حصل خطأ، ارجع لشاشة البداية فوراً
-            ui.showScreen('prime-gate');
-        }
-    }, 2500); // تقليل وقت التحميل لسرعة الاستجابة
-});
-
-// تشغيل الساعة والعدادات
-setInterval(() => {
-    const now = new Date();
-    document.getElementById('os-clock').innerText = now.toLocaleTimeString('en-GB');
-}, 1000);
-
-syncPioneerCount();
-
-// ربط الأزرار بالنافذة العالمية
-window.ui = ui;
-window.auth = window.authLogic;
+// [5] تفعيل النظام عند التحميل
+const core = new AzradOS();
+window.ui = {
+    showAuthModal: (mode) => {
+        document.getElementById('auth-modal-overlay').style.display = 'flex';
+        document.getElementById('signup-form-section').style.display = mode === 'signup' ? 'block' : 'none';
+        document.getElementById('login-form-section').style.display = mode === 'login' ? 'block' : 'none';
+    },
+    closeAuthModal: () => document.getElementById('auth-modal-overlay').style.display = 'none'
+};
