@@ -1,34 +1,49 @@
-/* --- 1. المتغيرات الإمبراطورية (The Royal Palette) --- */
+/* * AZRAD OS - THE COMPLETE ROYAL STYLE SHEET
+ * Version: 5.0 (Full Architecture)
+ * Design Pattern: Royal Dark Mode with Glassmorphism
+ */
+
+/* ==========================================================================
+   1. المتغيرات الإمبراطورية (The Palette)
+   ========================================================================== */
 :root {
-    /* الألوان الأساسية من تصميمك */
-    --royal-blue: #003366;
-    --deep-navy: #001f3f;
-    --gold: #D4AF37;
-    --gold-glow: 0 0 15px rgba(212, 175, 55, 0.5);
+    /* الألوان الأساسية من تصميم الصورة */
+    --royal-blue: #003366;    /* الأزرق الملكي للخلفية */
+    --deep-navy: #001f3f;     /* الأزرق الداكن جداً للعمق */
+    --gold: #D4AF37;          /* الذهبي للعناصر الهامة واللوجو */
+    --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+    
+    /* الألوان الوظيفية */
     --white: #ffffff;
-    --glass: rgba(255, 255, 255, 0.1);
+    --red-sos: #ff0000;
+    
+    /* تأثيرات الزجاج (Glassmorphism) */
+    --glass: rgba(255, 255, 255, 0.05);
     --glass-dark: rgba(0, 0, 0, 0.6);
+    --border: 1px solid rgba(212, 175, 55, 0.3);
+    --gold-glow: 0 0 15px rgba(212, 175, 55, 0.5);
     
     /* الخطوط */
     --cairo: 'Cairo', sans-serif;
     --orbitron: 'Orbitron', sans-serif;
     
-    /* التأثيرات */
+    /* الأنيميشن والأبعاد */
     --transition-fast: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    --border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-/* --- 2. التصفير والتأسيس (Reset & Core) --- */
+/* ==========================================================================
+   2. التصفير والتأسيس (Reset & Core)
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* منع الفلاش على الموبايل */
 }
 
 body {
-    background-color: var(--deep-navy);
+    background-color: var(--royal-blue); /* خلفية الشاشة زرقاء ملكية */
     color: var(--white);
     font-family: var(--cairo);
     overflow: hidden; /* لمنع السكرول العشوائي في الـ OS */
@@ -37,7 +52,9 @@ body {
     width: 100vw;
 }
 
-/* --- 3. شاشات النظام (OS Screens Logic) --- */
+/* ==========================================================================
+   3. شاشات النظام (OS Screens Logic)
+   ========================================================================== */
 .screen {
     position: fixed;
     inset: 0;
@@ -45,7 +62,6 @@ body {
     height: 100%;
     display: none; /* مخفي افتراضياً */
     z-index: 10;
-    background: var(--deep-navy);
     overflow: hidden;
 }
 
@@ -60,7 +76,9 @@ body {
     to { opacity: 1; transform: scale(1); filter: blur(0); }
 }
 
-/* --- 4. شاشة البداية (Prime Gate) --- */
+/* ==========================================================================
+   4. شاشة البوابة (Prime Gate)
+   ========================================================================== */
 #prime-gate {
     background: radial-gradient(circle at center, var(--royal-blue) 0%, var(--deep-navy) 100%);
     justify-content: center;
@@ -86,7 +104,7 @@ body {
     gap: 30px;
 }
 
-/* --- 5. اللوجو الجليتش (Glitch Logo) --- */
+/* --- 4.1 اللوجو الجليتش (Glitch Logo) --- */
 .glitch-logo {
     font-family: var(--cairo);
     font-size: 5rem;
@@ -129,7 +147,7 @@ body {
     margin-top: -10px;
 }
 
-/* --- 6. نظام الـ 250 المتبقي (Pioneer Tag) --- */
+/* --- 4.2 نظام الـ 250 المتبقي (Pioneer Tag) --- */
 .pioneer-tag {
     background: rgba(212, 175, 55, 0.1);
     border: var(--border);
@@ -157,7 +175,7 @@ body {
     box-shadow: 0 0 10px #00ff00;
 }
 
-/* --- 7. الأزرار الميجا (Mega Buttons) --- */
+/* --- 4.3 الأزرار الميجا (Mega Buttons) --- */
 .auth-action-hub {
     width: 100%;
     display: flex;
@@ -206,7 +224,240 @@ body {
     border-color: var(--gold);
 }
 
-/* --- 8. شاشة الـ Bootloader (التحميل) --- */
+/* ==========================================================================
+   5. نظام الـ HUD العلوي (Advanced Top HUD)
+   ========================================================================== */
+.os-header-advanced {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to bottom, var(--glass-dark), transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.user-info-pill {
+    background: var(--glass);
+    border: var(--border);
+    padding: 5px 15px 5px 8px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition-fast);
+}
+
+.user-header-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    object-fit: cover;
+}
+
+.user-header-name {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--white);
+}
+
+.os-clock-advanced {
+    font-family: var(--orbitron);
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   6. نافذة المصادقة (Auth Modal & Google Sync)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 5, 15, 0.95);
+    z-index: 1000;
+    display: none; /* يتم تفعيله بالـ JS */
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(20px);
+}
+
+.auth-card-expanded {
+    background: var(--royal-blue); /* لون الكارد مثل تصميم الصورة */
+    width: 90%;
+    max-width: 420px;
+    padding: 40px 30px;
+    border-radius: 35px;
+    border: var(--border);
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: modalSlideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.cyber-input-group { margin-bottom: 20px; }
+
+.cyber-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--gold);
+}
+
+.cyber-input {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    color: var(--white);
+    font-family: var(--cairo);
+}
+
+.cyber-input:focus { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+
+.btn-auth-execute {
+    width: 100%;
+    padding: 18px;
+    background: var(--gold);
+    color: var(--deep-navy);
+    border: none;
+    border-radius: 15px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.auth-divider {
+    margin: 25px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-google-sync-large {
+    width: 100%;
+    padding: 15px;
+    background: var(--white);
+    border-radius: 15px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   7. نظام الـ SOS والنبضات (Pulse rings)
+   ========================================================================== */
+.sos-system-core {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.sos-btn-major {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+    border: 4px solid #000;
+    border-radius: 50%;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 5;
+}
+
+.sos-btn-major:active { transform: scale(0.9) translateY(5px); }
+
+.sos-btn-text { font-family: var(--orbitron); font-size: 1.4rem; font-weight: 900; }
+
+.sos-pulse-rings .pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid #ff0000;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.r1 { animation: pulseRing 3s infinite 0s; }
+.r2 { animation: pulseRing 3s infinite 1s; }
+.r3 { animation: pulseRing 3s infinite 2s; }
+
+@keyframes pulseRing {
+    0% { width: 90px; height: 90px; opacity: 0.8; }
+    100% { width: 250px; height: 250px; opacity: 0; }
+}
+
+/* ==========================================================================
+   8. القائمة السفلية العائمة (The OS Dock)
+   ========================================================================== */
+.os-dock-expanded {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    background: rgba(0, 31, 63, 0.85); /* Deep Navy Glass */
+    backdrop-filter: blur(25px);
+    border-radius: 30px;
+    padding: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    z-index: 1000;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.dock-list-wrapper { display: flex; justify-content: space-around; }
+
+.dock-item {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 10px;
+    flex: 1;
+}
+
+.dock-item.active {
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* ==========================================================================
+   9. شاشة الـ Bootloader (التحميل)
+   ========================================================================== */
 #bootloader {
     z-index: 9999;
     background: #000;
@@ -235,459 +486,14 @@ body {
     100% { transform: rotateY(360deg); }
 }
 
-.bootloader-progress-bar {
-    width: 250px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    margin-top: 40px;
-    overflow: hidden;
-}
-
 .progress-fill {
     width: 0%;
     height: 100%;
     background: var(--gold);
-    box-shadow: 0 0 15px var(--gold);
     animation: fillProgress 3s ease-in-out forwards;
 }
 
 @keyframes fillProgress {
     0% { width: 0%; }
-    50% { width: 70%; }
     100% { width: 100%; }
-}
-/* --- 9. نظام الـ HUD العلوي (Advanced Top HUD) --- */
-.os-header-advanced {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background: linear-gradient(to bottom, var(--glass-dark), transparent);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 25px;
-    z-index: 100;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-}
-
-.user-info-pill {
-    background: var(--glass);
-    border: var(--border);
-    padding: 5px 15px 5px 8px;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: var(--transition-fast);
-}
-
-.user-info-pill:hover {
-    background: rgba(212, 175, 55, 0.1);
-}
-
-.user-header-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 2px solid var(--gold);
-    object-fit: cover;
-}
-
-.user-meta-stack {
-    display: flex;
-    flex-direction: column;
-}
-
-.user-header-name {
-    font-weight: 800;
-    font-size: 0.9rem;
-    color: var(--white);
-}
-
-.user-header-rank {
-    font-size: 0.7rem;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* --- 10. الساعة الرقمية (OS Digital Clock) --- */
-.os-clock-advanced {
-    font-family: var(--orbitron);
-    font-size: 1.4rem;
-    font-weight: 900;
-    color: var(--white);
-    letter-spacing: 3px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    background: var(--glass);
-    padding: 5px 20px;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* --- 11. نافذة المصادقة (The High-Tech Auth Modal) --- */
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 5, 15, 0.95);
-    z-index: 1000;
-    display: none; /* يتم تفعيله بالـ JS */
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(20px);
-}
-
-.auth-card-expanded {
-    background: var(--royal-blue);
-    width: 90%;
-    max-width: 420px;
-    padding: 40px 30px;
-    border-radius: 35px;
-    border: var(--border);
-    position: relative;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(212, 175, 55, 0.1);
-    animation: modalSlideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes modalSlideUp {
-    from { transform: translateY(50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-close-icon {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: none;
-    border: none;
-    color: var(--white);
-    font-size: 1.5rem;
-    cursor: pointer;
-    opacity: 0.5;
-    transition: 0.3s;
-}
-
-.modal-close-icon:hover { opacity: 1; color: var(--gold); }
-
-.auth-title {
-    font-size: 1.8rem;
-    font-weight: 900;
-    margin-bottom: 5px;
-    color: var(--white);
-}
-
-.auth-subtitle {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 30px;
-}
-
-/* --- 12. مدخلات البيانات الكايبرنيتية (Cyber Inputs) --- */
-.cyber-input-group {
-    margin-bottom: 20px;
-    text-align: right;
-}
-
-.cyber-label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--gold);
-    margin-right: 5px;
-}
-
-.cyber-input {
-    width: 100%;
-    padding: 16px 20px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    color: var(--white);
-    font-family: var(--cairo);
-    font-size: 1rem;
-    transition: var(--transition-fast);
-}
-
-.cyber-input:focus {
-    outline: none;
-    border-color: var(--gold);
-    background: rgba(212, 175, 55, 0.05);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-}
-
-/* --- 13. أزرار التنفيذ (Action Buttons) --- */
-.btn-auth-execute {
-    width: 100%;
-    padding: 18px;
-    background: var(--gold);
-    color: var(--deep-navy);
-    border: none;
-    border-radius: 15px;
-    font-weight: 900;
-    font-size: 1.1rem;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: var(--transition-fast);
-}
-
-.btn-auth-execute:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 20px var(--gold);
-}
-
-.auth-divider {
-    margin: 25px 0;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 0.8rem;
-}
-
-.auth-divider::before, .auth-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.btn-google-sync-large {
-    width: 100%;
-    padding: 15px;
-    background: var(--white);
-    color: #000;
-    border-radius: 15px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-weight: 800;
-    font-family: var(--cairo);
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-google-sync-large:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-}
-/* --- 14. نظام الرادار والخرائط (Radar & Map Graphics) --- */
-.radar-map-full {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: var(--deep-navy);
-}
-
-/* تأثير التعتيم الجانبي (Vignette) لإعطاء عمق للرادار */
-.radar-vignette-effect {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
-}
-
-/* حلقة البوصلة المتحركة */
-.os-compass-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80vw;
-    height: 80vw;
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 3;
-}
-
-.os-compass-ring::after {
-    content: "";
-    position: absolute;
-    inset: -10px;
-    border: 2px dashed rgba(212, 175, 55, 0.1);
-    border-radius: 50%;
-    animation: rotate 20s linear infinite;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* خط المسح الراداري (Scan Line) */
-.os-radar-scan-line {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40vw;
-    height: 40vw;
-    background: conic-gradient(from 0deg, transparent 0%, rgba(212, 175, 55, 0.2) 100%);
-    transform-origin: top left;
-    animation: scanning 4s linear infinite;
-    z-index: 3;
-    pointer-events: none;
-    border-radius: 50%;
-}
-
-@keyframes scanning {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* --- 15. نظام الـ SOS المركزي (The Heart of AZRAD) --- */
-.sos-system-core {
-    position: fixed;
-    bottom: 120px; /* فوق القائمة السفلية */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-}
-
-.sos-btn-major {
-    width: 90px;
-    height: 90px;
-    background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
-    border: 4px solid #000;
-    border-radius: 50%;
-    color: var(--white);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    z-index: 5;
-}
-
-.sos-btn-major:active {
-    transform: scale(0.9) translateY(5px);
-}
-
-.sos-btn-text {
-    font-family: var(--orbitron);
-    font-size: 1.4rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-.sos-btn-subtext {
-    font-size: 0.6rem;
-    font-weight: 700;
-    opacity: 0.8;
-}
-
-/* حلقات النبض (Pulse Rings) */
-.sos-pulse-rings .pulse-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 2px solid #ff0000;
-    border-radius: 50%;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.r1 { animation: pulseRing 3s infinite 0s; }
-.r2 { animation: pulseRing 3s infinite 1s; }
-.r3 { animation: pulseRing 3s infinite 2s; }
-
-@keyframes pulseRing {
-    0% { width: 90px; height: 90px; opacity: 0.8; }
-    100% { width: 250px; height: 250px; opacity: 0; }
-}
-
-/* --- 16. القائمة السفلية العائمة (The OS Dock) --- */
-.os-dock-expanded {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 450px;
-    background: rgba(0, 31, 63, 0.85); /* Deep Navy Glass */
-    backdrop-filter: blur(25px);
-    border-radius: 30px;
-    padding: 10px;
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    z-index: 1000;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-}
-
-.dock-list-wrapper {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.dock-item {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-    padding: 10px;
-    flex: 1;
-}
-
-.dock-item i {
-    font-size: 1.4rem;
-}
-
-.dock-item-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-}
-
-.dock-item.active {
-    color: var(--gold);
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-.dock-item.active i {
-    transform: translateY(-5px);
-}
-
-/* --- 17. نظام التنبيهات (OS Toast Messages) --- */
-.toast-system-container {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.os-toast {
-    background: var(--glass-dark);
-    border-right: 4px solid var(--gold);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-    font-weight: 700;
-    animation: toastSlideIn 0.4s ease forwards;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-@keyframes toastSlideIn {
-    from { transform: translateX(120%); }
-    to { transform: translateX(0); }
 }
