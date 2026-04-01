@@ -158,28 +158,44 @@ window.authLogic = {
 /**
  * [6] إدارة حالة النظام (System State)
  */
+/**
+ * [6] إدارة حالة النظام المطورة - حل مشكلة الاختفاء
+ */
 onAuthStateChanged(auth, async (user) => {
-    // إخفاء الـ Bootloader بعد 3 ثواني
-    setTimeout(() => {
-        ui.loader.style.display = 'none';
+    console.log("Current User State:", user ? "Logged In" : "Logged Out");
+
+    // ندي وقت للأنيميشن بتاع الـ Bootloader
+    setTimeout(async () => {
+        const loader = document.getElementById('bootloader');
+        if (loader) loader.style.setProperty('display', 'none', 'important');
+
         if (user) {
+            // لو المستخدم مسجل دخول
             ui.showScreen('os-interface');
-            const userRef = ref(db, `users/${user.uid}`);
-            get(userRef).then(snap => {
+            ui.showToast("تم الاتصال بالقاعدة المركزية", "success");
+            
+            try {
+                const userRef = ref(db, `users/${user.uid}`);
+                const snap = await get(userRef);
                 const data = snap.val();
+
+                // تحديث البيانات في الـ HUD
                 document.getElementById('u-name').innerText = data?.name || user.displayName || "بطل مجهول";
-                document.getElementById('u-avatar').src = user.photoURL || "https://ui-avatars.com/api/?name=" + (data?.name || "U");
-                
-                // تشغيل الرادار بموقع افتراضي أو حقيقي
+                if(user.photoURL) document.getElementById('u-avatar').src = user.photoURL;
+
+                // تشغيل الخريطة
                 navigator.geolocation.getCurrentPosition(
                     p => initRadar(p.coords.latitude, p.coords.longitude),
-                    () => initRadar()
+                    () => initRadar() // لو رفض اللوكيشن يشغل الخريطة الافتراضية
                 );
-            });
+            } catch (e) {
+                console.error("Error fetching user data:", e);
+            }
         } else {
+            // لو مش مسجل دخول أو حصل خطأ، ارجع لشاشة البداية فوراً
             ui.showScreen('prime-gate');
         }
-    }, 3000);
+    }, 2500); // تقليل وقت التحميل لسرعة الاستجابة
 });
 
 // تشغيل الساعة والعدادات
