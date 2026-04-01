@@ -1,22 +1,31 @@
 /**
  * AZRAD RADAR OS - THE MASTER CORE
- * Version: 5.0 (Final Architecture)
- * Modules: Auth, Geo-Intelligence, UI-FX, Pioneer-System
+ * نظام تشغيل أزرد - الإصدار الملكي
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
-    getAuth, onAuthStateChanged, createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, 
-    signOut, sendPasswordResetEmail 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    onAuthStateChanged, 
+    signOut,
+    GoogleAuthProvider,
+    signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
-    getDatabase, ref, set, get, update, increment, onValue 
+    getDatabase, 
+    ref, 
+    set, 
+    get, 
+    onValue, 
+    update, 
+    increment 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// [1] الإعدادات المركزية (إياك أن تغيرها)
+// [1] إعدادات Firebase (مستخرجة من ملفاتك)
 const firebaseConfig = {
-    apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
+    apiKey: "AIzaSyBDWT4ygUDKlmuelK6EXcyigkeNyQNCFtjW",
     authDomain: "azrad-global.firebaseapp.com",
     projectId: "azrad-global",
     databaseURL: "https://azrad-global-default-rtdb.firebaseio.com",
@@ -25,206 +34,162 @@ const firebaseConfig = {
     appId: "1:727549676844:web:8b474f550e664f34397089"
 };
 
+// تشغيل الخدمات
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
+const googleProvider = new GoogleAuthProvider();
 
-// [2] نظام واجهة المستخدم التفاعلي (UI-Engine)
+/**
+ * [2] المحرك الرئيسي للواجهة (UI Engine)
+ */
 const ui = {
-    showModal: (type) => {
-        const overlay = document.getElementById('modal-overlay');
-        const signup = document.getElementById('signup-form');
-        const login = document.getElementById('login-form');
-        
-        overlay.classList.add('active');
-        if (type === 'signup') {
-            signup.style.display = 'block';
-            login.style.display = 'none';
-        } else {
-            signup.style.display = 'none';
-            login.style.display = 'block';
-        }
+    screens: document.querySelectorAll('.screen'),
+    loader: document.getElementById('bootloader'),
+    
+    // الانتقال بين الشاشات بسلاسة
+    showScreen(screenId) {
+        this.screens.forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(screenId);
+        if (target) target.classList.add('active');
     },
-    closeModal: () => {
-        document.getElementById('modal-overlay').classList.remove('active');
-    },
-    updateClock: () => {
-        const clockEl = document.getElementById('live-clock');
-        setInterval(() => {
-            const now = new Date();
-            clockEl.innerText = now.toLocaleTimeString('en-GB', { hour12: false });
-        }, 1000);
-    },
-    initStars: () => {
-        const canvas = document.getElementById('bg-stars');
-        const ctx = canvas.getContext('2d');
-        let stars = [];
-        
-        const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-        window.addEventListener('resize', resize);
-        resize();
 
-        for(let i=0; i<150; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.5,
-                speed: Math.random() * 0.5
-            });
-        }
+    // نظام التنبيهات (Toasts)
+    showToast(message, type = 'info') {
+        const container = document.getElementById('os-toast-container');
+        const toast = document.createElement('div');
+        toast.className = `os-toast ${type}`;
+        toast.innerHTML = `<i class="fas fa-info-circle"></i> <span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    },
 
-        const animate = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#D4AF37";
-            stars.forEach(s => {
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
-                ctx.fill();
-                s.y += s.speed;
-                if(s.y > canvas.height) s.y = 0;
-            });
-            requestAnimationFrame(animate);
-        };
-        animate();
+    // فتح وغلق نافذة الدخول
+    showAuthModal(mode) {
+        const overlay = document.getElementById('auth-modal-overlay');
+        overlay.style.display = 'flex';
+        document.getElementById('signup-form-section').classList.toggle('active', mode === 'signup');
+        document.getElementById('login-form-section').classList.toggle('active', mode === 'login');
+    },
+
+    closeAuthModal() {
+        document.getElementById('auth-modal-overlay').style.display = 'none';
     }
 };
 
-// [3] محرك الهوية المتقدم (Auth-Core)
-const authSystem = {
-    run: async (type) => {
-        try {
-            if (type === 'signup') {
-                const name = document.getElementById('reg-name').value.trim();
-                const email = document.getElementById('reg-email').value.trim();
-                const pass = document.getElementById('reg-pass').value;
+/**
+ * [3] محرك الخريطة والرادار (Radar Engine)
+ */
+let map;
+function initRadar(lat = 30.0444, lng = 31.2357) {
+    if (map) return; // منع إعادة التحميل
+    
+    map = L.map('map', {
+        zoomControl: false,
+        attributionControl: false
+    }).setView([lat, lng], 13);
 
-                if (!name || !email || pass.length < 6) throw { code: 'custom/invalid-data' };
-                
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await authSystem.syncPioneer(res.user, name);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+    // إضافة تأثير نبض لموقع المستخدم
+    const userIcon = L.divIcon({
+        className: 'user-radar-pulse',
+        html: '<div class="radar-dot"></div>',
+        iconSize: [20, 20]
+    });
+    L.marker([lat, lng], { icon: userIcon }).addTo(map);
+}
+
+/**
+ * [4] نظام الـ 250 بطل (Pioneer Logic)
+ */
+function syncPioneerCount() {
+    const countRef = ref(db, 'system/pioneer_slots');
+    onValue(countRef, (snapshot) => {
+        const count = snapshot.val() || 250;
+        document.getElementById('pioneer-count').innerText = count;
+    });
+}
+
+/**
+ * [5] محرك المصادقة (Auth Engine)
+ */
+window.authLogic = {
+    async processAuth(mode) {
+        const email = mode === 'signup' ? document.getElementById('reg-email').value : document.getElementById('log-email').value;
+        const pass = mode === 'signup' ? document.getElementById('reg-pass').value : document.getElementById('log-pass').value;
+        const name = mode === 'signup' ? document.getElementById('reg-name').value : "";
+
+        try {
+            if (mode === 'signup') {
+                const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+                await set(ref(db, `users/${userCred.user.uid}`), {
+                    name: name,
+                    email: email,
+                    rank: "بطل مؤسس",
+                    joinedAt: Date.now()
+                });
+                await update(ref(db, 'system'), { pioneer_slots: increment(-1) });
+                ui.showToast("تم توثيق انضمامك للنخبة!", "success");
             } else {
-                const email = document.getElementById('log-email').value.trim();
-                const pass = document.getElementById('log-pass').value;
-                const res = await signInWithEmailAndPassword(auth, email, pass);
-                await authSystem.loadUser(res.user.uid);
+                await signInWithEmailAndPassword(auth, email, pass);
+                ui.showToast("تم تأكيد البصمة.. مرحباً بك", "success");
             }
-        } catch (e) { authSystem.handleErrors(e); }
+            ui.closeAuthModal();
+        } catch (error) {
+            ui.showToast(`خطأ: ${error.message}`, "error");
+        }
     },
-    google: async () => {
+
+    async processGoogle() {
         try {
-            const provider = new GoogleAuthProvider();
-            const res = await signInWithPopup(auth, provider);
-            await authSystem.syncPioneer(res.user, res.user.displayName);
-        } catch (e) { authSystem.handleErrors(e); }
+            await signInWithPopup(auth, googleProvider);
+            ui.closeAuthModal();
+        } catch (error) {
+            ui.showToast("فشل الربط مع جوجل");
+        }
     },
-    syncPioneer: async (user, name) => {
-        const userRef = ref(db, `users/${user.uid}`);
-        const snap = await get(userRef);
 
-        if (!snap.exists()) {
-            const statsRef = ref(db, 'stats');
-            const statsSnap = await get(statsRef);
-            let count = (statsSnap.val() && statsSnap.val().usersCount) || 0;
+    processLogout() {
+        signOut(auth).then(() => location.reload());
+    }
+};
 
-            const isPioneer = count < 250;
-            const data = {
-                uid: user.uid,
-                name: name,
-                email: user.email,
-                isPioneer: isPioneer,
-                joinOrder: isPioneer ? count + 1 : null,
-                avatar: user.photoURL || `https://ui-avatars.com/api/?name=${name}&background=D4AF37&color=fff`,
-                timestamp: new Date().getTime()
-            };
-
-            await set(userRef, data);
-            if (isPioneer) await update(statsRef, { usersCount: increment(1) });
-            authSystem.launchOS(data);
+/**
+ * [6] إدارة حالة النظام (System State)
+ */
+onAuthStateChanged(auth, async (user) => {
+    // إخفاء الـ Bootloader بعد 3 ثواني
+    setTimeout(() => {
+        ui.loader.style.display = 'none';
+        if (user) {
+            ui.showScreen('os-interface');
+            const userRef = ref(db, `users/${user.uid}`);
+            get(userRef).then(snap => {
+                const data = snap.val();
+                document.getElementById('u-name').innerText = data?.name || user.displayName || "بطل مجهول";
+                document.getElementById('u-avatar').src = user.photoURL || "https://ui-avatars.com/api/?name=" + (data?.name || "U");
+                
+                // تشغيل الرادار بموقع افتراضي أو حقيقي
+                navigator.geolocation.getCurrentPosition(
+                    p => initRadar(p.coords.latitude, p.coords.longitude),
+                    () => initRadar()
+                );
+            });
         } else {
-            authSystem.launchOS(snap.val());
+            ui.showScreen('prime-gate');
         }
-    },
-    loadUser: async (uid) => {
-        const snap = await get(ref(db, `users/${uid}`));
-        if (snap.exists()) authSystem.launchOS(snap.val());
-    },
-    launchOS: (data) => {
-        document.getElementById('prime-gate').classList.remove('active');
-        ui.closeModal();
-        const os = document.getElementById('os-interface');
-        os.classList.add('active');
-
-        document.getElementById('user-display-name').innerText = data.name;
-        document.getElementById('user-avatar').src = data.avatar;
-        
-        if (data.isPioneer) {
-            document.getElementById('pioneer-crown').style.display = 'block';
-            document.getElementById('user-status-label').innerText = `عضو مؤسس #${data.joinOrder}`;
-            document.getElementById('user-status-label').style.color = "#D4AF37";
-        }
-        
-        radarSystem.init();
-    },
-    logout: () => {
-        if(confirm("هل تريد الخروج من النظام؟")) {
-            signOut(auth).then(() => location.reload());
-        }
-    },
-    resetPass: async () => {
-        const email = document.getElementById('log-email').value;
-        if(!email) return alert("اكتب بريدك في خانة الدخول أولاً");
-        await sendPasswordResetEmail(auth, email);
-        alert("تم إرسال رابط الاستعادة لإيميلك");
-    },
-    handleErrors: (e) => {
-        console.error(e);
-        let m = "خطأ غير متوقع في النظام";
-        if (e.code === 'auth/email-already-in-use') m = "هذا البريد مسجل بالفعل";
-        if (e.code === 'auth/weak-password') m = "كلمة المرور ضعيفة جداً";
-        if (e.code === 'custom/invalid-data') m = "يرجى إدخال بيانات صحيحة (الاسم والبريد وباسورد +6)";
-        if (e.code === 'auth/popup-blocked') m = "المتصفح منع نافذة جوجل، يرجى السماح بها";
-        alert("🚨 " + m);
-    }
-};
-
-// [4] نظام الرادار الذكي (Geo-Radar)
-const radarSystem = {
-    init: () => {
-        const map = L.map('main-radar-map', { zoomControl: false, attributionControl: false }).setView([30.0444, 31.2357], 13);
-        
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-        // إضافة تأثير الـ Vignette للخريطة
-        const vignette = document.createElement('div');
-        vignette.className = 'leaflet-vignette';
-        document.getElementById('main-radar-map').appendChild(vignette);
-
-        // محاكاة نبض الرادار للمستخدم
-        L.circleMarker([30.0444, 31.2357], {
-            radius: 12, fillColor: "#D4AF37", color: "#fff", weight: 3, fillOpacity: 1
-        }).addTo(map);
-    }
-};
-
-// [5] تهيئة التشغيل عند التحميل
-document.addEventListener('DOMContentLoaded', () => {
-    ui.initStars();
-    ui.updateClock();
-
-    // ربط الدوال بالنافذة لتعمل مع HTML
-    window.ui = ui;
-    window.auth = authSystem;
-
-    // فحص الجلسة الحالية
-    onAuthStateChanged(auth, (user) => {
-        if (user) authSystem.loadUser(user.uid);
-    });
-
-    // زر الـ SOS
-    document.getElementById('sos-btn').addEventListener('click', () => {
-        alert("🚨 جاري بث إشارة الاستغاثة لجميع المنقذين في محيطك...");
-    });
+    }, 3000);
 });
+
+// تشغيل الساعة والعدادات
+setInterval(() => {
+    const now = new Date();
+    document.getElementById('os-clock').innerText = now.toLocaleTimeString('en-GB');
+}, 1000);
+
+syncPioneerCount();
+
+// ربط الأزرار بالنافذة العالمية
+window.ui = ui;
+window.auth = window.authLogic;
