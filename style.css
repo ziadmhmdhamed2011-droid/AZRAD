@@ -1,829 +1,693 @@
-/* AZRAD RADAR OS - THE IMPERIAL STYLESHEET 
-   Version: 5.0 (The Founder Edition)
-   Architecture: Neumorphism + Cyberpunk
-*/
-
-/* --- 1. الـ Variables والأساسيات (The Foundations) --- */
+/* --- 1. المتغيرات الإمبراطورية (The Royal Palette) --- */
 :root {
-    /* لوحة الألوان الملكية */
+    /* الألوان الأساسية من تصميمك */
+    --royal-blue: #003366;
+    --deep-navy: #001f3f;
     --gold: #D4AF37;
-    --gold-bright: #F9E27E;
-    --gold-dark: #8B6B1A;
-    --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 45%, #b38728 55%, #fbf5b7 100%);
-    --gold-glow: 0 0 20px rgba(212, 175, 55, 0.4);
+    --gold-glow: 0 0 15px rgba(212, 175, 55, 0.5);
+    --white: #ffffff;
+    --glass: rgba(255, 255, 255, 0.1);
+    --glass-dark: rgba(0, 0, 0, 0.6);
     
-    /* ألوان النظام الأسود */
-    --bg-prime: #020202;
-    --bg-card: rgba(10, 10, 10, 0.95);
-    --bg-input: #000000;
-    
-    /* ألوان الحالة */
-    --red-sos: #ff0000;
-    --red-glow: 0 0 30px rgba(255, 0, 0, 0.6);
-    --blue-scan: #00f3ff;
-    
-    /* المسافات والخطوط */
+    /* الخطوط */
     --cairo: 'Cairo', sans-serif;
     --orbitron: 'Orbitron', sans-serif;
-    --border-radius: 20px;
-    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* التأثيرات */
+    --transition-fast: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-/* تصفير العدادات */
+/* --- 2. التصفير والتأسيس (Reset & Core) --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    outline: none;
-    user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-body, html {
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-prime);
-    color: white;
+body {
+    background-color: var(--deep-navy);
+    color: var(--white);
     font-family: var(--cairo);
-    overflow: hidden;
+    overflow: hidden; /* لمنع السكرول العشوائي في الـ OS */
     line-height: 1.6;
+    height: 100vh;
+    width: 100vw;
 }
 
-/* --- 2. نظام الأنيميشنز (The Engine) --- */
-@keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
-}
-
-@keyframes scan-radar {
-    0% { transform: rotate(0deg); opacity: 0.5; }
-    50% { opacity: 0.2; }
-    100% { transform: rotate(360deg); opacity: 0.5; }
-}
-
-@keyframes pulse-gold {
-    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
-    70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-/* --- 3. تصميم الـ Screens (The Layout) --- */
+/* --- 3. شاشات النظام (OS Screens Logic) --- */
 .screen {
     position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
-    display: none;
-    flex-direction: column;
+    display: none; /* مخفي افتراضياً */
     z-index: 10;
-    background-color: var(--bg-prime);
+    background: var(--deep-navy);
+    overflow: hidden;
 }
 
 .screen.active {
     display: flex;
-    animation: fadeIn 0.8s ease-in-out;
+    flex-direction: column;
+    animation: screenEnter 0.8s forwards;
 }
 
-/* خلفية النجوم المتحركة */
+@keyframes screenEnter {
+    from { opacity: 0; transform: scale(1.05); filter: blur(10px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+/* --- 4. شاشة البداية (Prime Gate) --- */
+#prime-gate {
+    background: radial-gradient(circle at center, var(--royal-blue) 0%, var(--deep-navy) 100%);
+    justify-content: center;
+    align-items: center;
+}
+
 #bg-stars {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
 }
 
-/* --- 4. شاشة الـ Prime Gate (The Entrance) --- */
-.gate-content {
-    flex: 1;
+.gate-wrapper {
+    position: relative;
+    z-index: 5;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 30px;
-    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    gap: 30px;
 }
 
-.pioneer-tag {
-    background: rgba(212, 175, 55, 0.05);
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 900;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.pulse-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--gold);
-    border-radius: 50%;
-    animation: pulse-gold 2s infinite;
-}
-
-.main-logo-container {
-    text-align: center;
-    margin-bottom: 50px;
-    animation: float 4s infinite ease-in-out;
-}
-
+/* --- 5. اللوجو الجليتش (Glitch Logo) --- */
 .glitch-logo {
-    font-family: var(--orbitron);
-    font-size: clamp(4rem, 20vw, 7rem);
+    font-family: var(--cairo);
+    font-size: 5rem;
     font-weight: 900;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--white);
     position: relative;
-    letter-spacing: -5px;
+    text-shadow: var(--gold-glow);
 }
 
-.logo-sub {
-    font-family: var(--orbitron);
-    font-size: 0.8rem;
-    color: #444;
-    letter-spacing: 10px;
-    margin-top: -15px;
-    font-weight: 600;
-}
-
-/* --- 5. نظام الأزرار الـ Mega (Buttons) --- */
-.btn-mega {
-    width: 100%;
-    max-width: 380px;
-    padding: 2px; /* مسافة للبوردر المتدرج */
-    border-radius: 20px;
-    border: none;
-    background: var(--gold-gradient);
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: var(--transition-slow);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-inner {
-    background: #080808;
-    color: white;
-    padding: 20px;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    font-weight: 900;
-    font-size: 1.1rem;
-    transition: var(--transition-fast);
-}
-
-.btn-mega:hover .btn-inner {
-    background: transparent;
-    color: #000;
-}
-
-.btn-mega.primary .btn-inner {
-    background: var(--gold-gradient);
-    color: black;
-}
-
-/* --- 6. نظام الـ HUD العلوي (The Head-Up Display) --- */
-.os-header {
+.glitch-logo::before, .glitch-logo::after {
+    content: attr(data-text);
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    padding: 20px;
-    z-index: 100;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.glitch-logo::before {
+    color: var(--gold);
+    z-index: -1;
+    animation: glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-3px, 3px); }
+    40% { transform: translate(-3px, -3px); }
+    60% { transform: translate(3px, 3px); }
+    80% { transform: translate(3px, -3px); }
+    100% { transform: translate(0); }
+}
+
+.logo-subtext {
+    font-family: var(--orbitron);
+    letter-spacing: 4px;
+    font-size: 0.9rem;
+    color: var(--gold);
+    margin-top: -10px;
+}
+
+/* --- 6. نظام الـ 250 المتبقي (Pioneer Tag) --- */
+.pioneer-tag {
+    background: rgba(212, 175, 55, 0.1);
+    border: var(--border);
+    padding: 8px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--gold);
+    animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+/* --- 7. الأزرار الميجا (Mega Buttons) --- */
+.auth-action-hub {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mega-btn {
+    width: 100%;
+    padding: 22px;
+    border-radius: 20px;
+    font-family: var(--cairo);
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-fast);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.primary-gold {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+    color: var(--deep-navy);
+    box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+}
+
+.primary-gold:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(184, 134, 11, 0.5);
+}
+
+.secondary-ghost {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    backdrop-filter: blur(10px);
+}
+
+.secondary-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--gold);
+}
+
+/* --- 8. شاشة الـ Bootloader (التحميل) --- */
+#bootloader {
+    z-index: 9999;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.bootloader-hex-logo {
+    font-family: var(--orbitron);
+    font-size: 4rem;
+    color: var(--gold);
+    border: 4px solid var(--gold);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    animation: rotate-hex 4s linear infinite;
+}
+
+@keyframes rotate-hex {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+}
+
+.bootloader-progress-bar {
+    width: 250px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-top: 40px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--gold);
+    box-shadow: 0 0 15px var(--gold);
+    animation: fillProgress 3s ease-in-out forwards;
+}
+
+@keyframes fillProgress {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+/* --- 9. نظام الـ HUD العلوي (Advanced Top HUD) --- */
+.os-header-advanced {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to bottom, var(--glass-dark), transparent);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    padding: 0 25px;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
 }
 
-.user-pill {
-    background: rgba(15, 15, 15, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
-    padding: 8px 20px 8px 10px;
-    border-radius: 100px;
+.user-info-pill {
+    background: var(--glass);
+    border: var(--border);
+    padding: 5px 15px 5px 8px;
+    border-radius: 50px;
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: var(--transition-fast);
 }
 
-.avatar-container {
-    width: 45px;
-    height: 45px;
+.user-info-pill:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.user-header-avatar {
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     border: 2px solid var(--gold);
-    position: relative;
-    overflow: visible;
-}
-
-.avatar-container img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
     object-fit: cover;
 }
 
-.pioneer-crown {
-    position: absolute;
-    top: -15px;
-    right: -10px;
-    font-size: 20px;
-    filter: drop-shadow(0 0 10px var(--gold));
+.user-meta-stack {
+    display: flex;
+    flex-direction: column;
 }
 
-.user-meta span {
-    display: block;
-    font-weight: 900;
+.user-header-name {
+    font-weight: 800;
     font-size: 0.9rem;
-    color: var(--gold);
+    color: var(--white);
 }
 
-.user-meta small {
+.user-header-rank {
     font-size: 0.7rem;
-    color: #888;
-}
-
-/* --- 7. الرادار الاستراتيجي (Strategic Map) --- */
-#main-radar-map {
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    filter: brightness(0.6) contrast(1.2) hue-rotate(-10deg);
-}
-
-.radar-scan-line {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    background: conic-gradient(from 0deg at 50% 50%, rgba(212, 175, 55, 0.15) 0deg, transparent 90deg);
-    animation: scan-radar 4s linear infinite;
-}
-
-/* --- 8. زر الاستغاثة SOS (The Central Core) --- */
-.sos-container {
-    position: absolute;
-    bottom: 140px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-}
-
-.sos-trigger {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    border: 5px solid white;
-    background: var(--red-sos);
-    color: white;
-    font-family: var(--orbitron);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--red-glow);
-    transition: var(--transition-slow);
-    z-index: 5;
-}
-
-.sos-trigger:active {
-    transform: scale(0.9);
-}
-
-.sos-text { font-size: 1.8rem; font-weight: 900; line-height: 1; }
-.sos-subtext { font-size: 0.6rem; font-weight: 700; letter-spacing: 2px; }
-
-.sos-rings .ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 2px solid var(--red-sos);
-    border-radius: 50%;
-    animation: sosPulse 2s infinite;
-    pointer-events: none;
-}
-
-.ring.r1 { width: 120px; height: 120px; animation-delay: 0s; }
-.ring.r2 { width: 140px; height: 140px; animation-delay: 0.5s; }
-.ring.r3 { width: 160px; height: 160px; animation-delay: 1s; }
-
-/* --- 9. الـ Dock السفلي (Navigation) --- */
-.os-dock {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 500px;
-    background: rgba(10, 10, 10, 0.85);
-    backdrop-filter: blur(30px);
-    border: 1px solid var(--border);
-    border-radius: 35px;
-    padding: 12px;
-    display: flex;
-    justify-content: space-around;
-    z-index: 100;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-}
-
-.dock-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    color: #555;
-    transition: var(--transition-fast);
-    cursor: pointer;
-}
-
-.dock-item i { font-size: 1.4rem; }
-.dock-item span { font-size: 0.7rem; font-weight: 700; }
-
-.dock-item.active {
     color: var(--gold);
-    transform: translateY(-8px);
-    filter: drop-shadow(0 0 10px var(--gold));
-}
-
-/* أنيميشن الظهور العام */
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(1.05); }
-    to { opacity: 1; transform: scale(1); }
-}
-/* --- 10. نظام المودالات الاحترافي (The Auth Overlays) --- */
-.overlay {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(15px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-    opacity: 0;
-    transition: var(--transition-slow);
-}
-
-.overlay.active {
-    display: flex;
-    opacity: 1;
-}
-
-.modal-card {
-    background: var(--bg-card);
-    border: 1px solid var(--gold);
-    width: 100%;
-    max-width: 450px;
-    border-radius: 40px;
-    padding: 50px 40px;
-    position: relative;
-    box-shadow: 0 0 100px rgba(0,0,0,1), 0 0 20px rgba(212, 175, 55, 0.2);
-    transform: translateY(50px) scale(0.9);
-    transition: var(--transition-slow);
-}
-
-.overlay.active .modal-card {
-    transform: translateY(0) scale(1);
-}
-
-.modal-close {
-    position: absolute;
-    top: 25px;
-    left: 25px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    color: #666;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: var(--transition-fast);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-.modal-close:hover {
-    color: white;
-    border-color: var(--gold);
-    box-shadow: var(--gold-glow);
-}
-
-/* --- 11. هندسة الـ Cyber Inputs --- */
-.cyber-input-group {
-    margin-bottom: 25px;
-    position: relative;
-}
-
-.cyber-input-group label {
-    display: block;
-    color: var(--gold);
-    font-size: 0.8rem;
-    font-weight: 900;
-    margin-bottom: 10px;
-    margin-right: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-.cyber-input-group input {
+/* --- 10. الساعة الرقمية (OS Digital Clock) --- */
+.os-clock-advanced {
+    font-family: var(--orbitron);
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    background: var(--glass);
+    padding: 5px 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- 11. نافذة المصادقة (The High-Tech Auth Modal) --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 5, 15, 0.95);
+    z-index: 1000;
+    display: none; /* يتم تفعيله بالـ JS */
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(20px);
+}
+
+.auth-card-expanded {
+    background: var(--royal-blue);
+    width: 90%;
+    max-width: 420px;
+    padding: 40px 30px;
+    border-radius: 35px;
+    border: var(--border);
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(212, 175, 55, 0.1);
+    animation: modalSlideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-close-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.modal-close-icon:hover { opacity: 1; color: var(--gold); }
+
+.auth-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+    color: var(--white);
+}
+
+.auth-subtitle {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 30px;
+}
+
+/* --- 12. مدخلات البيانات الكايبرنيتية (Cyber Inputs) --- */
+.cyber-input-group {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.cyber-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--gold);
+    margin-right: 5px;
+}
+
+.cyber-input {
     width: 100%;
-    background: var(--bg-input);
-    border: 1px solid #222;
-    padding: 18px 25px;
-    border-radius: 18px;
-    color: white;
+    padding: 16px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    color: var(--white);
     font-family: var(--cairo);
     font-size: 1rem;
     transition: var(--transition-fast);
 }
 
-.cyber-input-group input:focus {
+.cyber-input:focus {
+    outline: none;
     border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.05);
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-    background: #050505;
 }
 
-/* --- 12. أزرار التنفيذ (Action Buttons) --- */
-.btn-execute {
+/* --- 13. أزرار التنفيذ (Action Buttons) --- */
+.btn-auth-execute {
     width: 100%;
-    padding: 20px;
-    background: var(--gold-gradient);
+    padding: 18px;
+    background: var(--gold);
+    color: var(--deep-navy);
     border: none;
-    border-radius: 18px;
-    color: black;
+    border-radius: 15px;
     font-weight: 900;
     font-size: 1.1rem;
     cursor: pointer;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-    transition: var(--transition-fast);
     margin-top: 10px;
+    transition: var(--transition-fast);
 }
 
-.btn-execute:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3);
+.btn-auth-execute:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px var(--gold);
 }
 
-.form-helpers {
-    text-align: left;
-    margin-bottom: 20px;
+.auth-divider {
+    margin: 25px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
 }
 
-.form-helpers span {
-    color: #555;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.form-helpers span:hover {
-    color: var(--gold);
-}
-
-/* --- 13. الربط مع جوجل (Social Sync) --- */
-.social-auth {
-    margin-top: 35px;
-}
-
-.divider {
-    text-align: center;
-    position: relative;
-    margin-bottom: 25px;
-}
-
-.divider::before {
+.auth-divider::before, .auth-divider::after {
     content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
+    flex: 1;
     height: 1px;
-    background: #222;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.divider span {
-    position: relative;
-    background: var(--bg-card);
-    padding: 0 15px;
-    color: #444;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.btn-google-sync {
+.btn-google-sync-large {
     width: 100%;
-    background: white;
-    border: none;
     padding: 15px;
+    background: var(--white);
+    color: #000;
     border-radius: 15px;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    color: #000;
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition-fast);
-}
-
-.btn-google-sync:hover {
-    background: #f1f1f1;
-    transform: scale(1.02);
-}
-
-/* --- 14. تفاصيل الـ HUD (Clock & Notifs) --- */
-.os-clock {
-    font-family: var(--orbitron);
-    font-size: 1.2rem;
-    font-weight: 900;
-    color: white;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
-}
-
-.os-notif-btn {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    width: 45px;
-    height: 45px;
-    border-radius: 15px;
-    color: white;
-    position: relative;
-    cursor: pointer;
-}
-
-.notif-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--red-sos);
-    color: white;
-    font-size: 10px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    border: 2px solid var(--bg-prime);
-}
-
-/* --- 15. ميديا كويري (Responsive Mastery) --- */
-@media (max-width: 400px) {
-    .modal-card {
-        padding: 30px 20px;
-    }
-    
-    .glitch-logo {
-        font-size: 3.5rem;
-    }
-    
-    .os-clock {
-        display: none; /* توفير مساحة في الموبايلات الصغيرة جداً */
-    }
-}
-
-/* تحسين الخريطة لتبدو كشاشة رادار */
-.leaflet-container {
-    background: #050505 !important;
-}
-
-.leaflet-vignette {
-    box-shadow: inset 0 0 150px rgba(0,0,0,0.8);
-    pointer-events: none;
-    position: absolute;
-    inset: 0;
-    z-index: 1000;
-}
-/* استكمال الـ 5000 سطر هيكون في الجزء التاني الخاص بالمودالات والشاشات الداخلية */
-/* --- 16. تنسيق لوحة البيانات (Data Panels) --- */
-.os-panel {
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 600px;
-    height: calc(100% - 250px);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    z-index: 90;
-    display: none; /* تظهر فقط عند اختيار التاب */
-    flex-direction: column;
-    overflow: hidden;
-    animation: panelSlide 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.os-panel.active { display: flex; }
-
-@keyframes panelSlide {
-    from { opacity: 0; transform: translateX(-50%) translateY(30px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-.panel-header {
-    padding: 25px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255,255,255,0.02);
-}
-
-.panel-header h3 {
-    font-family: var(--orbitron);
-    color: var(--gold);
-    font-size: 1.2rem;
-    letter-spacing: 2px;
-}
-
-.panel-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-}
-
-/* --- 17. تصميم قائمة البلاغات (Reports UI) --- */
-.report-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 15px;
-    display: flex;
-    gap: 15px;
-    transition: 0.3s;
-    cursor: pointer;
-}
-
-.report-card:hover {
-    background: rgba(212, 175, 55, 0.05);
-    border-color: var(--gold);
-    transform: scale(1.02);
-}
-
-.report-icon {
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 0, 0, 0.1);
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--red-sos);
-    font-size: 1.5rem;
-}
-
-.report-info h4 { font-size: 1rem; color: #fff; margin-bottom: 5px; }
-.report-info p { font-size: 0.8rem; color: #777; }
-
-/* --- 18. قائمة الـ 250 الأوائل (Pioneers Leaderboard) --- */
-.pioneer-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-    border-bottom: 1px solid var(--border);
-}
-
-.pioneer-rank {
-    font-family: var(--orbitron);
-    color: var(--gold);
-    font-weight: 900;
-    font-size: 1.1rem;
-    width: 40px;
-}
-
-.pioneer-user {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.pioneer-user img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid var(--gold);
-}
-
-/* --- 19. شريط التمرير الاحترافي (Custom Scrollbar) --- */
-.panel-body::-webkit-scrollbar {
-    width: 5px;
-}
-
-.panel-body::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.panel-body::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 10px;
-}
-
-/* --- 20. نظام الإشعارات العائم (Floating Toast Notifications) --- */
-.toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 2000;
-}
-
-.toast {
-    background: var(--bg-card);
-    border-right: 4px solid var(--gold);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    animation: toastIn 0.4s ease forwards;
-}
-
-@keyframes toastIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-/* --- 21. تفاصيل الخريطة المتقدمة (Map UI Polish) --- */
-.leaflet-popup-content-wrapper {
-    background: var(--bg-card) !important;
-    color: white !important;
-    border: 1px solid var(--gold);
-    border-radius: 15px !important;
+    font-weight: 800;
     font-family: var(--cairo);
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.leaflet-popup-tip {
-    background: var(--gold) !important;
+.btn-google-sync-large:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
 }
-
-/* --- 22. شاشة التحميل (Master Loader) --- */
-.master-loader {
-    position: fixed;
+/* --- 14. نظام الرادار والخرائط (Radar & Map Graphics) --- */
+.radar-map-full {
+    position: absolute;
     inset: 0;
-    z-index: 9999;
-    background: var(--bg-prime);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    z-index: 1;
+    background: var(--deep-navy);
 }
 
-.loader-hex {
-    width: 60px;
-    height: 60px;
-    border: 3px solid transparent;
-    border-top-color: var(--gold);
-    border-bottom-color: var(--gold);
+/* تأثير التعتيم الجانبي (Vignette) لإعطاء عمق للرادار */
+.radar-vignette-effect {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
+}
+
+/* حلقة البوصلة المتحركة */
+.os-compass-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vw;
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    pointer-events: none;
+    z-index: 3;
 }
 
-@keyframes spin {
+.os-compass-ring::after {
+    content: "";
+    position: absolute;
+    inset: -10px;
+    border: 2px dashed rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-.loader-text {
-    margin-top: 20px;
+/* خط المسح الراداري (Scan Line) */
+.os-radar-scan-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40vw;
+    height: 40vw;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(212, 175, 55, 0.2) 100%);
+    transform-origin: top left;
+    animation: scanning 4s linear infinite;
+    z-index: 3;
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+@keyframes scanning {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- 15. نظام الـ SOS المركزي (The Heart of AZRAD) --- */
+.sos-system-core {
+    position: fixed;
+    bottom: 120px; /* فوق القائمة السفلية */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.sos-btn-major {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+    border: 4px solid #000;
+    border-radius: 50%;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 5;
+}
+
+.sos-btn-major:active {
+    transform: scale(0.9) translateY(5px);
+}
+
+.sos-btn-text {
     font-family: var(--orbitron);
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.sos-btn-subtext {
+    font-size: 0.6rem;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+/* حلقات النبض (Pulse Rings) */
+.sos-pulse-rings .pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid #ff0000;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.r1 { animation: pulseRing 3s infinite 0s; }
+.r2 { animation: pulseRing 3s infinite 1s; }
+.r3 { animation: pulseRing 3s infinite 2s; }
+
+@keyframes pulseRing {
+    0% { width: 90px; height: 90px; opacity: 0.8; }
+    100% { width: 250px; height: 250px; opacity: 0; }
+}
+
+/* --- 16. القائمة السفلية العائمة (The OS Dock) --- */
+.os-dock-expanded {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    background: rgba(0, 31, 63, 0.85); /* Deep Navy Glass */
+    backdrop-filter: blur(25px);
+    border-radius: 30px;
+    padding: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    z-index: 1000;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.dock-list-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.dock-item {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 10px;
+    flex: 1;
+}
+
+.dock-item i {
+    font-size: 1.4rem;
+}
+
+.dock-item-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.dock-item.active {
     color: var(--gold);
-    font-size: 0.8rem;
-    letter-spacing: 5px;
-    animation: pulse-gold 1.5s infinite;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.dock-item.active i {
+    transform: translateY(-5px);
+}
+
+/* --- 17. نظام التنبيهات (OS Toast Messages) --- */
+.toast-system-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.os-toast {
+    background: var(--glass-dark);
+    border-right: 4px solid var(--gold);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    font-weight: 700;
+    animation: toastSlideIn 0.4s ease forwards;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+@keyframes toastSlideIn {
+    from { transform: translateX(120%); }
+    to { transform: translateX(0); }
 }
