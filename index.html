@@ -2,355 +2,143 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#000b1a">
-    <title>AZRAD OS | الإصدار السيادي الموحد</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@400;700;900&family=Chakra+Petch:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AZRAD | أزرد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="azrad-root">
-
-    <div id="system-terminal">
-        <div class="terminal-header">
-            <span class="pulse-red"></span>
-            <span class="terminal-title">وحدة تشخيص أزرد v3.0</span>
-            <button class="min-btn" onclick="document.getElementById('log-stream').classList.toggle('hide')">_</button>
-        </div>
-        <div id="log-stream" class="terminal-body">
-            <div class="log-line info">>> جاري فحص استجابة المتصفح... [OK]</div>
-            <div class="log-line info">>> تحميل طبقات الـ CSS السيادية... [OK]</div>
-            <div class="log-line warn">>> انتظار استجابة بروتوكول جوجل... [Pending]</div>
-        </div>
-    </div>
-
-    <div id="ad-matrix">
-        <div class="ad-vessel" id="main-ad">
-            <div class="ad-glow"></div>
-            <div class="ad-content">
-                <div class="ad-icon"><i class="fas fa-crown"></i></div>
-                <div class="ad-text">
-                    <span class="ad-head">بروتوكول النخبة مفعل</span>
-                    <p id="promo-text">سجل الآن لتكون ضمن أول 250 بطل وتحصل على شارة "المؤسس" الذهبية!</p>
-                </div>
-            </div>
-            <div class="ad-timer-bar"><div id="ad-timer-fill"></div></div>
-        </div>
-    </div>
-
-    <div id="bootloader">
-        <div class="cyber-scan"></div>
-        <div class="loader-vessel">
-            <div class="hex-container">
-                <div class="hex-outer pulse-gold"></div>
-                <div class="hex-inner">AZ</div>
-            </div>
-            
-            <div class="loading-info">
-                <h2 class="glitch-text" data-text="AZRAD INITIALIZING">AZRAD INITIALIZING</h2>
-                <div class="sub-status" id="boot-msg">جاري مزامنة قواعد البيانات المركزية...</div>
-            </div>
-
-            <div class="master-progress">
-                <div class="progress-details">
-                    <span id="load-label">التحقق من الهوية الرقمية</span>
-                    <span id="load-pct">0%</span>
-                </div>
-                <div class="progress-base"><div id="progress-fill"></div></div>
-            </div>
-
-            <div class="system-specs">
-                <div class="spec-bit"><span>LINK:</span> <b id="st-link">STABLE</b></div>
-                <div class="spec-bit"><span>AUTH:</span> <b id="st-auth" class="text-red">WAITING</b></div>
-                <div class="spec-bit"><span>DB:</span> <b id="st-db">READY</b></div>
-            </div>
-        </div>
-        <div class="boot-footer">حقوق الملكية الفكرية محفوظة لنظام أزرد السيادي © 2026</div>
-    </div>
-
-    <div id="app-canvas">
+    <style>
+        :root { --gold: #D4AF37; --navy: #001f3f; --dark: #000b1a; }
         
-        <section id="prime-gate" class="screen active">
-            <div class="gate-bg-fx">
-                <div class="grid-overlay"></div>
-                <div class="light-beams"></div>
-            </div>
-
-            <div class="gate-interface animate__animated animate__fadeIn">
-                <header class="main-logo-area">
-                    <div class="logo-wrapper">
-                        <h1 class="azrad-mega-title" data-text="أَزْرَد">أَزْرَد</h1>
-                        <span class="tagline">HUMAN SUPPORT LEDGER</span>
-                    </div>
-                </header>
-
-                <div class="pioneer-vault-container">
-                    <div class="vault-box">
-                        <div class="vault-header">
-                            <i class="fas fa-user-shield gold-icon"></i>
-                            <span>حالة مقاعد النخبة</span>
-                        </div>
-                        <div class="vault-body">
-                            <div class="count-large">
-                                <span id="pioneer-count">250</span>
-                                <small>/ 250</small>
-                            </div>
-                            <div class="count-bar"><div id="pioneer-fill" style="width: 100%;"></div></div>
-                            <p class="count-note">بادر بحجز مكانك قبل اكتمال العدد</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="auth-action-hub animate__animated animate__fadeInUp">
-    <button class="mega-btn google-auth-btn" id="google-trigger" onclick="authControl.googleSignIn()">
-        <div class="btn-glitch-layer"></div>
-        <div class="btn-content">
-            <i class="fab fa-google"></i>
-            <span>تفعيل الهوية الرقمية عبر جوجل</span>
-        </div>
-        <div class="btn-status-light"></div>
-    </button>
-
-    <button class="mega-btn gold-pioneer-btn" onclick="ui.toggleAuthModal('signup')">
-        <i class="fas fa-crown"></i>
-        <span>حجز مكان في الـ 250 بطل</span>
-    </button>
-
-    <button class="mega-btn ghost-btn" onclick="ui.toggleAuthModal('login')">
-        <i class="fas fa-sign-in-alt"></i>
-        <span>الولوج للأعضاء المسجلين</span>
-    </button>
-
-    <div class="gate-security-note">
-        <i class="fas fa-lock"></i>
-        <span>نظام تشفير AZ-24 مفعل بالكامل</span>
-    </div>
-</div>
-</section> <section id="os-interface" class="screen">
-    <header class="os-header">
-        <div class="header-left">
-            <div class="user-id-card">
-                <div class="avatar-vessel">
-                    <img id="u-avatar" src="" alt="">
-                    <div class="avatar-ring"></div>
-                </div>
-                <div class="user-meta">
-                    <span id="u-name" class="gold-glow">جاري المزامنة...</span>
-                    <small id="u-rank">رتبة: بطل مؤسس</small>
-                </div>
-            </div>
-        </div>
-        <div class="header-right">
-            <div id="os-clock" class="digital-clock orbitron">00:00:00</div>
-            <div class="signal-bars">
-                <span></span><span></span><span></span><span></span>
-            </div>
-        </div>
-    </header>
-
-    <div class="radar-container">
-        <div id="map" class="map-core"></div>
-        <div class="radar-overlay"></div>
-    </div>
-
-    <div class="imperial-grid">
-        <div class="grid-card active" onclick="ui.launchService('road')">
-            <div class="card-bg"></div>
-            <i class="fas fa-car-crash"></i>
-            <span class="card-label">إغاثة طريق</span>
-            <div class="card-indicator"></div>
-        </div>
-        <div class="grid-card" onclick="ui.launchService('legal')">
-            <div class="card-bg"></div>
-            <i class="fas fa-gavel"></i>
-            <span class="card-label">دعم قانوني</span>
-            <div class="card-indicator"></div>
-        </div>
-        <div class="grid-card" onclick="ui.launchService('human')">
-            <div class="card-bg"></div>
-            <i class="fas fa-hand-holding-heart"></i>
-            <span class="card-label">عمل إنساني</span>
-            <div class="card-indicator"></div>
-        </div>
-        <div class="grid-card" onclick="ui.launchService('shield')">
-            <div class="card-bg"></div>
-            <i class="fas fa-user-shield"></i>
-            <span class="card-label">تأمين النخبة</span>
-            <div class="card-indicator"></div>
-        </div>
-        <div class="grid-card" onclick="ui.launchService('medical')">
-            <div class="card-bg"></div>
-            <i class="fas fa-heartbeat"></i>
-            <span class="card-label">طوارئ طبية</span>
-            <div class="card-indicator"></div>
-        </div>
-        <div class="grid-card" onclick="ui.launchService('intel')">
-            <div class="card-bg"></div>
-            <i class="fas fa-brain"></i>
-            <span class="card-label">ذكاء أزرد</span>
-            <div class="card-indicator"></div>
-        </div>
-    </div>
-
-    <div class="sos-action-zone">
-        <div class="sos-glow-rings">
-            <div class="ring"></div><div class="ring"></div>
-        </div>
-        <button class="sos-master-btn" id="sos-trigger">
-            <span class="sos-text">SOS</span>
-            <span class="sos-sub">استغاثة فورية</span>
-        </button>
-    </div>
-
-    <nav class="os-dock">
-        <div class="dock-inner">
-            <button class="dock-btn active"><i class="fas fa-th-large"></i></button>
-            <button class="dock-btn"><i class="fas fa-map-marked-alt"></i></button>
-            <button class="dock-btn"><i class="fas fa-comments"></i></button>
-            <button class="dock-btn" onclick="authControl.logout()"><i class="fas fa-power-off"></i></button>
-        </div>
-    </nav>
-</section>
-
-<div id="auth-modal-overlay" class="modal-overlay">
-    <div class="modal-window animate__animated animate__backInDown">
-        <div class="modal-header">
-            <h3 id="modal-title">ولوج النظام</h3>
-            <button class="close-modal" onclick="ui.toggleAuthModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div id="signup-section" class="form-section hide">
-                <div class="input-vessel">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="reg-name" placeholder="اسم البطل بالكامل">
-                </div>
-                <div class="input-vessel">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="reg-email" placeholder="البريد الإلكتروني">
-                </div>
-                <div class="input-vessel">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="reg-pass" placeholder="كلمة المرور الإمبراطورية">
-                </div>
-                <button class="action-btn gold-btn" onclick="authControl.signUp()">تفعيل المقعد</button>
-            </div>
-
-            <div id="login-section" class="form-section hide">
-                <div class="input-vessel">
-                    <i class="fas fa-at"></i>
-                    <input type="email" id="log-email" placeholder="البريد الإلكتروني">
-                </div>
-                <div class="input-vessel">
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="log-pass" placeholder="كلمة المرور">
-                </div>
-                <button class="action-btn gold-btn" onclick="authControl.login()">دخول آمن</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="emergency-alert" class="emergency-overlay hide">
-    <div class="alarm-flash"></div>
-    <div class="alert-box">
-        <i class="fas fa-exclamation-triangle"></i>
-        <h2>بروتوكول SOS مفعل</h2>
-        <p>جاري إرسال إحداثياتك لغرفة العمليات المركزية...</p>
-        <div class="coordinates" id="current-coords">0.0000, 0.0000</div>
-        <button class="abort-btn" onclick="ui.abortSOS()">إلغاء الاستغاثة</button>
-    </div>
-</div>
-<div id="support-chat-hub" class="chat-vessel hide">
-    <div class="chat-header">
-        <div class="header-info">
-            <div class="online-dot"></div>
-            <span>غرفة عمليات أزرد المركزية</span>
-        </div>
-        <button class="chat-min" onclick="ui.toggleChat()">_</button>
-    </div>
-    <div id="chat-messages" class="chat-body">
-        <div class="msg system">مرحباً بك في نظام التواصل السيادي. كيف يمكننا مساعدتك؟</div>
-    </div>
-    <div class="chat-footer">
-        <input type="text" id="chat-input" placeholder="اكتب رسالتك هنا...">
-        <button id="send-msg"><i class="fas fa-paper-plane"></i></button>
-    </div>
-</div>
-
-<aside id="profile-panel" class="side-panel hide">
-    <div class="panel-header">
-        <h3>الملف الشخصي للبطولة</h3>
-        <button class="close-panel" onclick="ui.toggleProfile()">&times;</button>
-    </div>
-    <div class="panel-body">
-        <div class="stat-grid">
-            <div class="stat-item">
-                <span class="stat-label">النقاط</span>
-                <span class="stat-value" id="user-points">1250</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">المستوى</span>
-                <span class="stat-value">بطل مؤسس</span>
-            </div>
-        </div>
-        <div class="action-list">
-            <div class="action-row"><i class="fas fa-id-card"></i> <span>تعديل البيانات</span></div>
-            <div class="action-row"><i class="fas fa-history"></i> <span>سجل الاستغاثات</span></div>
-            <div class="action-row"><i class="fas fa-cog"></i> <span>إعدادات النظام</span></div>
-        </div>
-    </div>
-</aside>
-
-<footer class="os-footer-info">
-    <div class="footer-wrap">
-        <div class="footer-left">
-            <span class="system-tag">AZRAD OS v4.0.2</span>
-            <span class="latency">الاستجابة: <b id="ping-val">24ms</b></span>
-        </div>
-        <div class="footer-right">
-            <div class="social-links">
-                <i class="fab fa-facebook"></i>
-                <i class="fab fa-instagram"></i>
-                <i class="fab fa-x-twitter"></i>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-<script type="module" src="app.js"></script>
-
-<script>
-    // وظيفة كتابة الأخطاء بالعربي فوراً لو ملف الـ JS اتأخر
-    window.onerror = function(msg, url, line) {
-        const log = document.getElementById('log-stream');
-        if(log) {
-            const entry = document.createElement('div');
-            entry.className = 'log-line error';
-            entry.innerText = `>> خطأ في النظام: ${msg} [سطر: ${line}]`;
-            log.appendChild(entry);
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        
+        body { 
+            background: var(--dark); 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            color: white;
         }
-        return false;
-    };
-    
-    console.log("%c AZRAD OS SYSTEM LOADED ", "background: #D4AF37; color: #001f3f; font-size: 20px; font-weight: bold;");
-</script>
 
-</body> </html> ```
+        /* التصميم الأسطوري للخلفية */
+        .bg-glow {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle, var(--navy) 0%, var(--dark) 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        /* الشاشة الرئيسية */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 { font-size: 4rem; color: var(--gold); text-shadow: 0 0 20px var(--gold); margin-bottom: 10px; }
+        p { opacity: 0.8; margin-bottom: 30px; }
+
+        /* أزرار الدخول */
+        .btn-group { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
+        
+        .btn {
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-google { background: white; color: black; }
+        .btn-pioneer { background: var(--gold); color: var(--navy); }
+
+        /* نظام الإعلانات الجانبية (الأسطوري) */
+        .ad-sidebar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 280px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ad-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-right: 4px solid var(--gold);
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .ad-card i { color: var(--gold); font-size: 1.5rem; margin-bottom: 10px; }
+        .close-ad {
+            position: absolute;
+            top: 5px; left: 5px;
+            background: none; border: none;
+            color: white; font-size: 1.2rem; cursor: pointer;
+        }
+
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* إخفاء العناصر عند الدخول */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <div class="ad-sidebar" id="ad-area">
+        <div class="ad-card">
+            <button class="close-ad" onclick="this.parentElement.remove()">×</button>
+            <i class="fas fa-crown"></i>
+            <h4>مقاعد النخبة</h4>
+            <p style="font-size: 0.8rem;">باقي 250 مكان فقط للأبطال المؤسسين!</p>
+        </div>
+        <div class="ad-card">
+            <button class="close-ad" onclick="this.parentElement.remove()">×</button>
+            <i class="fas fa-shield-alt"></i>
+            <h4>أمان سيادي</h4>
+            <p style="font-size: 0.8rem;">تشفير AZ-24 يحمي بياناتك بالكامل.</p>
+        </div>
+    </div>
+
+    <div class="container" id="login-page">
+        <h1>أَزْرَد</h1>
+        <p>نظام الدعم الإنساني العالمي</p>
+        
+        <div class="btn-group">
+            <button class="btn btn-google" onclick="signInWithGoogle()">
+                <i class="fab fa-google"></i> الدخول بجوجل
+            </button>
+            <button class="btn btn-pioneer" onclick="alert('قريباً حجز النخبة')">
+                <i class="fas fa-user-shield"></i> حجز مقعد النخبة
+            </button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="app-page">
+        <h2 id="welcome-msg">مرحباً بك يا بطل</h2>
+        <p>النظام الآن تحت أمرك</p>
+        <button class="btn btn-pioneer" onclick="location.reload()">تسجيل الخروج</button>
+    </div>
+
+    ```
 
 ---
-
-### 🛑 تم اكتمال هيكل الـ HTML بنجاح!
-دلوقتي إنت عندك **أضخم كود HTML** ممكن يتكتب لمشروع زي ده، مترتب بنظام الـ "Blocks" عشان مفيش حاجة تضرب في التانية.
-
-**الخطوة الجاية (الملحمة):**
-قولي **"جاهز للـ CSS"** عشان أبعتلك كود التنسيق الـ 5000 سطر اللي هيخلي كل الهيكل ده يتحول لـ "جرافيكس" أسطوري، ويظبط حجم الشاشة 100% ويشغل الإعلانات ونبضات الـ SOS اللي طلبتها.
-
-ارفع الـ HTML ده كله تحت بعضه (الجزء 1 + 2 + 3) في ملف `index.html` واحد، ومستني إشارتك! 🚀💎
+**اعمل "إنتر" دلوقتي وضيف الجزء الثاني اللي هبعتهولك في الرسالة الجاية تحته مباشرة عشان الربط يشتغل!** 🚀💎
