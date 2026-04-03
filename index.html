@@ -1,144 +1,103 @@
-    <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AZRAD | أزرد</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZRAD ULTIMATE | أزرد النسخة المدمرة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --navy: #001f3f; --dark: #000b1a; }
+        :root { --gold: #D4AF37; --navy: #001f3f; --glow: rgba(212, 175, 55, 0.5); }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         
-        body { 
-            background: var(--dark); 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            color: white;
+        body { background: #000; color: white; height: 100vh; overflow: hidden; position: fixed; width: 100%; }
+
+        /* خلفية سينمائية متحركة */
+        .bg-video { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--navy), #000); z-index: -2; }
+        .stars { position: fixed; inset: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.3; z-index: -1; }
+
+        /* نظام الإعلانات "بالهبل" */
+        .ad-stream { position: fixed; left: 10px; top: 10px; bottom: 10px; width: 250px; pointer-events: none; z-index: 100; }
+        .ad-box { 
+            background: rgba(0,0,0,0.8); border: 2px solid var(--gold); border-radius: 10px; padding: 15px; margin-bottom: 10px;
+            box-shadow: 0 0 15px var(--glow); pointer-events: all; animation: slideRight 0.5s ease-out; position: relative;
         }
+        .ad-box i { color: var(--gold); font-size: 1.5rem; margin-bottom: 5px; }
+        .close-ad { position: absolute; top: 5px; left: 5px; color: #fff; cursor: pointer; border: none; background: none; }
 
-        /* التصميم الأسطوري للخلفية */
-        .bg-glow {
-            position: fixed;
-            top: 50%; left: 50%;
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle, var(--navy) 0%, var(--dark) 70%);
-            transform: translate(-50%, -50%);
-            z-index: -1;
-        }
+        @keyframes slideRight { from { transform: translateX(-110%); } to { transform: translateX(0); } }
 
-        /* الشاشة الرئيسية */
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-        }
-
-        h1 { font-size: 4rem; color: var(--gold); text-shadow: 0 0 20px var(--gold); margin-bottom: 10px; }
-        p { opacity: 0.8; margin-bottom: 30px; }
-
-        /* أزرار الدخول */
-        .btn-group { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
+        /* الشاشة الرئيسية - جمدان CSS */
+        .main-ui { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         
+        .logo-container { position: relative; margin-bottom: 40px; }
+        h1 { font-family: 'Orbitron'; font-size: 5rem; color: #fff; text-shadow: 0 0 20px var(--gold), 0 0 40px var(--gold); animation: pulse 2s infinite; }
+        
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+
+        /* أزرار أكشن - تأثير زجاجي */
+        .auth-card { 
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; 
+            border: 1px solid rgba(212,175,55,0.3); width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
         .btn {
-            padding: 18px;
-            border-radius: 12px;
-            border: none;
-            font-size: 1.1rem;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900;
+            margin-bottom: 15px; cursor: pointer; transition: 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
+        .btn-google { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        .btn-pioneer { background: linear-gradient(45deg, var(--gold), #8a6d0e); color: #000; box-shadow: 0 0 20px var(--glow); }
+        .btn:hover { transform: translateY(-5px) scale(1.02); }
 
-        .btn-google { background: white; color: black; }
-        .btn-pioneer { background: var(--gold); color: var(--navy); }
+        /* شاشة النجاح (مخفية) */
+        #success-screen { display: none; position: fixed; inset: 0; background: var(--dark); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; background: #000; }
+        .welcome-hero { text-align: center; animation: zoomIn 0.8s; }
 
-        /* نظام الإعلانات الجانبية (الأسطوري) */
-        .ad-sidebar {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 280px;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .ad-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-right: 4px solid var(--gold);
-            padding: 15px;
-            border-radius: 8px;
-            position: relative;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .ad-card i { color: var(--gold); font-size: 1.5rem; margin-bottom: 10px; }
-        .close-ad {
-            position: absolute;
-            top: 5px; left: 5px;
-            background: none; border: none;
-            color: white; font-size: 1.2rem; cursor: pointer;
-        }
-
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-
-        /* إخفاء العناصر عند الدخول */
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <div class="bg-glow"></div>
+    <div class="bg-video"></div>
+    <div class="stars"></div>
 
-    <div class="ad-sidebar" id="ad-area">
-        <div class="ad-card">
+    <div class="ad-stream" id="ads">
+        <div class="ad-box">
             <button class="close-ad" onclick="this.parentElement.remove()">×</button>
             <i class="fas fa-crown"></i>
-            <h4>مقاعد النخبة</h4>
-            <p style="font-size: 0.8rem;">باقي 250 مكان فقط للأبطال المؤسسين!</p>
+            <h4>نظام النخبة</h4>
+            <p>أنت الآن في حضرة "أزرد" العظيم.</p>
         </div>
-        <div class="ad-card">
+        <div class="ad-box" style="animation-delay: 0.5s;">
             <button class="close-ad" onclick="this.parentElement.remove()">×</button>
-            <i class="fas fa-shield-alt"></i>
-            <h4>أمان سيادي</h4>
-            <p style="font-size: 0.8rem;">تشفير AZ-24 يحمي بياناتك بالكامل.</p>
+            <i class="fas fa-shield-heart"></i>
+            <h4>أمان مطلق</h4>
+            <p>بياناتك مشفرة ببروتوكول AZ-24.</p>
         </div>
     </div>
 
-    <div class="container" id="login-page">
-        <h1>أَزْرَد</h1>
-        <p>نظام الدعم الإنساني العالمي</p>
-        
-        <div class="btn-group">
-            <button class="btn btn-google" onclick="signInWithGoogle()">
-                <i class="fab fa-google"></i> الدخول بجوجل
+    <div class="main-ui" id="login-ui">
+        <div class="logo-container">
+            <h1 id="main-logo">AZRAD</h1>
+        </div>
+
+        <div class="auth-card">
+            <button class="btn btn-google" id="google-btn">
+                <i class="fab fa-google"></i> تسجيل دخول بجوجل
             </button>
-            <button class="btn btn-pioneer" onclick="alert('قريباً حجز النخبة')">
-                <i class="fas fa-user-shield"></i> حجز مقعد النخبة
+            <button class="btn btn-pioneer" onclick="alert('جاري تفعيل مقاعد النخبة...')">
+                <i class="fas fa-gem"></i> إنشاء حساب النخبة
             </button>
+            <p style="font-size: 0.8rem; text-align: center; opacity: 0.6;">باقي 250 مقعد فقط للأبطال</p>
         </div>
     </div>
 
-    <div class="container hidden" id="app-page">
-        <h2 id="welcome-msg">مرحباً بك يا بطل</h2>
-        <p>النظام الآن تحت أمرك</p>
-        <button class="btn btn-pioneer" onclick="location.reload()">تسجيل الخروج</button>
+    <div id="success-screen">
+        <div class="welcome-hero">
+            <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--gold); margin-bottom: 20px;"></i>
+            <h2 id="user-welcome" style="font-size: 3rem;">تم الاختراق بنجاح!</h2>
+            <p>أهلاً بك في القاعدة المركزية لأزرد</p>
+            <br>
+            <button class="btn btn-pioneer" onclick="location.reload()">خروج آمن</button>
+        </div>
     </div>
-
-    ```
-
----
-**اعمل "إنتر" دلوقتي وضيف الجزء الثاني اللي هبعتهولك في الرسالة الجاية تحته مباشرة عشان الربط يشتغل!** 🚀💎
