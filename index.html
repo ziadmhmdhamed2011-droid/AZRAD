@@ -101,3 +101,85 @@
             <button class="btn btn-pioneer" onclick="location.reload()">خروج آمن</button>
         </div>
     </div>
+ <script type="module">
+        // استدعاء ترسانة Firebase القوية
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // إعدادات الربط مع قاعدة بيانات أزرد المركزية
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDWT4ygUDKlmuelK6EXcyigkeNyQNCFtjW",
+            authDomain: "azrad-global.firebaseapp.com",
+            projectId: "azrad-global",
+            appId: "1:727549676844:web:8b474f550e664f34397089"
+        };
+
+        // تشغيل المحرك
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // تفعيل الكود السري (Client ID) الذي أرسلته في الصورة لضمان الربط
+        provider.setCustomParameters({
+            'client_id': '727549676844-a3i6n3s14pqlmtti184s74453uief9r9.apps.googleusercontent.com',
+            'prompt': 'select_account'
+        });
+
+        // 🟢 وظيفة الدخول بجوجل (The Titan Login)
+        const googleBtn = document.getElementById('google-btn');
+        googleBtn.onclick = async () => {
+            console.log("جاري محاولة اختراق بوابة جوجل...");
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // تفعيل شاشة الجمدان والترحيب
+                document.getElementById('login-ui').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'flex';
+                document.getElementById('user-welcome').innerText = `أهلاً بك يا بطل: ${user.displayName}`;
+                
+                // إخفاء الإعلانات الجانبية عند الدخول لزيادة التركيز
+                document.getElementById('ads').style.display = 'none';
+            } catch (error) {
+                console.error("عطل فني:", error.message);
+                alert("!! تنبيه أمان !!\nتأكد من إضافة رابط الـ GitHub الخاص بك في Authorized Domains داخل إعدادات Firebase ليعمل الدخول.");
+            }
+        };
+
+        // 📡 نظام توليد الإعلانات التلقائي (بالهبل)
+        const adStream = document.getElementById('ads');
+        const adContents = [
+            { icon: 'fa-user-ninja', title: 'فرقة النخبة', text: 'انضم لـ 250 مقاتل رقمي الآن.' },
+            { icon: 'fa-biohazard', title: 'تحذير أمان', text: 'نظام التشفير يعمل بأقصى طاقة.' },
+            { icon: 'fa-satellite', title: 'الرادار الميداني', text: 'تم تحديث خرائط الإغاثة فوراً.' }
+        ];
+
+        setInterval(() => {
+            const randomAd = adContents[Math.floor(Math.random() * adContents.length)];
+            const adDiv = document.createElement('div');
+            adDiv.className = 'ad-box';
+            adDiv.innerHTML = `
+                <button class="close-ad" onclick="this.parentElement.remove()">×</button>
+                <i class="fas ${randomAd.icon}"></i>
+                <h4>${randomAd.title}</h4>
+                <p>${randomAd.text}</p>
+            `;
+            adStream.appendChild(adDiv);
+            
+            // مسح الإعلانات القديمة تلقائياً عشان الزحمة
+            if (adStream.children.length > 5) {
+                adStream.removeChild(adStream.firstChild);
+            }
+        }, 8000);
+
+        // مراقبة الحالة (لو المستخدم مسجل دخول أصلاً)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('login-ui').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'flex';
+                document.getElementById('user-welcome').innerText = `البطل ${user.displayName} متصل الآن`;
+            }
+        });
+    </script>
+</body>
+</html>
