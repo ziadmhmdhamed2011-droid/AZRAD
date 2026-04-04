@@ -262,13 +262,31 @@
             document.getElementById('signup-box').classList.toggle('hidden', view === 'login');
         };
 
-        function showDashboard(name) {
-            document.getElementById('login-box').classList.add('hidden');
-            document.getElementById('signup-box').classList.add('hidden');
-            document.getElementById('ads').classList.add('hidden');
-            document.getElementById('success-screen').classList.remove('hidden');
-            document.getElementById('welcome-msg').innerText = `أهلاً بك في القاعدة: ${name}`;
-        }
+     function showDashboard(name) {
+    // التأكد من وجود العناصر قبل محاولة إخفائها عشان الـ Error يختفي
+    const loginBox = document.getElementById('login-box');
+    const signupBox = document.getElementById('signup-box');
+    const ads = document.getElementById('ads');
+    const adArea = document.getElementById('ad-area');
+    const successScreen = document.getElementById('success-screen');
+    const welcomeMsg = document.getElementById('welcome-msg');
+
+    if (loginBox) loginBox.classList.add('hidden');
+    if (signupBox) signupBox.classList.add('hidden');
+    if (ads) ads.classList.add('hidden');
+    if (adArea) adArea.classList.add('hidden'); // إخفاء منطقة الإعلانات بالكامل
+    
+    if (successScreen) {
+        successScreen.classList.remove('hidden');
+        successScreen.style.display = 'block'; // تأكيد الظهور
+    }
+    
+    if (welcomeMsg) {
+        welcomeMsg.innerText = `أهلاً بك في القاعدة: ${name}`;
+    }
+    
+    console.log("تم الدخول بنجاح يا بطل!");
+}
 
         // [5] محرك الإعلانات التلقائي (بالهبل)
         const adContents = [
