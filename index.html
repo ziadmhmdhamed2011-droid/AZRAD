@@ -1,185 +1,297 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZRAD ULTIMATE | أزرد النسخة المدمرة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <title>AZRAD SYSTEM | نظام أزرد السيادي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Orbitron:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --gold: #D4AF37; --navy: #001f3f; --glow: rgba(212, 175, 55, 0.5); }
-        
+        :root {
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.5);
+            --navy: #001f3f;
+            --dark-bg: #000814;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        
-        body { background: #000; color: white; height: 100vh; overflow: hidden; position: fixed; width: 100%; }
 
-        /* خلفية سينمائية متحركة */
-        .bg-video { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--navy), #000); z-index: -2; }
-        .stars { position: fixed; inset: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.3; z-index: -1; }
-
-        /* نظام الإعلانات "بالهبل" */
-        .ad-stream { position: fixed; left: 10px; top: 10px; bottom: 10px; width: 250px; pointer-events: none; z-index: 100; }
-        .ad-box { 
-            background: rgba(0,0,0,0.8); border: 2px solid var(--gold); border-radius: 10px; padding: 15px; margin-bottom: 10px;
-            box-shadow: 0 0 15px var(--glow); pointer-events: all; animation: slideRight 0.5s ease-out; position: relative;
-        }
-        .ad-box i { color: var(--gold); font-size: 1.5rem; margin-bottom: 5px; }
-        .close-ad { position: absolute; top: 5px; left: 5px; color: #fff; cursor: pointer; border: none; background: none; }
-
-        @keyframes slideRight { from { transform: translateX(-110%); } to { transform: translateX(0); } }
-
-        /* الشاشة الرئيسية - جمدان CSS */
-        .main-ui { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        
-        .logo-container { position: relative; margin-bottom: 40px; }
-        h1 { font-family: 'Orbitron'; font-size: 5rem; color: #fff; text-shadow: 0 0 20px var(--gold), 0 0 40px var(--gold); animation: pulse 2s infinite; }
-        
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
-
-        /* أزرار أكشن - تأثير زجاجي */
-        .auth-card { 
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; 
-            border: 1px solid rgba(212,175,55,0.3); width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
+        /* تأثيرات الخلفية (الرادار والشبكة) */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--navy) 0%, #000 85%);
+            z-index: -2;
+        }
+
+        .grid-pattern {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(var(--gold-glow) 1px, transparent 1px), 
+                              linear-gradient(90deg, var(--gold-glow) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        /* نظام الإعلانات الجانبية (Smart Ads) */
+        .ads-sidebar {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            bottom: 20px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .ad-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            pointer-events: all;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px var(--gold-glow);
+            animation: slideInRight 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .ad-card h4 { color: var(--gold); font-size: 1.1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .ad-card p { font-size: 0.85rem; line-height: 1.4; opacity: 0.9; }
+        .close-ad { position: absolute; top: 8px; left: 10px; background: none; border: none; color: #fff; cursor: pointer; font-size: 1.2rem; }
+
+        @keyframes slideInRight {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* مركز التحكم (Auth Card) */
+        .main-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 45px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 4.5rem; color: var(--gold); text-shadow: 0 0 25px var(--gold); margin-bottom: 10px; }
+        .tagline { font-size: 0.9rem; letter-spacing: 3px; color: rgba(255,255,255,0.6); margin-bottom: 35px; text-transform: uppercase; }
+
+        /* المدخلات */
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 15px;
+            outline: none;
+            transition: 0.3s;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .input-field:focus { border-color: var(--gold); box-shadow: 0 0 15px var(--gold-glow); }
+
+        /* الأزرار الجاحدة */
         .btn {
-            width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900;
-            margin-bottom: 15px; cursor: pointer; transition: 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
         }
-        .btn-google { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
-        .btn-pioneer { background: linear-gradient(45deg, var(--gold), #8a6d0e); color: #000; box-shadow: 0 0 20px var(--glow); }
-        .btn:hover { transform: translateY(-5px) scale(1.02); }
 
-        /* شاشة النجاح (مخفية) */
-        #success-screen { display: none; position: fixed; inset: 0; background: var(--dark); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; background: #000; }
-        .welcome-hero { text-align: center; animation: zoomIn 0.8s; }
+        .btn-gold { 
+            background: linear-gradient(45deg, var(--gold), #B8860B); 
+            color: var(--navy); 
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        .btn-google { 
+            background: #ffffff; 
+            color: #000; 
+        }
+
+        .btn:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.1); }
+        .btn:active { transform: translateY(1px); }
+
+        .toggle-btn { background: none; border: none; color: var(--gold); cursor: pointer; text-decoration: underline; font-size: 0.85rem; margin-top: 10px; }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <div class="bg-video"></div>
-    <div class="stars"></div>
+    <div class="bg-overlay"></div>
+    <div class="grid-pattern"></div>
 
-    <div class="ad-stream" id="ads">
-        <div class="ad-box">
+    <div class="ads-sidebar" id="ad-area">
+        <div class="ad-card">
             <button class="close-ad" onclick="this.parentElement.remove()">×</button>
-            <i class="fas fa-crown"></i>
-            <h4>نظام النخبة</h4>
-            <p>أنت الآن في حضرة "أزرد" العظيم.</p>
+            <h4><i class="fas fa-crown"></i> حجز النخبة</h4>
+            <p>باقي 250 مقعد فقط للأبطال المؤسسين لنظام أزرد العالمي.</p>
         </div>
-        <div class="ad-box" style="animation-delay: 0.5s;">
+        <div class="ad-card" style="animation-delay: 0.3s;">
             <button class="close-ad" onclick="this.parentElement.remove()">×</button>
-            <i class="fas fa-shield-heart"></i>
-            <h4>أمان مطلق</h4>
-            <p>بياناتك مشفرة ببروتوكول AZ-24.</p>
+            <h4><i class="fas fa-shield-alt"></i> تشفير سيادي</h4>
+            <p>بياناتك مؤمنة بالكامل خلف جدار الحماية AZ-RAD v4.</p>
         </div>
     </div>
 
-    <div class="main-ui" id="login-ui">
-        <div class="logo-container">
-            <h1 id="main-logo">AZRAD</h1>
-        </div>
+    <div class="main-card" id="login-box">
+        <h1>AZRAD</h1>
+        <p class="tagline">Global Defense System</p>
 
-        <div class="auth-card">
+        <div id="form-container">
+            <input type="email" id="email" class="input-field" placeholder="البريد الإلكتروني">
+            <input type="password" id="pass" class="input-field" placeholder="كلمة المرور">
+            
+            <button class="btn btn-gold" onclick="emailAction('login')">تسجيل الدخول</button>
             <button class="btn btn-google" id="google-btn">
-                <i class="fab fa-google"></i> تسجيل دخول بجوجل
+                <i class="fab fa-google"></i> المواصلة عبر Google
             </button>
-            <button class="btn btn-pioneer" onclick="alert('جاري تفعيل مقاعد النخبة...')">
-                <i class="fas fa-gem"></i> إنشاء حساب النخبة
-            </button>
-            <p style="font-size: 0.8rem; text-align: center; opacity: 0.6;">باقي 250 مقعد فقط للأبطال</p>
+            
+            <button class="toggle-btn" onclick="switchView('signup')">ليس لديك حساب؟ انضم للنخبة</button>
         </div>
     </div>
 
-    <div id="success-screen">
-        <div class="welcome-hero">
-            <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--gold); margin-bottom: 20px;"></i>
-            <h2 id="user-welcome" style="font-size: 3rem;">تم الاختراق بنجاح!</h2>
-            <p>أهلاً بك في القاعدة المركزية لأزرد</p>
-            <br>
-            <button class="btn btn-pioneer" onclick="location.reload()">خروج آمن</button>
-        </div>
+    <div class="main-card hidden" id="signup-box">
+        <h1>JOIN</h1>
+        <p class="tagline">Become a Pioneer</p>
+        
+        <input type="email" id="new-email" class="input-field" placeholder="بريد إلكتروني جديد">
+        <input type="password" id="new-pass" class="input-field" placeholder="كلمة مرور قوية">
+        
+        <button class="btn btn-gold" onclick="emailAction('signup')">إنشاء ملف البطل</button>
+        <button class="toggle-btn" onclick="switchView('login')">لديك حساب بالفعل؟ سجل دخول</button>
     </div>
- <script type="module">
-        // استدعاء ترسانة Firebase القوية
+
+    <div id="success-screen" class="hidden" style="text-align: center;">
+        <i class="fas fa-check-circle" style="font-size: 6rem; color: var(--gold); margin-bottom: 20px;"></i>
+        <h2 id="welcome-msg" style="font-size: 2.5rem; color: #fff;">تم الاتصال بالقاعدة</h2>
+        <br>
+        <button class="btn btn-gold" style="max-width: 250px; margin: auto;" onclick="location.reload()">تسجيل الخروج الآمن</button>
+     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // إعدادات الربط مع قاعدة بيانات أزرد المركزية
+        // [1] تكوين المفاتيح (باستخدام الـ API Key الجديد بتاعك)
         const firebaseConfig = {
-            apiKey: "AIzaSyBDWT4ygUDKlmuelK6EXcyigkeNyQNCFtjW",
+            apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
             authDomain: "azrad-global.firebaseapp.com",
             projectId: "azrad-global",
             appId: "1:727549676844:web:8b474f550e664f34397089"
         };
 
-        // تشغيل المحرك
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // تفعيل الكود السري (Client ID) الذي أرسلته في الصورة لضمان الربط
+        // ربط الـ Client ID لضمان توثيق جوجل
         provider.setCustomParameters({
-            'client_id': '727549676844-a3i6n3s14pqlmtti184s74453uief9r9.apps.googleusercontent.com',
-            'prompt': 'select_account'
+            'client_id': '727549676844-a3i6n3s14pqlmtti184s74453uief9r9.apps.googleusercontent.com'
         });
 
-        // 🟢 وظيفة الدخول بجوجل (The Titan Login)
+        // [2] وظيفة تسجيل الدخول بجوجل
         const googleBtn = document.getElementById('google-btn');
         googleBtn.onclick = async () => {
-            console.log("جاري محاولة اختراق بوابة جوجل...");
+            console.log("جاري اختراق بوابة جوجل...");
             try {
                 const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                // تفعيل شاشة الجمدان والترحيب
-                document.getElementById('login-ui').style.display = 'none';
-                document.getElementById('success-screen').style.display = 'flex';
-                document.getElementById('user-welcome').innerText = `أهلاً بك يا بطل: ${user.displayName}`;
-                
-                // إخفاء الإعلانات الجانبية عند الدخول لزيادة التركيز
-                document.getElementById('ads').style.display = 'none';
+                showDashboard(result.user.displayName || result.user.email);
             } catch (error) {
-                console.error("عطل فني:", error.message);
-                alert("!! تنبيه أمان !!\nتأكد من إضافة رابط الـ GitHub الخاص بك في Authorized Domains داخل إعدادات Firebase ليعمل الدخول.");
+                console.error("عطل في جوجل:", error.message);
+                alert("خطأ: " + error.message + "\nتأكد من إضافة رابط GitHub في الـ Authorized Domains!");
             }
         };
 
-        // 📡 نظام توليد الإعلانات التلقائي (بالهبل)
-        const adStream = document.getElementById('ads');
+        // [3] وظيفة الإيميل والباسورد (دخول + إنشاء حساب)
+        window.emailAction = async (type) => {
+            const email = type === 'login' ? document.getElementById('email').value : document.getElementById('new-email').value;
+            const pass = type === 'login' ? document.getElementById('pass').value : document.getElementById('new-pass').value;
+
+            if (!email || !pass) return alert("برجاء إدخال البيانات كاملة يا بطل!");
+
+            try {
+                let result;
+                if (type === 'login') {
+                    result = await signInWithEmailAndPassword(auth, email, pass);
+                } else {
+                    result = await createUserWithEmailAndPassword(auth, email, pass);
+                    alert("تم إنشاء بروفايل البطل بنجاح!");
+                }
+                showDashboard(result.user.email);
+            } catch (error) {
+                alert("عطل في النظام: " + error.message);
+            }
+        };
+
+        // [4] إدارة الواجهات (التنقل)
+        window.switchView = (view) => {
+            document.getElementById('login-box').classList.toggle('hidden', view === 'signup');
+            document.getElementById('signup-box').classList.toggle('hidden', view === 'login');
+        };
+
+        function showDashboard(name) {
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('signup-box').classList.add('hidden');
+            document.getElementById('ads').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
+            document.getElementById('welcome-msg').innerText = `أهلاً بك في القاعدة: ${name}`;
+        }
+
+        // [5] محرك الإعلانات التلقائي (بالهبل)
         const adContents = [
-            { icon: 'fa-user-ninja', title: 'فرقة النخبة', text: 'انضم لـ 250 مقاتل رقمي الآن.' },
-            { icon: 'fa-biohazard', title: 'تحذير أمان', text: 'نظام التشفير يعمل بأقصى طاقة.' },
-            { icon: 'fa-satellite', title: 'الرادار الميداني', text: 'تم تحديث خرائط الإغاثة فوراً.' }
+            { icon: 'fa-rocket', title: 'تحديث v4.0', text: 'تم تسريع استجابة الرادار الميداني بنسبة 200%.' },
+            { icon: 'fa-biohazard', title: 'تنبيه أمان', text: 'محاولات دخول فاشلة من إحداثيات مجهولة تم صدها.' },
+            { icon: 'fa-gem', title: 'عضوية الماس', text: 'أبطال النخبة يحصلون على دعم قانوني مجاني الآن.' }
         ];
 
         setInterval(() => {
-            const randomAd = adContents[Math.floor(Math.random() * adContents.length)];
-            const adDiv = document.createElement('div');
-            adDiv.className = 'ad-box';
-            adDiv.innerHTML = `
-                <button class="close-ad" onclick="this.parentElement.remove()">×</button>
-                <i class="fas ${randomAd.icon}"></i>
-                <h4>${randomAd.title}</h4>
-                <p>${randomAd.text}</p>
-            `;
-            adStream.appendChild(adDiv);
-            
-            // مسح الإعلانات القديمة تلقائياً عشان الزحمة
-            if (adStream.children.length > 5) {
-                adStream.removeChild(adStream.firstChild);
+            const adArea = document.getElementById('ad-area');
+            if (adArea.children.length < 4) { // منع التكدس
+                const random = adContents[Math.floor(Math.random() * adContents.length)];
+                const adDiv = document.createElement('div');
+                adDiv.className = 'ad-card';
+                adDiv.innerHTML = `
+                    <button class="close-ad" onclick="this.parentElement.remove()">×</button>
+                    <h4><i class="fas ${random.icon}"></i> ${random.title}</h4>
+                    <p>${random.text}</p>
+                `;
+                adArea.appendChild(adDiv);
             }
-        }, 8000);
-
-        // مراقبة الحالة (لو المستخدم مسجل دخول أصلاً)
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('login-ui').style.display = 'none';
-                document.getElementById('success-screen').style.display = 'flex';
-                document.getElementById('user-welcome').innerText = `البطل ${user.displayName} متصل الآن`;
-            }
-        });
+        }, 12000); // إعلان جديد كل 12 ثانية
     </script>
 </body>
 </html>
+    </div>
