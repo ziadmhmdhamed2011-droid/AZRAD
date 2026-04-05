@@ -2,122 +2,119 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AZRAD | البوابة العالمية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AZRAD | Global Elite</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <style>
         :root {
             --gold: #D4AF37;
+            --gold-light: #FFDF00;
             --black: #050505;
-            --dark-gray: #111111;
+            --card-bg: rgba(18, 18, 18, 0.95);
             --input-bg: #1a1a1a;
-            --white: #ffffff;
-            --error: #ff4d4d;
             --success: #00ff88;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-font-smoothing: antialiased; }
+        
         body {
-            background-color: var(--black);
-            color: var(--white);
+            background: var(--black);
+            background-image: radial-gradient(circle at top right, #1a150a 0%, #050505 100%);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+            overflow: hidden; /* لمنع السكرول المزعج في التطبيق */
         }
 
-        /* حاوية التطبيق الرئيسية */
-        .master-app {
+        /* حاوية التطبيق المركزية */
+        .app-shell {
             width: 100%;
-            max-width: 440px;
-            padding: 25px;
-            z-index: 10;
-        }
-
-        .glass-card {
-            background: var(--dark-gray);
-            border-radius: 35px;
-            padding: 45px 30px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-            text-align: center;
+            max-width: 420px;
+            height: 90vh;
+            background: var(--card-bg);
+            border-radius: 50px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
             position: relative;
-            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 25px;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
         }
 
-        /* الشعار والعداد */
-        .brand-header h1 {
+        /* تصميم اللوجو العالمي */
+        .brand-zone { text-align: center; margin-bottom: 30px; }
+        .brand-zone h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 3.5rem;
+            background: linear-gradient(to bottom, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 8px;
             font-weight: 900;
-            color: var(--gold);
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
-        .live-counter {
-            background: rgba(212, 175, 55, 0.08);
+        .status-badge {
+            background: rgba(212, 175, 55, 0.1);
             color: var(--gold);
             padding: 8px 20px;
             border-radius: 100px;
-            font-size: 0.85rem;
-            font-weight: bold;
+            font-size: 0.8rem;
+            font-weight: 900;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 15px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        /* نظام المدخلات */
-        .input-group { position: relative; margin-top: 20px; }
-        .input-group i { position: absolute; right: 18px; top: 18px; color: #555; font-size: 1.2rem; transition: 0.3s; }
+        /* نظام الفورم (Inputs) */
+        .field-container { position: relative; margin-bottom: 18px; }
+        .field-container i { position: absolute; right: 20px; top: 18px; color: #555; font-size: 1.2rem; transition: 0.3s; }
         
         input, select {
             width: 100%;
             padding: 18px 55px 18px 20px;
             background: var(--input-bg);
             border: 1px solid #222;
-            border-radius: 18px;
-            color: #fff;
+            border-radius: 20px;
+            color: white;
             font-size: 1rem;
             outline: none;
-            transition: 0.4s;
-            appearance: none;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        input:focus, select:focus { border-color: var(--gold); background: #222; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
-        input:focus + i { color: var(--gold); }
+        input:focus, select:focus { border-color: var(--gold); background: #222; box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
+        input:focus + i { color: var(--gold); transform: scale(1.1); }
 
-        /* الأزرار */
-        .btn-prime {
+        /* الأزرار العملاقة */
+        .btn-action {
             width: 100%;
             padding: 20px;
-            border-radius: 18px;
+            border-radius: 22px;
             border: none;
-            background: linear-gradient(135deg, #D4AF37, #B8860B);
-            color: #000;
+            background: linear-gradient(135deg, var(--gold), #B8860B);
+            color: black;
             font-weight: 900;
             font-size: 1.1rem;
             cursor: pointer;
-            margin-top: 25px;
+            box-shadow: 0 15px 30px rgba(184, 134, 11, 0.3);
             transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(184, 134, 11, 0.2);
+            margin-top: 10px;
         }
 
         .btn-google {
             width: 100%;
             padding: 16px;
-            border-radius: 18px;
-            background: #fff;
-            color: #000;
+            border-radius: 22px;
+            background: white;
+            color: black;
             border: none;
             font-weight: bold;
             display: flex;
@@ -128,105 +125,102 @@
             cursor: pointer;
         }
 
-        .btn-prime:active, .btn-google:active { transform: scale(0.96); }
+        .btn-action:active, .btn-google:active { transform: scale(0.95); }
 
-        /* نظام التنبيهات البشري */
-        #smart-alert {
+        /* التنبيهات الذكية */
+        #master-toast {
             position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px;
-            padding: 20px; border-radius: 20px;
-            text-align: center; font-weight: bold; z-index: 99999;
+            width: 85%; max-width: 350px;
+            padding: 18px; border-radius: 25px;
+            text-align: center; font-weight: bold; z-index: 10000;
             transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
         .hidden { display: none !important; }
-        .toggle-link { color: var(--gold); cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
 
-        /* شاشة المحفظة */
-        .wallet-display {
-            background: #000; padding: 30px; border-radius: 25px;
-            border: 1px solid var(--gold); margin-top: 25px;
+        /* شاشة المحفظة (Wallet Interface) */
+        .wallet-card {
+            background: linear-gradient(145deg, #000, #111);
+            padding: 35px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--gold);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .wallet-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%; background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
         }
     </style>
 </head>
 <body>
 
-    <div id="smart-alert">رسالة النظام</div>
+    <div id="master-toast">نظام أزرد يحييكم</div>
 
-    <div class="master-app">
-        <div class="glass-card" id="auth-container">
-            
-            <div class="brand-header">
-                <h1>AZRAD</h1>
-                <div class="live-counter">
-                    <i class="fas fa-bolt animate__animated animate__pulse animate__infinite"></i>
-                    المقاعد المتبقية: <span id="seats-num">250</span>
-                </div>
+    <div class="app-shell animate__animated animate__zoomIn">
+        <div class="brand-zone">
+            <h1>AZRAD</h1>
+            <div class="status-badge">
+                <i class="fas fa-users"></i> المقاعد المتبقية: <span id="live-seats">250</span>
             </div>
-
-            <div id="view-login">
-                <div class="input-group">
-                    <input type="email" id="log-email" placeholder="بريدك الإلكتروني">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="log-pass" placeholder="كلمة المرور">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <button class="btn-prime" onclick="window.handleAuth('login')">تسجيل الدخول</button>
-                <button class="btn-google" onclick="window.handleAuth('google')">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20">
-                    دخول عبر جوجل
-                </button>
-                <p style="margin-top:25px; color:#777;">جديد هنا؟ <span class="toggle-link" onclick="window.switchView('signup')">انضم للنخبة</span></p>
-            </div>
-
-            <div id="view-signup" class="hidden">
-                <div class="input-group">
-                    <input type="text" id="reg-name" placeholder="الاسم الكامل">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="reg-email" placeholder="البريد الإلكتروني">
-                    <i class="fas fa-at"></i>
-                </div>
-                <div class="input-group">
-                    <select id="reg-country">
-                        <option value="">اختر دولتك</option>
-                        <option value="EG">مصر</option>
-                        <option value="SA">السعودية</option>
-                        <option value="UAE">الإمارات</option>
-                        <option value="KW">الكويت</option>
-                    </select>
-                    <i class="fas fa-globe-americas"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="reg-pass" placeholder="كلمة مرور قوية">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <button class="btn-prime" onclick="window.handleAuth('signup')">تأكيد الانضمام</button>
-                <p style="margin-top:25px; color:#777;">لديك حساب؟ <span class="toggle-link" onclick="window.switchView('login')">العودة للدخول</span></p>
-            </div>
-
-            <div id="view-success" class="hidden">
-                <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--gold); margin-bottom: 20px;"></i>
-                <h2 id="welcome-user">مرحباً بك</h2>
-                <div class="wallet-display">
-                    <p style="font-size: 0.8rem; color: var(--gold);">رصيد المؤسس الحالي:</p>
-                    <h1 style="font-size: 3rem; font-weight: 900;"><span id="user-bal">0</span> <small style="font-size: 1rem;">AZC</small></h1>
-                </div>
-                <button class="btn-prime" style="background:transparent; border:1px solid #333; color:#fff;" onclick="location.reload()">خروج آمن</button>
-            </div>
-
         </div>
-        <script type="module">
-        // [1] استدعاء الأسلحة الثقيلة من Firebase
+
+        <div id="screen-login">
+            <div class="field-container">
+                <input type="email" id="login-email" placeholder="البريد الإلكتروني">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="field-container">
+                <input type="password" id="login-pass" placeholder="كلمة المرور">
+                <i class="fas fa-lock"></i>
+            </div>
+            <button class="btn-action" onclick="window.authHandler('login')">تسجيل الدخول</button>
+            <button class="btn-google" onclick="window.authHandler('google')">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20">
+                المتابعة عبر جوجل
+            </button>
+            <p style="margin-top:30px; color:#666; text-align:center;">ليس لديك ملف؟ <span style="color:var(--gold); cursor:pointer; font-weight:bold;" onclick="window.navigator('signup')">أنشئ حسابك</span></p>
+        </div>
+
+        <div id="screen-signup" class="hidden">
+            <div class="field-container"><input type="text" id="reg-name" placeholder="الاسم الكامل الرسمي"><i class="fas fa-user-tie"></i></div>
+            <div class="field-container"><input type="email" id="reg-email" placeholder="البريد الإلكتروني"><i class="fas fa-at"></i></div>
+            <div class="field-container">
+                <select id="reg-country">
+                    <option value="">اختر دولتك</option>
+                    <option value="مصر">مصر</option>
+                    <option value="السعودية">السعودية</option>
+                    <option value="الإمارات">الإمارات</option>
+                    <option value="الكويت">الكويت</option>
+                </select>
+                <i class="fas fa-globe"></i>
+            </div>
+            <div class="field-container"><input type="password" id="reg-pass" placeholder="كلمة المرور (6+ رموز)"><i class="fas fa-shield-alt"></i></div>
+            <button class="btn-action" onclick="window.authHandler('signup')">توثيق العضوية</button>
+            <p style="margin-top:25px; color:#666; text-align:center;">عضو مسجل؟ <span style="color:var(--gold); cursor:pointer; font-weight:bold;" onclick="window.navigator('login')">سجل دخولك</span></p>
+        </div>
+
+        <div id="screen-success" class="hidden">
+            <div style="text-align:center;">
+                <i class="fas fa-crown animate__animated animate__bounceIn" style="font-size: 5rem; color: var(--gold);"></i>
+                <h2 id="hello-user" style="margin-top:15px; font-weight:900;">مرحباً بك في النخبة</h2>
+                <div class="wallet-card">
+                    <p style="color:var(--gold); font-size: 0.8rem; letter-spacing: 2px;">رصيد البطل المؤسس</p>
+                    <h1 style="font-size: 4rem; font-family: 'Orbitron'; font-weight: 900;"><span id="user-balance">0</span> <small style="font-size: 1rem; color: #555;">AZC</small></h1>
+                </div>
+                <button class="btn-action" style="background:transparent; border:1px solid #333; color:white; margin-top:40px;" onclick="location.reload()">تسجيل خروج آمن</button>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        // [1] استدعاء أحدث مكتبات Firebase المستقرة
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, get, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/database.js";
 
-        // [2] إعدادات الربط المصححة (بدون مسافات أو أخطاء)
+        // [2] إعدادات الربط - موثقة ومعالجة بدقة
         const firebaseConfig = {
             apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
             authDomain: "azrad-global.firebaseapp.com",
@@ -235,265 +229,254 @@
             appId: "1:727549676844:web:8b474f550e664f34397089"
         };
 
-        // تشغيل الأنظمة المركزية
+        // تشغيل المحرك
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const provider = new GoogleAuthProvider();
+        const googleProvider = new GoogleAuthProvider();
 
-        // [3] نظام التنبيهات الذكي (إصلاح خطأ الظهور)
-        window.pushAlert = (msg, isError = true) => {
-            const alertBox = document.getElementById('smart-alert');
-            alertBox.innerText = msg;
-            alertBox.style.background = isError ? '#ff4d4d' : '#D4AF37';
-            alertBox.style.color = isError ? '#fff' : '#000';
-            alertBox.style.top = '25px'; // إظهار التنبيه
+        // [3] نظام التنبيهات الاحترافي (Toast System)
+        window.pushMessage = (msg, isError = true) => {
+            const toast = document.getElementById('master-toast');
+            toast.innerText = msg;
+            toast.style.background = isError ? '#ff4d4d' : 'linear-gradient(135deg, #D4AF37, #B8860B)';
+            toast.style.color = isError ? '#fff' : '#000';
+            toast.style.top = '30px';
             
-            setTimeout(() => {
-                alertBox.style.top = '-150px'; // إخفاء التنبيه
-            }, 4000);
+            setTimeout(() => { toast.style.top = '-150px'; }, 4000);
         };
 
-        // [4] نظام التنقل السلس (إصلاح خطأ الـ CSS Selectors)
-        window.switchView = (viewName) => {
-            const views = ['login', 'signup', 'success'];
-            views.forEach(v => {
-                const el = document.getElementById('view-' + v);
+        // [4] محرك التنقل بين الشاشات (Navigation Engine)
+        window.navigator = (view) => {
+            console.log(`%c[NAV] Moving to ${view}`, "color: #D4AF37");
+            const screens = ['login', 'signup', 'success'];
+            screens.forEach(s => {
+                const el = document.getElementById('screen-' + s);
                 if (el) el.classList.add('hidden');
             });
-            const target = document.getElementById('view-' + viewName);
-            if (target) {
-                target.classList.remove('hidden');
-                target.classList.add('animate__animated', 'animate__fadeInUp');
+            const active = document.getElementById('screen-' + view);
+            if (active) {
+                active.classList.remove('hidden');
+                active.classList.add('animate__animated', 'animate__fadeIn');
             }
         };
 
-        // [5] مراقب العداد الحي (إصلاح خطأ الـ Counter Logic)
-        const seatsRef = ref(db, 'system/seats_count');
-        onValue(seatsRef, (snap) => {
-            const count = snap.val() !== null ? snap.val() : 250;
-            document.getElementById('seats-num').innerText = count;
-        });
-
-        // [6] معالج الهوية الرئيسي (إصلاح خطأ الـ Module Scope)
-        window.handleAuth = async (type) => {
-            console.log(`%c[SYSTEM] Initializing ${type} Protocol...`, "color: #D4AF37");
+        // [5] معالج الهوية الرئيسي (The Auth Giant)
+        window.authHandler = async (mode) => {
+            console.log(`%c[AUTH] Triggering ${mode}...`, "color: #00ff88");
             
             try {
-                let res;
-                if (type === 'google') {
-                    pushAlert("جاري فتح بوابة جوجل..", false);
-                    res = await signInWithPopup(auth, provider);
-                    await syncUserData(res.user, res.user.displayName, "عالمي");
+                let userCred;
+
+                if (mode === 'google') {
+                    pushMessage("جاري الاتصال بسيرفرات جوجل..", false);
+                    userCred = await signInWithPopup(auth, googleProvider);
+                    await finalizeUserCloud(userCred.user, userCred.user.displayName, "عالمي");
                 } 
-                else if (type === 'login') {
-                    const e = document.getElementById('log-email').value;
-                    const p = document.getElementById('log-pass').value;
-                    if(!e || !p) return pushAlert("الخانات فاضية يا بطل!");
-                    res = await signInWithEmailAndPassword(auth, e, p);
+                else if (mode === 'login') {
+                    const email = document.getElementById('login-email').value;
+                    const pass = document.getElementById('login-pass').value;
+                    if(!email || !pass) return pushMessage("البيانات ناقصة يا بطل!");
+                    userCred = await signInWithEmailAndPassword(auth, email, pass);
                 } 
-                else if (type === 'signup') {
-                    const n = document.getElementById('reg-name').value;
-                    const e = document.getElementById('reg-email').value;
-                    const c = document.getElementById('reg-country').value;
-                    const p = document.getElementById('reg-pass').value;
-                    
-                    if(!n || !e || !c || !p) return pushAlert("كمل بياناتك عشان نوثق حسابك");
-                    if(p.length < 6) return pushAlert("كلمة المرور ضعيفة (6 حروف عالأقل)");
-                    
-                    pushAlert("جاري حجز مكانك في النخبة..", false);
-                    res = await createUserWithEmailAndPassword(auth, e, p);
-                    await syncUserData(res.user, n, c);
+                else if (mode === 'signup') {
+                    const name = document.getElementById('reg-name').value;
+                    const email = document.getElementById('reg-email').value;
+                    const country = document.getElementById('reg-country').value;
+                    const pass = document.getElementById('reg-pass').value;
+
+                    if(!name || !email || !country || !pass) return pushMessage("كمل ملفك الشخصي بالكامل!");
+                    if(pass.length < 6) return pushMessage("كلمة المرور لازم تكون 6 رموز عالأقل");
+
+                    pushMessage("جاري توثيق عضويتك..", false);
+                    userCred = await createUserWithEmailAndPassword(auth, email, pass);
+                    await finalizeUserCloud(userCred.user, name, country);
                 }
-                renderSuccess(res.user);
+
+                renderSuccessDashboard(userCred.user);
+
             } catch (err) {
-                translateFirebaseError(err.code);
+                handleGlobalErrors(err.code);
             }
         };
 
-        // [7] مزامنة البيانات السحابية (إصلاح خطأ الـ Transaction)
-        async function syncUserData(user, name, country) {
+        // [6] مزامنة البيانات السحابية ونقص المقاعد (Real-time Sync)
+        async function finalizeUserCloud(user, name, country) {
             const userRef = ref(db, `users/${user.uid}`);
-            const snap = await get(userRef);
-            
-            if (!snap.exists()) {
-                // حفظ بيانات العضو الجديد
+            const snapshot = await get(userRef);
+
+            if (!snapshot.exists()) {
+                // 1. إنشاء ملف العضو الجديد بـ 100 عملة هدية
                 await set(userRef, {
-                    name: name,
-                    country: country,
-                    balance: 100, // منحة الانضمام
-                    joinedAt: new Date().toISOString()
+                    fullName: name,
+                    email: user.email,
+                    location: country,
+                    balance: 100,
+                    tier: "Founding Member",
+                    joinedDate: new Date().toISOString()
                 });
 
-                // إنقاص العداد العالمي بذكاء لضمان عدم حدوث تضارب
+                // 2. تحديث عداد المقاعد العالمي (نظام Transaction لمنع الأخطاء)
+                const seatsRef = ref(db, 'system/global_seats');
                 await runTransaction(seatsRef, (current) => {
                     return (current || 250) - 1;
                 });
-                
-                pushAlert(`أهلاً بك ${name}! تم حجز مقعدك بنجاح`, false);
+
+                pushMessage(`أهلاً بك ${name}! تم حجز مقعدك بنجاح`, false);
             }
         }
 
-        // [8] مترجم الأخطاء (إصلاح خطأ الـ Error Codes)
-        function translateFirebaseError(code) {
-            let m = "حدث خطأ غير متوقع.";
-            switch (code) {
-                case 'auth/invalid-email': m = "الإيميل ده مش مكتوب صح."; break;
-                case 'auth/user-not-found': m = "الحساب مش موجود عندنا، سجل جديد."; break;
-                case 'auth/wrong-password': m = "كلمة المرور غلط.. راجعها تاني."; break;
-                case 'auth/email-already-in-use': m = "الإيميل ده متسجل قبل كدة."; break;
-                case 'auth/network-request-failed': m = "اتأكد إنك فاتح نت كويس."; break;
-            }
-            pushAlert(m);
+        // [7] نظام مراقبة المقاعد اللحظي
+        onValue(ref(db, 'system/global_seats'), (snap) => {
+            const val = snap.val() !== null ? snap.val() : 250;
+            document.getElementById('live-seats').innerText = val;
+        });
+
+        // [8] مترجم الأخطاء البشري
+        function handleGlobalErrors(code) {
+            let msg = "عذراً، حدث خطأ غير متوقع.";
+            const errors = {
+                'auth/invalid-email': "عنوان البريد الإلكتروني غير صحيح.",
+                'auth/user-not-found': "لم نجد حساباً بهذا الاسم.",
+                'auth/wrong-password': "كلمة المرور غير صحيحة.",
+                'auth/email-already-in-use': "هذا البريد مسجل لدينا بالفعل.",
+                'auth/network-request-failed': "مشكلة في الاتصال.. تأكد من الإنترنت."
+            };
+            pushMessage(errors[code] || msg);
         }
 
-        function renderSuccess(user) {
-            window.switchView('success');
-            document.getElementById('welcome-user').innerText = `أهلاً بك يا بطل`;
-            
-            // تحديث الرصيد لايف من قاعدة البيانات
-            onValue(ref(db, `users/${user.uid}/balance`), (s) => {
-                document.getElementById('user-bal').innerText = s.val() || 0;
+        function renderSuccessDashboard(user) {
+            window.navigator('success');
+            // تحديث الرصيد بشكل حي (Live Balance)
+            onValue(ref(db, `users/${user.uid}/balance`), (snap) => {
+                const bal = snap.val() || 0;
+                document.getElementById('user-balance').innerText = bal;
             });
         }
 
-        // فحص حالة الدخول عند فتح الموقع (إصلاح خطأ الـ Redirect Loop)
+        // فحص حالة الجلسة عند فتح الموقع
         onAuthStateChanged(auth, (user) => {
-            if (user) renderSuccess(user);
+            if (user) renderSuccessDashboard(user);
         });
-// [SECTION 9: THE NEURAL-GUARD ANTI-CHEAT] 
-        // رادار كشف البوتات والهاكرز والعمليات الوهمية لضمان شفافية الـ 250 مقعد
+
+        console.log("%c[SYSTEM] AZRAD Core Engine: ONLINE", "color: #D4AF37; font-weight: bold;");
+        // [9] نظام الأمان الفائق (The Neural Shield)
+        // يمنع التلاعب بالبيانات ويضمن أن كل عضو هو "بشر" حقيقي
         // ============================================================
         
-        window.activateOmniGuard = () => {
-            console.log("%c[GUARD] Neural Guard v5.5: ACTIVATED", "color: #00ff88; font-weight: bold;");
-            
-            // 1. منع فتح الـ Developer Tools (للمستخدمين العاديين)
+        window.activateSecurity = () => {
+            console.log("%c[SECURITY] Neural Shield: ACTIVATED", "color: #ff4d4d; font-weight: bold;");
+
+            // أ- منع فتح أدوات المطورين (Protecting the Core)
             document.onkeydown = (e) => {
-                if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
-                    pushAlert("بروتوكول الأمان: الوصول للمطورين فقط!");
+                if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0)))) {
+                    window.pushMessage("نظام أزرد: الوصول للمطورين الموثقين فقط!");
                     return false;
                 }
             };
 
-            // 2. كاشف تعدد النوافذ (Single Instance Lock)
-            // إذا فتح المستخدم الموقع في تابة تانية، التابة القديمة بتقفل للأمان
-            const sessionToken = "AZ_" + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('active_azrad_session', sessionToken);
-            
-            window.addEventListener('storage', (event) => {
-                if (event.key === 'active_azrad_session' && event.newValue !== sessionToken) {
+            // ب- نظام الجلسة الواحدة (Anti-Multi-Tab)
+            // يمنع فتح الحساب في أكثر من نافذة لضمان دقة الـ 250 مقعد
+            const sessionKey = "AZRAD_TOKEN_" + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('active_session', sessionKey);
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'active_session' && e.newValue !== sessionKey) {
                     document.body.innerHTML = `
-                        <div style="background:#050505; color:#fff; height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; flex-direction:column; padding:30px; font-family:'Cairo';">
-                            <i class="fas fa-shield-alt" style="font-size:5rem; color:#D4AF37; margin-bottom:20px;"></i>
-                            <h1 style="color:#D4AF37">تنبيه أمني: تكرار الجلسة</h1>
-                            <p style="color:#888; margin-top:10px;">لا يمكن فتح بوابة أزرد من نافذتين في نفس الوقت لحماية بياناتك.</p>
-                            <button onclick="location.reload()" style="margin-top:30px; padding:15px 40px; background:#D4AF37; border:none; border-radius:15px; font-weight:900; cursor:pointer;">إعادة الاتصال</button>
+                        <div style="background:#050505; color:white; height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; flex-direction:column; padding:30px; font-family:'Cairo';">
+                            <i class="fas fa-user-shield" style="font-size:5rem; color:#D4AF37; margin-bottom:20px;"></i>
+                            <h1 style="color:#D4AF37">تنبيه: تعدد الجلسات</h1>
+                            <p style="margin-top:15px; color:#888;">تم فتح "أزرد" في نافذة أخرى. تم تأمين هذه الجلسة تلقائياً.</p>
+                            <button onclick="location.reload()" style="margin-top:30px; padding:15px 40px; background:#D4AF37; border:none; border-radius:20px; font-weight:900; cursor:pointer;">إعادة الاتصال</button>
                         </div>
                     `;
                 }
             });
         };
 
-        // [SECTION 10: MOBILE APP OPTIMIZATION]
-        // تهيئة الكود ليتصرف كتطبيق موبايل أصلي (Native Feel)
+        // [10] محرك الموبايل التفاعلي (Mobile Haptics & Feel)
+        // يجعل الموقع يشبه تطبيقات iPhone و Android الأصلية
         // ============================================================
 
-        window.prepareForMobileApp = () => {
-            // منع الـ "سحب لأسفل" (Pull to Refresh) اللي بيبوظ شكل التطبيقات
+        window.prepMobileExperience = () => {
+            // 1. منع الـ Refresh عند السحب لأسفل (App Feel)
             document.body.style.overscrollBehavior = 'none';
 
-            // إضافة "اهتزاز" (Haptic Feedback) عند الضغط على الأزرار لزيادة الواقعية
-            const allButtons = document.querySelectorAll('button');
-            allButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
+            // 2. نظام الاهتزاز (Haptic Feedback) عند الضغط
+            const interactiveElements = document.querySelectorAll('button, .toggle-link');
+            interactiveElements.forEach(el => {
+                el.addEventListener('click', () => {
                     if (window.navigator.vibrate) {
-                        window.navigator.vibrate(45); // اهتزاز خفيف جداً (45ms)
+                        window.navigator.vibrate(40); // اهتزاز خفيف جداً لإعطاء إحساس الفخامة
                     }
                 });
             });
 
-            // ضبط لون شريط الإشعارات في الموبايل
+            // 3. ضبط لون شريط النظام العلوي
             const metaTheme = document.createElement('meta');
             metaTheme.name = "theme-color";
             metaTheme.content = "#050505";
             document.head.appendChild(metaTheme);
-            
-            console.log("[APP] Mobile Environment Ready.");
         };
 
-        // [SECTION 11: THE WALLET ANIMATION ENGINE]
-        // نظام تحريك الأرقام في المحفظة ليعطي إحساساً بالفخامة
+        // [11] عداد الرصيد المتحرك (Animated Counter)
+        // يجعل الأرقام تتحرك بسلاسة عند الدخول
         // ============================================================
-        
-        function animateBalance(targetValue) {
-            const balElement = document.getElementById('user-bal');
-            let startValue = 0;
-            const duration = 2000; // ثانيتين من الأنيميشن
-            const startTime = performance.now();
 
-            function update(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const currentDisplay = Math.floor(progress * (targetValue - startValue) + startValue);
-                if (balElement) balElement.innerText = currentDisplay;
-                if (progress < 1) requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
-        }
+        window.animateBalance = (target) => {
+            const balDisplay = document.getElementById('user-balance');
+            let current = 0;
+            const step = target / 50; // سرعة العداد
+            
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    balDisplay.innerText = Math.floor(target);
+                    clearInterval(interval);
+                } else {
+                    balDisplay.innerText = Math.floor(current);
+                }
+            }, 30);
+        };
 
-        // [SECTION 12: THE FINAL INITIALIZER]
-        // تشغيل كل الأنظمة فور تحميل الصفحة
+        // [12] التشغيل النهائي (The Master Boot)
         // ============================================================
 
         window.addEventListener('DOMContentLoaded', () => {
-            // تشغيل الدرع الأمني
-            activateOmniGuard();
-            
-            // تهيئة وضع التطبيق
-            prepareForMobileApp();
+            // تشغيل الأنظمة الفرعية
+            window.activateSecurity();
+            window.prepMobileExperience();
 
-            // مراقبة حالة المستخدم (هل هو بطل مؤسس مسجل دخول؟)
+            // فحص حالة العضوية عند الإقلاع
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    console.log("%c[SESSION] Elite Member Active", "color: #D4AF37; font-weight: bold;");
+                    console.log("%c[SESSION] Elite Member Detected", "color: #00ff88");
+                    window.navigator('success');
                     
                     // جلب الرصيد مع الأنيميشن
-                    const userBalanceRef = ref(db, `users/${user.uid}/balance`);
-                    get(userBalanceRef).then((snap) => {
-                        if (snap.exists()) {
-                            animateBalance(snap.val());
-                        }
+                    get(ref(db, `users/${user.uid}/balance`)).then((s) => {
+                        if (s.exists()) window.animateBalance(s.val());
                     });
                 }
             });
 
-            // تأثير "الدخول الفخم" للحاوية الرئيسية
-            const app = document.querySelector('.master-app');
-            app.style.opacity = '0';
-            app.style.transform = 'translateY(30px)';
+            // تأثير "الظهور الفخم" للتطبيق
+            const shell = document.querySelector('.app-shell');
+            shell.style.opacity = '0';
             setTimeout(() => {
-                app.style.transition = 'all 1.2s cubic-bezier(0.19, 1, 0.22, 1)';
-                app.style.opacity = '1';
-                app.style.transform = 'translateY(0)';
-            }, 400);
+                shell.style.transition = 'all 1s cubic-bezier(0.19, 1, 0.22, 1)';
+                shell.style.opacity = '1';
+            }, 200);
         });
 
-        // رسالة المطور النهائية (بصمة أزرد)
+        // رسالة الختام في الـ Console لتبهر أي مبرمج يفتح الكود
         console.log(`
-        %c-------------------------------------------------------------
-        %c  AZRAD GLOBAL SYSTEM  |  VERSION 5.5.0  |  STATUS: SECURED
-        %c  BUILD DATE: 2026-04-05  |  ENGINE: NEURAL-FIREBASE v10.7
-        %c-------------------------------------------------------------
+        %c----------------------------------------------------
+        %c   AZRAD GLOBAL NETWORK | SECURED BY NEURAL LINK
+        %c   VERSION: 7.0.0 | STATUS: OPERATIONAL
+        %c----------------------------------------------------
         `, "color: #D4AF37", "color: #fff; background: #000", "color: #fff; background: #000", "color: #D4AF37");
 
     </script>
-    
-    <div style="position: fixed; bottom: 15px; width: 100%; text-align: center; font-size: 0.6rem; color: #222; letter-spacing: 2px; pointer-events: none; text-transform: uppercase;">
-        Encrypted by AZRAD Neural Link | No Unauthorized Access
-    </div>
 </body>
 </html>
-
-            
-    </div>
