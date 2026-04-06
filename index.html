@@ -3,253 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AZRAD | THE SOVEREIGN PROTOCOL</title>
+    <title>AZRAD | FOUNDER EDITION v11</title>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <style>
-        /* AZRAD CSS FRAMEWORK v10.9
-           هذا القسم مصمم ليعطي الموقع ثقلاً بصرياً لا يضاهى 
-        */
         :root {
             --gold: #D4AF37;
-            --gold-bright: #FFD700;
-            --gold-dark: #B8860B;
-            --black-pure: #000000;
-            --black-matte: #050505;
-            --black-surface: #0a0a0a;
-            --glass-strong: rgba(0, 0, 0, 0.9);
-            --glass-light: rgba(255, 255, 255, 0.03);
-            --glow: 0 0 20px rgba(212, 175, 55, 0.3);
-            --transition-slow: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            --transition-fast: 0.3s ease;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --black: #030303;
+            --surface: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.02);
         }
 
-        /* منع السكرول المزعج وضبط الأبعاد */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none !important; }
-        html, body { height: 100%; width: 100%; overflow: hidden; background: var(--black-pure); }
+        /* تحسين الأداء لمنع التهنيج */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Cairo', sans-serif; 
+            outline: none;
+            -webkit-font-smoothing: antialiased;
+            backface-visibility: hidden; /* يسرع الأداء */
+        }
 
         body {
-            font-family: 'Cairo', sans-serif;
+            background: var(--black);
             color: white;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 40%);
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
-        /* شاشة التحميل الأسطورية */
-        #preloader {
-            position: fixed; inset: 0; background: var(--black-pure);
-            z-index: 10000; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-        }
-
-        .loader-logo {
-            font-family: 'Orbitron'; font-size: 4rem; font-weight: 900;
-            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--gold));
-        }
-
-        .loader-bar {
-            width: 200px; height: 2px; background: #111; border-radius: 10px; overflow: hidden;
-        }
-
-        .loader-progress {
-            width: 0%; height: 100%; background: var(--gold);
-            box-shadow: 0 0 10px var(--gold); animation: load 2s forwards;
-        }
-
-        @keyframes load { to { width: 100%; } }
-
-        /* حاوية التطبيق الرئيسية */
+        /* الحاوية الرئيسية (التصميم المطرشم) */
         .master-shell {
-            width: 100%; max-width: 440px; height: 94vh;
-            background: var(--black-matte); border-radius: 50px;
+            width: 100%;
+            max-width: 410px;
+            height: 92vh;
+            background: var(--surface);
+            border-radius: 45px;
             border: 1px solid rgba(212, 175, 55, 0.15);
-            position: relative; overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
-            display: flex; flex-direction: column;
-            z-index: 10; transform-style: preserve-3d;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9), inset 0 0 20px rgba(212, 175, 55, 0.05);
+            overflow: hidden;
+            z-index: 10;
         }
 
-        /* أنماط الحقول (Inputs) */
-        .auth-box { padding: 40px 30px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        
-        .input-wrap { margin-bottom: 20px; position: relative; }
-        
-        .input-wrap input {
-            width: 100%; padding: 22px 25px; background: rgba(255,255,255,0.02);
-            border: 1px solid #1a1a1a; border-radius: 25px; color: white;
-            font-size: 1.1rem; transition: var(--transition-fast); text-align: center;
+        /* العداد التنازلي للمؤسسين */
+        .counter-box {
+            background: rgba(212, 175, 55, 0.05);
+            padding: 10px 20px;
+            border-radius: 0 0 25px 25px;
+            text-align: center;
+            border: 1px solid var(--gold-glow);
+            border-top: none;
+            margin: 0 auto 20px;
+            width: fit-content;
+        }
+        .counter-num { 
+            font-family: 'Orbitron'; 
+            color: var(--gold); 
+            font-weight: 900; 
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--gold-glow);
         }
 
-        .input-wrap input:focus {
-            border-color: var(--gold); background: rgba(212, 175, 55, 0.05);
-            box-shadow: var(--glow); transform: translateY(-2px);
+        /* مدخلات البيانات الفخمة */
+        .input-group { margin-bottom: 18px; position: relative; }
+        input {
+            width: 100%;
+            padding: 20px;
+            background: #0f0f0f;
+            border: 1px solid #1a1a1a;
+            border-radius: 22px;
+            color: white;
+            text-align: center;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:focus { 
+            border-color: var(--gold); 
+            background: #151515;
+            box-shadow: 0 0 20px var(--gold-glow);
+            transform: translateY(-2px);
         }
 
         /* الأزرار الملكية */
-        .btn-gold {
-            width: 100%; padding: 22px; border-radius: 25px; border: none;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: black; font-weight: 900; font-size: 1.2rem; cursor: pointer;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4); transition: var(--transition-slow);
-            display: flex; align-items: center; justify-content: center; gap: 15px;
+        .btn-action {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--gold), #B8860B);
+            border: none;
+            border-radius: 22px;
+            color: black;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
+        .btn-action:hover { transform: scale(1.02); filter: brightness(1.1); }
 
-        .btn-gold:hover { transform: scale(1.02); filter: brightness(1.1); }
-        .btn-gold:active { transform: scale(0.98); }
-
-        .btn-google {
-            width: 100%; padding: 18px; border-radius: 25px; border: 1px solid #222;
-            background: white; color: black; font-weight: 700; margin-top: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer;
+        /* ميزات المؤسس (The Founder Perks) */
+        .founder-perks {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 15px;
         }
-
-        /* التنبيهات الذكية */
-        #toast {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            width: 85%; max-width: 380px; background: var(--gold); color: black;
-            padding: 18px; border-radius: 25px; font-weight: 900; text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5); transition: 0.6s var(--transition-slow); z-index: 11000;
+        .perk-card {
+            background: rgba(255,255,255,0.02);
+            padding: 10px 5px;
+            border-radius: 15px;
+            border: 1px solid #111;
+            text-align: center;
+            font-size: 0.6rem;
+            color: #888;
         }
+        .perk-card i { color: var(--gold); display: block; margin-bottom: 5px; font-size: 1rem; }
 
         .hidden { display: none !important; }
+        
+        #toast {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); color: black; padding: 16px 30px;
+            border-radius: 25px; font-weight: 900; transition: 0.5s var(--transition-slow); z-index: 10000;
+        }
     </style>
 </head>
-<div id="toast" class="animate__animated">نظام أزرد: جاري الفحص...</div>
+<div id="toast" class="animate__animated">جاري فحص بروتوكول أزرد...</div>
 
-<div id="preloader">
-    <div class="loader-logo">AZRAD</div>
-    <div class="loader-bar">
-        <div class="loader-progress"></div>
+<div id="preloader" style="position:fixed; inset:0; background:#000; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <h1 style="font-family:'Orbitron'; font-size:3rem; color:var(--gold); letter-spacing:10px;" class="animate__animated animate__pulse animate__infinite">AZRAD</h1>
+    <div style="width:150px; height:2px; background:#111; margin-top:20px; overflow:hidden;">
+        <div style="width:100%; height:100%; background:var(--gold); animation: load 2s infinite;"></div>
     </div>
-    <p style="margin-top: 20px; font-size: 0.8rem; color: #444; letter-spacing: 2px;">SECURE CONNECTION ESTABLISHED</p>
 </div>
 
 <div class="master-shell animate__animated animate__fadeIn">
     
-    <div style="height: 5px; background: linear-gradient(90deg, transparent, var(--gold), transparent);"></div>
+    <div class="counter-box">
+        <span style="font-size: 0.6rem; color: #555; display: block; margin-bottom: 2px;">FOUNDER SEATS REMAINING</span>
+        <span class="counter-num" id="seats-count">250</span>
+        <span style="color: var(--gold); font-size: 0.8rem; margin-left: 5px;">/ 250</span>
+    </div>
 
     <div class="auth-box">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h2 style="font-family: 'Orbitron'; letter-spacing: 8px; color: white;">AZRAD</h2>
-            <div style="width: 40px; height: 2px; background: var(--gold); margin: 10px auto;"></div>
-        </div>
-
+        
         <div id="view-login" class="animate__animated animate__fadeIn">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h3 style="font-weight: 900; font-size: 1.5rem;">دخول السيادة</h3>
-                <p style="color: #666; font-size: 0.8rem;">أدخل شفرات الوصول الخاصة بك</p>
+            <div style="text-align: center; margin-bottom: 35px;">
+                <h2 style="font-weight: 900; letter-spacing: 2px;">دخول النخبة</h2>
+                <div style="width: 30px; height: 3px; background: var(--gold); margin: 8px auto;"></div>
             </div>
 
-            <div class="input-wrap">
-                <input type="email" id="login-email" placeholder="البريد الإلكتروني" spellcheck="false">
+            <div class="input-group">
+                <input type="email" id="l-email" placeholder="البريد الإلكتروني" autocomplete="off">
             </div>
-            <div class="input-wrap">
-                <input type="password" id="login-pass" placeholder="كلمة المرور">
+            <div class="input-group">
+                <input type="password" id="l-pass" placeholder="كلمة المرور">
             </div>
 
-            <button class="btn-gold" onclick="window.handleAuth('login')">
-                <span>تأكيد الدخول</span>
-                <i class="fas fa-shield-check"></i>
+            <button class="btn-action" onclick="window.masterAuth('login')">
+                <span>تأكيد الهوية</span>
+                <i class="fas fa-fingerprint"></i>
             </button>
 
-            <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px;">
-                <div style="flex: 1; height: 1px; background: #222;"></div>
-                <span style="font-size: 0.7rem; color: #444;">أو عبر الأنظمة العالمية</span>
-                <div style="flex: 1; height: 1px; background: #222;"></div>
-            </div>
-
-            <button class="btn-google" onclick="window.handleAuth('google')">
+            <button class="btn-google" style="background:#fff; color:#000; border:none; margin-top:15px; width:100%; padding:15px; border-radius:20px; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:10px; cursor:pointer;" onclick="window.masterAuth('google')">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18">
-                المتابعة عبر جوجل
+                الدخول عبر Google
             </button>
 
-            <p style="text-align: center; margin-top: 30px; font-size: 0.9rem; color: #666;">
-                ليس لديك هوية؟ 
-                <span style="color: var(--gold); cursor: pointer; font-weight: bold;" onclick="window.switchView('signup')">أسس حسابك الآن</span>
+            <p style="text-align: center; margin-top: 25px; font-size: 0.8rem; color: #444;">
+                ليس لديك حساب؟ <span style="color: var(--gold); cursor: pointer; font-weight: 900;" onclick="window.router('signup')">انضم للمؤسسين</span>
             </p>
         </div>
 
         <div id="view-signup" class="hidden animate__animated animate__fadeIn">
             <div style="text-align: center; margin-bottom: 30px;">
-                <h3 style="font-weight: 900; font-size: 1.5rem;">تأسيس هوية</h3>
-                <p style="color: #666; font-size: 0.8rem;">انضم إلى صفوة المجتمع الرقمي</p>
+                <h2 style="font-weight: 900;">تأسيس عضوية</h2>
+                <p style="color: #444; font-size: 0.7rem;">احجز مقعدك في الـ 250 الأوائل</p>
             </div>
 
-            <div class="input-wrap">
-                <input type="text" id="reg-name" placeholder="الاسم الرسمي بالكامل">
-            </div>
-            <div class="input-wrap">
-                <input type="email" id="reg-email" placeholder="البريد الإلكتروني">
-            </div>
-            <div class="input-wrap">
-                <input type="password" id="reg-pass" placeholder="كلمة المرور (6+ رموز)">
-            </div>
+            <div class="input-group"><input type="text" id="r-name" placeholder="الاسم بالكامل"></div>
+            <div class="input-group"><input type="email" id="r-email" placeholder="البريد الإلكتروني"></div>
+            <div class="input-group"><input type="password" id="r-pass" placeholder="كلمة المرور"></div>
 
-            <button class="btn-gold" onclick="window.handleAuth('signup')">
-                <span>إنشاء الحساب</span>
-                <i class="fas fa-user-plus"></i>
+            <button class="btn-action" onclick="window.masterAuth('signup')">
+                <span>حجز المقعد الآن</span>
+                <i class="fas fa-crown"></i>
             </button>
 
-            <p style="text-align: center; margin-top: 30px; font-size: 0.9rem; color: #666;">
-                لديك حساب بالفعل؟ 
-                <span style="color: var(--gold); cursor: pointer; font-weight: bold;" onclick="window.switchView('login')">تسجيل الدخول</span>
+            <p style="text-align: center; margin-top: 25px; font-size: 0.8rem; color: #444;">
+                لديك حساب؟ <span style="color: var(--gold); cursor: pointer; font-weight: 900;" onclick="window.router('login')">دخول آمن</span>
             </p>
         </div>
 
         <div id="view-success" class="hidden animate__animated animate__fadeIn">
             <div style="text-align: center; margin-bottom: 20px;">
-                <div id="user-avatar" style="width: 80px; height: 80px; background: #111; border: 2px solid var(--gold); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">👤</div>
-                <h3 id="display-name" style="font-weight: 900;">بطل أزرد</h3>
-                <div class="badge" style="margin-top: 5px;">عضو مؤسس (Founder)</div>
-            </div>
-
-            <div style="background: #000; padding: 30px 20px; border-radius: 30px; border: 1px solid var(--gold); margin: 20px 0; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -10px; right: -10px; opacity: 0.05; font-size: 5rem;"><i class="fas fa-coins"></i></div>
-                <p style="color: var(--gold); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 10px;">رصيد العملات المتاحة</p>
-                <h1 style="font-size: 3.5rem; font-family: 'Orbitron';"><span id="user-balance">0</span> <small style="font-size: 1rem; color: #444;">AZC</small></h1>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                <div style="background: #0a0a0a; padding: 15px; border-radius: 20px; border: 1px solid #1a1a1a; text-align: center;">
-                    <p style="font-size: 0.6rem; color: #444;">المقاعد المتبقية</p>
-                    <p id="seats-display" style="font-weight: bold; color: var(--gold);">250</p>
+                <div style="position: relative; width: 90px; height: 90px; margin: 0 auto 15px;">
+                    <div style="position: absolute; inset: 0; border: 2px solid var(--gold); border-radius: 50%; animation: pulse 2s infinite;"></div>
+                    <div id="u-pfp" style="width: 100%; height: 100%; border-radius: 50%; background: #111; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">👑</div>
                 </div>
-                <div style="background: #0a0a0a; padding: 15px; border-radius: 20px; border: 1px solid #1a1a1a; text-align: center;">
-                    <p style="font-size: 0.6rem; color: #444;">حالة الحساب</p>
-                    <p style="font-weight: bold; color: #00ff88;">نشط</p>
-                </div>
+                <h3 id="u-name" style="font-weight: 900; color: #fff;">...</h3>
+                <div style="color: var(--gold); font-size: 0.6rem; letter-spacing: 3px; font-weight: bold; margin-top: 5px;">VERIFIED FOUNDER</div>
             </div>
 
-            <button class="btn-gold" style="background: transparent; border: 1px solid #222; color: #555; margin-top: 30px;" onclick="window.logout()">
-                تسجيل الخروج الآمن
+            <div style="background: linear-gradient(145deg, #0a0a0a, #000); padding: 30px 20px; border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.3); text-align: center; position: relative; overflow: hidden;">
+                <p style="font-size: 0.6rem; color: #555; letter-spacing: 2px;">FOUNDER BALANCE</p>
+                <h1 style="font-size: 3.5rem; font-family: 'Orbitron'; margin: 10px 0;"><span id="u-bal">0</span> <small style="font-size: 0.9rem; color: #333;">AZC</small></h1>
+                <div style="height: 2px; background: rgba(212,175,55,0.1); width: 50%; margin: 0 auto;"></div>
+            </div>
+
+            <div class="founder-perks">
+                <div class="perk-card"><i class="fas fa-bolt"></i>أولوية تحويل</div>
+                <div class="perk-card"><i class="fas fa-shield-heart"></i>حماية VIP</div>
+                <div class="perk-card"><i class="fas fa-gem"></i>هدايا شهرية</div>
+            </div>
+
+            <button class="btn-action" style="background: transparent; border: 1px solid #1a1a1a; color: #444; margin-top: 25px; font-size: 0.8rem;" onclick="window.logout()">
+                خروج آمن من البروتوكول
             </button>
         </div>
+
     </div>
 
-    <div style="padding: 20px; text-align: center; border-top: 1px solid #111;">
-        <p style="font-size: 0.6rem; color: #333; letter-spacing: 1px;">ENCRYPTED BY AZRAD SECURITY PROTOCOL &copy; 2026</p>
+    <div style="padding: 15px; text-align: center; border-top: 1px solid #0f0f0f; margin-top: auto;">
+        <p style="font-size: 0.5rem; color: #222; letter-spacing: 2px;">AZRAD GLOBAL SOVEREIGNTY SYSTEM &copy; 2026</p>
     </div>
 </div>
+
+<style>
+    @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+</style>
 <script>
-    /* [AZRAD CORE ENGINE v10.9]
-       هذا المحرك مسؤول عن إدارة الهوية، الرصيد، والمزامنة السحابية.
+    /* [AZRAD SOVEREIGN ENGINE - FOUNDER EDITION]
+       Designed for: 250 Elite Members
+       Architecture: Low-Latency Reactive State
     */
 
-    // 1. الإعدادات الكونية (Firebase Config)
-    const firebaseConfig = {
+    // 1. بروتوكول الاتصال (Firebase Configuration)
+    const azradConfig = {
         apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
         authDomain: "azrad-global.firebaseapp.com",
         projectId: "azrad-global",
@@ -257,166 +260,175 @@
         appId: "1:727549676844:web:8b474f550e664f34397089"
     };
 
-    // تشغيل الأنظمة
-    firebase.initializeApp(firebaseConfig);
+    // تشغيل المحركات الأساسية
+    if (!firebase.apps.length) {
+        firebase.initializeApp(azradConfig);
+    }
     const auth = firebase.auth();
     const db = firebase.database();
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-    // 2. نظام التنبيهات (Toast Logic)
-    window.showToast = (msg) => {
-        const t = document.getElementById('toast');
-        t.innerText = msg;
-        t.style.top = '30px';
-        t.classList.add('animate__bounceInDown');
-        
-        setTimeout(() => {
-            t.style.top = '-100px';
-            t.classList.remove('animate__bounceInDown');
-        }, 4000);
+    // 2. إدارة الحالة لمنع التهنيج (State Management)
+    const State = {
+        currentView: 'login',
+        isProcessing: false,
+        user: null,
+        seats: 250
     };
 
-    // 3. محرك التبديل بين الشاشات (View Switcher)
-    window.switchView = (view) => {
-        document.getElementById('view-login').classList.add('hidden');
-        document.getElementById('view-signup').classList.add('hidden');
-        document.getElementById('view-success').classList.add('hidden');
+    // 3. نظام التنبيهات المطور (Ultra-Fast Toast)
+    window.showToast = (msg, type = 'gold') => {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.background = type === 'error' ? '#ff3333' : 'var(--gold)';
+        toast.style.color = type === 'error' ? 'white' : 'black';
+        toast.style.top = '30px';
+        toast.classList.add('animate__bounceInDown');
+
+        setTimeout(() => {
+            toast.style.top = '-100px';
+            toast.classList.remove('animate__bounceInDown');
+        }, 3500);
+    };
+
+    // 4. محرك التبديل الذكي (The Router)
+    window.router = (viewName) => {
+        if (State.isProcessing) return;
         
-        const target = document.getElementById('view-' + view);
+        const views = ['login', 'signup', 'success'];
+        views.forEach(v => {
+            const el = document.getElementById('view-' + v);
+            el.classList.add('hidden');
+        });
+
+        const target = document.getElementById('view-' + viewName);
         target.classList.remove('hidden');
         target.classList.add('animate__fadeIn');
+        State.currentView = viewName;
     };
 
-    // 4. معالج الهوية (Authentication Handler)
-    window.handleAuth = async (type) => {
+    // 5. محرك العداد التنازلي اللحظي (The Live Counter)
+    const syncSeats = () => {
+        const seatsRef = db.ref('system/seats');
+        seatsRef.on('value', (snapshot) => {
+            const count = snapshot.val();
+            if (count !== null) {
+                const el = document.getElementById('seats-count');
+                // تأثير عداد رقمي "مطرشم"
+                let start = parseInt(el.innerText);
+                let end = count;
+                if (start !== end) {
+                    el.classList.add('animate__pulse');
+                    el.innerText = end;
+                    setTimeout(() => el.classList.remove('animate__pulse'), 500);
+                }
+            }
+        });
+    };
+
+    // 6. بروتوكول المؤسسين (Founder Auth Logic)
+    window.masterAuth = async (mode) => {
+        if (State.isProcessing) return;
+        State.isProcessing = true;
+        
         try {
             let res;
-            if (type === 'google') {
+            if (mode === 'google') {
                 res = await auth.signInWithPopup(googleProvider);
-                await syncUserToCloud(res.user, res.user.displayName);
+                await initializeFounderData(res.user, res.user.displayName);
             } 
-            else if (type === 'login') {
-                const e = document.getElementById('login-email').value;
-                const p = document.getElementById('login-pass').value;
-                if(!e || !p) return showToast("أدخل بياناتك كاملة!");
-                res = await auth.signInWithEmailAndPassword(e, p);
+            else if (mode === 'login') {
+                const email = document.getElementById('l-email').value;
+                const pass = document.getElementById('l-pass').value;
+                if (!email || !pass) throw new Error("أدخل شفرات الوصول!");
+                res = await auth.signInWithEmailAndPassword(email, pass);
             } 
-            else if (type === 'signup') {
-                const n = document.getElementById('reg-name').value;
-                const e = document.getElementById('reg-email').value;
-                const p = document.getElementById('reg-pass').value;
-                if(!n || !e || !p) return showToast("كل الخانات مطلوبة!");
-                if(p.length < 6) return showToast("كلمة المرور ضعيفة!");
-                
-                res = await auth.createUserWithEmailAndPassword(e, p);
-                await syncUserToCloud(res.user, n);
+            else if (mode === 'signup') {
+                const name = document.getElementById('r-name').value;
+                const email = document.getElementById('r-email').value;
+                const pass = document.getElementById('r-pass').value;
+
+                if (!name || !email || !pass) throw new Error("بيانات المؤسس غير مكتملة!");
+                if (pass.length < 6) throw new Error("الشفرة يجب أن تكون 6 رموز فأكثر");
+
+                res = await auth.createUserWithEmailAndPassword(email, pass);
+                await initializeFounderData(res.user, name);
             }
-            showToast("تم التحقق من الهوية بنجاح");
-        } catch (err) {
-            showToast("خطأ أمني: " + err.message);
+            showToast("تم اختراق النظام.. بنجاح!");
+        } catch (error) {
+            showToast(error.message, 'error');
+        } finally {
+            State.isProcessing = false;
         }
     };
 
-    // 5. مزامنة البيانات السحابية (Cloud Sync)
-    async function syncUserToCloud(user, name) {
-        const uRef = db.ref(`users/${user.uid}`);
-        const snap = await uRef.once('value');
-        
-        if (!snap.exists()) {
-            // مستخدم جديد يحصل على 100 عملة ترحيبية
-            await uRef.set({
+    // 7. ميزات المؤسس الحصرية (Perks Logic)
+    async function initializeFounderData(user, name) {
+        const userRef = db.ref(`users/${user.uid}`);
+        const snapshot = await userRef.once('value');
+
+        if (!snapshot.exists()) {
+            // التحقق من توافر مقاعد
+            const seatsSnap = await db.ref('system/seats').once('value');
+            const currentSeats = seatsSnap.val() || 250;
+
+            if (currentSeats <= 0) {
+                await user.delete();
+                throw new Error("للأسف، اكتمل عدد المؤسسين (250/250)");
+            }
+
+            // إنشاء ملف المؤسس
+            await userRef.set({
                 name: name,
-                balance: 100,
-                rank: "Founder",
-                joinedAt: Date.now()
+                balance: 500, // منحة المؤسسين (أعلى من العادي)
+                status: "Founder",
+                perks: ["VIP_PROTECT", "FAST_WITHDRAW", "MONTHLY_GIFT"],
+                joinedAt: firebase.database.ServerValue.TIMESTAMP
             });
-            // إنقاص مقعد من النظام
-            await db.ref('system/seats').transaction(c => (c || 250) - 1);
+
+            // إنقاص المقاعد بشكل آمن
+            await db.ref('system/seats').transaction((s) => (s || 250) - 1);
         }
     }
 
-    // 6. مراقب الحالة اللحظي (Real-time Observer)
+    // 8. مراقب الجلسة الذكي (Session Observer)
     auth.onAuthStateChanged(user => {
         const preloader = document.getElementById('preloader');
-        
         if (user) {
-            window.switchView('success');
-            // تحديث بيانات لوحة التحكم فوراً
+            window.router('success');
+            // مزامنة بيانات لوحة التحكم
             db.ref(`users/${user.uid}`).on('value', s => {
-                const data = s.val();
-                if(data) {
-                    document.getElementById('display-name').innerText = data.name;
-                    document.getElementById('user-balance').innerText = data.balance;
+                const d = s.val();
+                if (d) {
+                    document.getElementById('u-name').innerText = d.name;
+                    document.getElementById('u-bal').innerText = d.balance;
                 }
             });
         } else {
-            window.switchView('login');
+            window.router('login');
         }
 
-        // إخفاء شاشة التحميل
+        // إخفاء التحميل بسلاسة لتقليل الجهد على المعالج
         setTimeout(() => {
             preloader.classList.add('animate__fadeOut');
-            setTimeout(() => preloader.style.display = 'none', 500);
-        }, 2000);
+            setTimeout(() => preloader.style.display = 'none', 600);
+        }, 1500);
     });
 
-    // 7. تحديث المقاعد عالمياً
-    db.ref('system/seats').on('value', s => {
-        document.getElementById('seats-display').innerText = s.val() || 250;
-    });
+    // 9. تشغيل المزامنة العالمية
+    syncSeats();
 
-    // 8. الخروج الآمن
+    // 10. بروتوكول الخروج الآمن
     window.logout = () => {
-        auth.signOut().then(() => location.reload());
+        if (confirm("هل تريد الخروج من بيئة أزرد الآمنة؟")) {
+            auth.signOut().then(() => location.reload());
+        }
     };
 
-    // إضافة تأثير الاهتزاز عند الضغط (للموبايل)
-    document.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if(navigator.vibrate) navigator.vibrate(40);
-        });
-    });
+    // تحسين الأداء: تعطيل التفاعلات أثناء الأنيميشن
+    document.addEventListener('animationstart', () => { document.body.style.pointerEvents = 'none'; });
+    document.addEventListener('animationend', () => { document.body.style.pointerEvents = 'auto'; });
 
-
-
-
-    // ==========================================
-// ⚠️ تحذير: كود التطهير الشامل - امسحه بعد الاستخدام
-// ==========================================
-
-window.purgeAllData = async () => {
-    const confirmAction = confirm("⚠️ هل أنت متأكد؟ هذا الإجراء سيمسح كل المستخدمين، الأرصدة، والمقاعد نهائياً من السيرفر!");
-    
-    if (confirmAction) {
-        try {
-            // 1. مسح جدول المستخدمين بالكامل
-            await db.ref('users').remove();
-            
-            // 2. إعادة ضبط عداد المقاعد للرقم الأصلي (250)
-            await db.ref('system/seats').set(250);
-            
-            // 3. مسح أي بيانات أخرى في النظام
-            await db.ref('system/logs').remove();
-
-            showToast("🔥 تم تطهير قاعدة البيانات بنجاح!");
-            
-            // تسجيل خروج أي مستخدم حالي لتجنب الأخطاء
-            auth.signOut().then(() => {
-                setTimeout(() => location.reload(), 2000);
-            });
-
-        } catch (error) {
-            showToast("❌ فشل المسح: " + error.message);
-            console.error(error);
-        }
-    }
-};
-
-// تشغيل المسح فوراً بمجرد ما الصفحة تفتح (لو عايز تنجز)
-// purgeAllData(); 
-
-// أو تقدر تفتحه من "الكونسول" في المتصفح بكتابة: purgeAllData()
-    
 </script>
 </body>
 </html>
