@@ -428,7 +428,31 @@
     // تحسين الأداء: تعطيل التفاعلات أثناء الأنيميشن
     document.addEventListener('animationstart', () => { document.body.style.pointerEvents = 'none'; });
     document.addEventListener('animationend', () => { document.body.style.pointerEvents = 'auto'; });
+// فنكشن التسجيل المطورة
+async function handleSignup(email, password, name) {
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
 
+        // 1. إرسال رابط التأكيد للإيميل فوراً
+        await user.sendEmailVerification();
+        
+        // 2. تسجيل البيانات في الداتابيز بس بحالة "غير مفعل"
+        await db.ref('users/' + user.uid).set({
+            name: name,
+            balance: 0, // مش هياخد الـ 500 غير لما يفعل
+            verified: false
+        });
+
+        alert("تم إرسال رابط التأكيد لإيميلك! افتح الإيميل ودوس على الرابط عشان الحساب يتفعل.");
+        
+        // 3. توجيهه لصفحة "انتظار التأكيد"
+        showVerifyScreen(); 
+
+    } catch (error) {
+        alert("خطأ: " + error.message);
+    }
+}
 </script>
 </body>
 </html>
