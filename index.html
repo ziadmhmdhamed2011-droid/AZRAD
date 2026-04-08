@@ -2,457 +2,84 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AZRAD | FOUNDER EDITION v11</title>
-
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-
-    <style>
-        :root {
-            --gold: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.4);
-            --black: #030303;
-            --surface: #0a0a0a;
-            --glass: rgba(255, 255, 255, 0.02);
-        }
-
-        /* تحسين الأداء لمنع التهنيج */
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: 'Cairo', sans-serif; 
-            outline: none;
-            -webkit-font-smoothing: antialiased;
-            backface-visibility: hidden; /* يسرع الأداء */
-        }
-
-        body {
-            background: var(--black);
-            color: white;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
-        }
-
-        /* الحاوية الرئيسية (التصميم المطرشم) */
-        .master-shell {
-            width: 100%;
-            max-width: 410px;
-            height: 92vh;
-            background: var(--surface);
-            border-radius: 45px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.9), inset 0 0 20px rgba(212, 175, 55, 0.05);
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        /* العداد التنازلي للمؤسسين */
-        .counter-box {
-            background: rgba(212, 175, 55, 0.05);
-            padding: 10px 20px;
-            border-radius: 0 0 25px 25px;
-            text-align: center;
-            border: 1px solid var(--gold-glow);
-            border-top: none;
-            margin: 0 auto 20px;
-            width: fit-content;
-        }
-        .counter-num { 
-            font-family: 'Orbitron'; 
-            color: var(--gold); 
-            font-weight: 900; 
-            font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--gold-glow);
-        }
-
-        /* مدخلات البيانات الفخمة */
-        .input-group { margin-bottom: 18px; position: relative; }
-        input {
-            width: 100%;
-            padding: 20px;
-            background: #0f0f0f;
-            border: 1px solid #1a1a1a;
-            border-radius: 22px;
-            color: white;
-            text-align: center;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        input:focus { 
-            border-color: var(--gold); 
-            background: #151515;
-            box-shadow: 0 0 20px var(--gold-glow);
-            transform: translateY(-2px);
-        }
-
-        /* الأزرار الملكية */
-        .btn-action {
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--gold), #B8860B);
-            border: none;
-            border-radius: 22px;
-            color: black;
-            font-weight: 900;
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-action:hover { transform: scale(1.02); filter: brightness(1.1); }
-
-        /* ميزات المؤسس (The Founder Perks) */
-        .founder-perks {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 15px;
-        }
-        .perk-card {
-            background: rgba(255,255,255,0.02);
-            padding: 10px 5px;
-            border-radius: 15px;
-            border: 1px solid #111;
-            text-align: center;
-            font-size: 0.6rem;
-            color: #888;
-        }
-        .perk-card i { color: var(--gold); display: block; margin-bottom: 5px; font-size: 1rem; }
-
-        .hidden { display: none !important; }
-        
-        #toast {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: var(--gold); color: black; padding: 16px 30px;
-            border-radius: 25px; font-weight: 900; transition: 0.5s var(--transition-slow); z-index: 10000;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZRAD | تسجيل الدخول | السيادة الرقمية</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
 </head>
-<div id="toast" class="animate__animated">جاري فحص بروتوكول أزرد...</div>
+<body>
 
-<div id="preloader" style="position:fixed; inset:0; background:#000; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-    <h1 style="font-family:'Orbitron'; font-size:3rem; color:var(--gold); letter-spacing:10px;" class="animate__animated animate__pulse animate__infinite">AZRAD</h1>
-    <div style="width:150px; height:2px; background:#111; margin-top:20px; overflow:hidden;">
-        <div style="width:100%; height:100%; background:var(--gold); animation: load 2s infinite;"></div>
+<div class="auth-wrapper">
+    <div id="authContainer" class="auth-container card-shadow">
+        <div class="logo-area">
+            <img src="icon.png" alt="AZRAD Logo" class="logo-img">
+            <h1>AZRAD</h1>
+            <p>السيادة الرقمية تبدأ من هنا</p>
+        </div>
+
+        <div class="tabs">
+            <button id="loginTab" class="active" onclick="showAuthTab('login')">تسجيل دخول</button>
+            <button id="signupTab" onclick="showAuthTab('signup')">إنشاء حساب</button>
+        </div>
+
+        <form id="loginForm" class="auth-form anim-slide-in">
+            <div class="input-group">
+                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="loginPass" placeholder="كلمة المرور" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="form-options">
+                <a href="#" class="forgot-pass" onclick="resetPassword()">نسيت كلمة المرور؟</a>
+            </div>
+            <button type="submit" id="btnLogin" class="btn-main">دخول</button>
+        </form>
+
+        <form id="signupForm" class="auth-form hidden anim-slide-in">
+            <div class="input-group">
+                <input type="text" id="newName" placeholder="الاسم الكامل" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="input-group">
+                <input type="email" id="newEmail" placeholder="البريد الإلكتروني" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="newPass" placeholder="كلمة مرور قوية" oninput="checkPassStrength(this.value)" required>
+                <i class="fas fa-lock"></i>
+                <div class="strength-bar"><div id="passStrengthIndicator"></div></div>
+            </div>
+            <button type="submit" id="btnSignup" class="btn-main">إنشاء الحساب</button>
+        </form>
+
+        <div class="divider"><span>أو</span></div>
+
+        <button class="btn-google" onclick="initSignInWithGoogle()">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" alt="Google">
+            الدخول بواسطة جوجل
+        </button>
+        
+        <div id="recaptcha-container"></div>
+    </div>
+
+    <div id="appContainer" class="app-container hidden card-shadow">
+        <div class="user-profile">
+            <img src="" alt="User Avatar" id="userAvatar">
+            <h2>مرحباً، <span id="userNamePlaceholder"></span></h2>
+            <p id="userEmailPlaceholder"></p>
+        </div>
+        <button onclick="initSignOut()" class="btn-logout">تسجيل خروج</button>
     </div>
 </div>
 
-<div class="master-shell animate__animated animate__fadeIn">
-    
-    <div class="counter-box">
-        <span style="font-size: 0.6rem; color: #555; display: block; margin-bottom: 2px;">FOUNDER SEATS REMAINING</span>
-        <span class="counter-num" id="seats-count">250</span>
-        <span style="color: var(--gold); font-size: 0.8rem; margin-left: 5px;">/ 250</span>
-    </div>
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="ui.js"></script>
 
-    <div class="auth-box">
-        
-        <div id="view-login" class="animate__animated animate__fadeIn">
-            <div style="text-align: center; margin-bottom: 35px;">
-                <h2 style="font-weight: 900; letter-spacing: 2px;">دخول النخبة</h2>
-                <div style="width: 30px; height: 3px; background: var(--gold); margin: 8px auto;"></div>
-            </div>
-
-            <div class="input-group">
-                <input type="email" id="l-email" placeholder="البريد الإلكتروني" autocomplete="off">
-            </div>
-            <div class="input-group">
-                <input type="password" id="l-pass" placeholder="كلمة المرور">
-            </div>
-
-            <button class="btn-action" onclick="window.masterAuth('login')">
-                <span>تأكيد الهوية</span>
-                <i class="fas fa-fingerprint"></i>
-            </button>
-
-            <button class="btn-google" style="background:#fff; color:#000; border:none; margin-top:15px; width:100%; padding:15px; border-radius:20px; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:10px; cursor:pointer;" onclick="window.masterAuth('google')">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18">
-                الدخول عبر Google
-            </button>
-
-            <p style="text-align: center; margin-top: 25px; font-size: 0.8rem; color: #444;">
-                ليس لديك حساب؟ <span style="color: var(--gold); cursor: pointer; font-weight: 900;" onclick="window.router('signup')">انضم للمؤسسين</span>
-            </p>
-        </div>
-
-        <div id="view-signup" class="hidden animate__animated animate__fadeIn">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h2 style="font-weight: 900;">تأسيس عضوية</h2>
-                <p style="color: #444; font-size: 0.7rem;">احجز مقعدك في الـ 250 الأوائل</p>
-            </div>
-
-            <div class="input-group"><input type="text" id="r-name" placeholder="الاسم بالكامل"></div>
-            <div class="input-group"><input type="email" id="r-email" placeholder="البريد الإلكتروني"></div>
-            <div class="input-group"><input type="password" id="r-pass" placeholder="كلمة المرور"></div>
-
-            <button class="btn-action" onclick="window.masterAuth('signup')">
-                <span>حجز المقعد الآن</span>
-                <i class="fas fa-crown"></i>
-            </button>
-
-            <p style="text-align: center; margin-top: 25px; font-size: 0.8rem; color: #444;">
-                لديك حساب؟ <span style="color: var(--gold); cursor: pointer; font-weight: 900;" onclick="window.router('login')">دخول آمن</span>
-            </p>
-        </div>
-
-        <div id="view-success" class="hidden animate__animated animate__fadeIn">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="position: relative; width: 90px; height: 90px; margin: 0 auto 15px;">
-                    <div style="position: absolute; inset: 0; border: 2px solid var(--gold); border-radius: 50%; animation: pulse 2s infinite;"></div>
-                    <div id="u-pfp" style="width: 100%; height: 100%; border-radius: 50%; background: #111; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">👑</div>
-                </div>
-                <h3 id="u-name" style="font-weight: 900; color: #fff;">...</h3>
-                <div style="color: var(--gold); font-size: 0.6rem; letter-spacing: 3px; font-weight: bold; margin-top: 5px;">VERIFIED FOUNDER</div>
-            </div>
-
-            <div style="background: linear-gradient(145deg, #0a0a0a, #000); padding: 30px 20px; border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.3); text-align: center; position: relative; overflow: hidden;">
-                <p style="font-size: 0.6rem; color: #555; letter-spacing: 2px;">FOUNDER BALANCE</p>
-                <h1 style="font-size: 3.5rem; font-family: 'Orbitron'; margin: 10px 0;"><span id="u-bal">0</span> <small style="font-size: 0.9rem; color: #333;">AZC</small></h1>
-                <div style="height: 2px; background: rgba(212,175,55,0.1); width: 50%; margin: 0 auto;"></div>
-            </div>
-
-            <div class="founder-perks">
-                <div class="perk-card"><i class="fas fa-bolt"></i>أولوية تحويل</div>
-                <div class="perk-card"><i class="fas fa-shield-heart"></i>حماية VIP</div>
-                <div class="perk-card"><i class="fas fa-gem"></i>هدايا شهرية</div>
-            </div>
-
-            <button class="btn-action" style="background: transparent; border: 1px solid #1a1a1a; color: #444; margin-top: 25px; font-size: 0.8rem;" onclick="window.logout()">
-                خروج آمن من البروتوكول
-            </button>
-        </div>
-
-    </div>
-
-    <div style="padding: 15px; text-align: center; border-top: 1px solid #0f0f0f; margin-top: auto;">
-        <p style="font-size: 0.5rem; color: #222; letter-spacing: 2px;">AZRAD GLOBAL SOVEREIGNTY SYSTEM &copy; 2026</p>
-    </div>
-</div>
-
-<style>
-    @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
-</style>
-<script>
-    /* [AZRAD SOVEREIGN ENGINE - FOUNDER EDITION]
-       Designed for: 250 Elite Members
-       Architecture: Low-Latency Reactive State
-    */
-
-    // 1. بروتوكول الاتصال (Firebase Configuration)
-    const azradConfig = {
-        apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
-        authDomain: "azrad-global.firebaseapp.com",
-        projectId: "azrad-global",
-        databaseURL: "https://azrad-global-default-rtdb.firebaseio.com",
-        appId: "1:727549676844:web:8b474f550e664f34397089"
-    };
-
-    // تشغيل المحركات الأساسية
-    if (!firebase.apps.length) {
-        firebase.initializeApp(azradConfig);
-    }
-    const auth = firebase.auth();
-    const db = firebase.database();
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
-
-    // 2. إدارة الحالة لمنع التهنيج (State Management)
-    const State = {
-        currentView: 'login',
-        isProcessing: false,
-        user: null,
-        seats: 250
-    };
-
-    // 3. نظام التنبيهات المطور (Ultra-Fast Toast)
-    window.showToast = (msg, type = 'gold') => {
-        const toast = document.getElementById('toast');
-        toast.innerText = msg;
-        toast.style.background = type === 'error' ? '#ff3333' : 'var(--gold)';
-        toast.style.color = type === 'error' ? 'white' : 'black';
-        toast.style.top = '30px';
-        toast.classList.add('animate__bounceInDown');
-
-        setTimeout(() => {
-            toast.style.top = '-100px';
-            toast.classList.remove('animate__bounceInDown');
-        }, 3500);
-    };
-
-    // 4. محرك التبديل الذكي (The Router)
-    window.router = (viewName) => {
-        if (State.isProcessing) return;
-        
-        const views = ['login', 'signup', 'success'];
-        views.forEach(v => {
-            const el = document.getElementById('view-' + v);
-            el.classList.add('hidden');
-        });
-
-        const target = document.getElementById('view-' + viewName);
-        target.classList.remove('hidden');
-        target.classList.add('animate__fadeIn');
-        State.currentView = viewName;
-    };
-
-    // 5. محرك العداد التنازلي اللحظي (The Live Counter)
-    const syncSeats = () => {
-        const seatsRef = db.ref('system/seats');
-        seatsRef.on('value', (snapshot) => {
-            const count = snapshot.val();
-            if (count !== null) {
-                const el = document.getElementById('seats-count');
-                // تأثير عداد رقمي "مطرشم"
-                let start = parseInt(el.innerText);
-                let end = count;
-                if (start !== end) {
-                    el.classList.add('animate__pulse');
-                    el.innerText = end;
-                    setTimeout(() => el.classList.remove('animate__pulse'), 500);
-                }
-            }
-        });
-    };
-
-    // 6. بروتوكول المؤسسين (Founder Auth Logic)
-    window.masterAuth = async (mode) => {
-        if (State.isProcessing) return;
-        State.isProcessing = true;
-        
-        try {
-            let res;
-            if (mode === 'google') {
-                res = await auth.signInWithPopup(googleProvider);
-                await initializeFounderData(res.user, res.user.displayName);
-            } 
-            else if (mode === 'login') {
-                const email = document.getElementById('l-email').value;
-                const pass = document.getElementById('l-pass').value;
-                if (!email || !pass) throw new Error("أدخل شفرات الوصول!");
-                res = await auth.signInWithEmailAndPassword(email, pass);
-            } 
-            else if (mode === 'signup') {
-                const name = document.getElementById('r-name').value;
-                const email = document.getElementById('r-email').value;
-                const pass = document.getElementById('r-pass').value;
-
-                if (!name || !email || !pass) throw new Error("بيانات المؤسس غير مكتملة!");
-                if (pass.length < 6) throw new Error("الشفرة يجب أن تكون 6 رموز فأكثر");
-
-                res = await auth.createUserWithEmailAndPassword(email, pass);
-                await initializeFounderData(res.user, name);
-            }
-            showToast("تم اختراق النظام.. بنجاح!");
-        } catch (error) {
-            showToast(error.message, 'error');
-        } finally {
-            State.isProcessing = false;
-        }
-    };
-
-    // 7. ميزات المؤسس الحصرية (Perks Logic)
-    async function initializeFounderData(user, name) {
-        const userRef = db.ref(`users/${user.uid}`);
-        const snapshot = await userRef.once('value');
-
-        if (!snapshot.exists()) {
-            // التحقق من توافر مقاعد
-            const seatsSnap = await db.ref('system/seats').once('value');
-            const currentSeats = seatsSnap.val() || 250;
-
-            if (currentSeats <= 0) {
-                await user.delete();
-                throw new Error("للأسف، اكتمل عدد المؤسسين (250/250)");
-            }
-
-            // إنشاء ملف المؤسس
-            await userRef.set({
-                name: name,
-                balance: 500, // منحة المؤسسين (أعلى من العادي)
-                status: "Founder",
-                perks: ["VIP_PROTECT", "FAST_WITHDRAW", "MONTHLY_GIFT"],
-                joinedAt: firebase.database.ServerValue.TIMESTAMP
-            });
-
-            // إنقاص المقاعد بشكل آمن
-            await db.ref('system/seats').transaction((s) => (s || 250) - 1);
-        }
-    }
-
-    // 8. مراقب الجلسة الذكي (Session Observer)
-    auth.onAuthStateChanged(user => {
-        const preloader = document.getElementById('preloader');
-        if (user) {
-            window.router('success');
-            // مزامنة بيانات لوحة التحكم
-            db.ref(`users/${user.uid}`).on('value', s => {
-                const d = s.val();
-                if (d) {
-                    document.getElementById('u-name').innerText = d.name;
-                    document.getElementById('u-bal').innerText = d.balance;
-                }
-            });
-        } else {
-            window.router('login');
-        }
-
-        // إخفاء التحميل بسلاسة لتقليل الجهد على المعالج
-        setTimeout(() => {
-            preloader.classList.add('animate__fadeOut');
-            setTimeout(() => preloader.style.display = 'none', 600);
-        }, 1500);
-    });
-
-    // 9. تشغيل المزامنة العالمية
-    syncSeats();
-
-    // 10. بروتوكول الخروج الآمن
-    window.logout = () => {
-        if (confirm("هل تريد الخروج من بيئة أزرد الآمنة؟")) {
-            auth.signOut().then(() => location.reload());
-        }
-    };
-
-    // تحسين الأداء: تعطيل التفاعلات أثناء الأنيميشن
-    document.addEventListener('animationstart', () => { document.body.style.pointerEvents = 'none'; });
-    document.addEventListener('animationend', () => { document.body.style.pointerEvents = 'auto'; });
-// فنكشن التسجيل المطورة
-async function handleSignup(email, password, name) {
-    try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        const user = userCredential.user;
-
-        // 1. إرسال رابط التأكيد للإيميل فوراً
-        await user.sendEmailVerification();
-        
-        // 2. تسجيل البيانات في الداتابيز بس بحالة "غير مفعل"
-        await db.ref('users/' + user.uid).set({
-            name: name,
-            balance: 0, // مش هياخد الـ 500 غير لما يفعل
-            verified: false
-        });
-
-        alert("تم إرسال رابط التأكيد لإيميلك! افتح الإيميل ودوس على الرابط عشان الحساب يتفعل.");
-        
-        // 3. توجيهه لصفحة "انتظار التأكيد"
-        showVerifyScreen(); 
-
-    } catch (error) {
-        alert("خطأ: " + error.message);
-    }
-}
-</script>
 </body>
 </html>
