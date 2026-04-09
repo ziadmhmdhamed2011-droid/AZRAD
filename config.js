@@ -1,4 +1,4 @@
-// --- إعدادات الربط الرسمية لتطبيق AZRAD ---
+// --- ملف الربط النهائي لتطبيق AZRAD ---
 
 const firebaseConfig = {
   apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
@@ -11,22 +11,24 @@ const firebaseConfig = {
   measurementId: "G-9JFDZRN5MD"
 };
 
-// تشغيل Firebase النسخة المتوافقة
+// تشغيل Firebase (النسخة المستقرة)
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// التعديل الصحيح للربط
-const auth = firebase.auth();
-const db = firebase.firestore();
-const rtdb = firebase.database(); // دي اللي كانت عاملة Error
-const googleProvider = new firebase.auth.GoogleAuthProvider();
-// إعداد حماية "أنا لست روبوت" (Invisible reCAPTCHA)
-window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-    'size': 'invisible',
-    'callback': (response) => {
-        console.log("تم التحقق من الحماية بنجاح ✅");
-    }
-});
+// تعريف الأدوات (الأسماء دي لازم تكون كدة عشان auth.js يشوفها)
+var auth = firebase.auth();
+var db = firebase.firestore();
+var googleProvider = new firebase.auth.GoogleAuthProvider();
 
-console.log("تم ربط AZRAD بـ Firebase بنجاح 🚀");
+// إعداد رمز التحقق (reCAPTCHA)
+// خليناه "مرئي" دلوقتي عشان تتأكد إنه شغال
+window.onload = function() {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'normal', // لو عايزه يختفي بعدين خليها 'invisible'
+        'callback': (response) => {
+            console.log("تم التحقق من الإنسان بنجاح ✅");
+        }
+    });
+    window.recaptchaVerifier.render();
+};
