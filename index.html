@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZRAD | نظام التوثيق السيادي</title>
+    <meta name="description" content="AZRAD - المنصة الرائدة لتنظيم المساعدات الإنسانية والعمل التطوعي">
+    <title>AZRAD | بوابة الخير والتمكين الرقمي</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -14,115 +15,172 @@
 </head>
 <body>
 
-    <div class="bg-animate"></div>
-
-    <div class="main-container">
-        <div id="authContainer" class="glass-card anim-slide-up">
+    <div id="introOverlay" class="intro-overlay">
+        <div class="intro-card anim-pop-in">
+            <button class="close-intro-btn" onclick="closeIntro()" title="إغلاق">
+                <i class="fas fa-times"></i>
+            </button>
             
-            <div id="statusMessage" class="hidden"></div>
-
-            <div class="brand-header">
-                <div class="logo-wrapper">
-                    <img src="icon.png" alt="AZRAD" id="mainLogo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/5968/5968204.png'">
+            <div class="intro-slider">
+                <div id="slide1" class="intro-slide active">
+                    <div class="intro-icon-circle">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h2>رؤية AZRAD الإنسانية</h2>
+                    <p>نحن لسنا مجرد تطبيق، نحن جسر رقمي يربط القلوب الرحيمة بالأسر المتعففة بكل أمان وخصوصية.</p>
                 </div>
-                <h1>AZRAD</h1>
-                <div class="security-tag">
-                    <i class="fas fa-fingerprint"></i>
-                    <span>نظام التوثيق المتعدد الطبقات</span>
+
+                <div id="slide2" class="intro-slide">
+                    <div class="intro-icon-circle">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h2>تكنولوجيا في خدمة الخير</h2>
+                    <p>نستخدم الذكاء الاصطناعي لتوزيع المساعدات بعدالة، وضمان عدم تكرار الاستفادة لضمان وصول الدعم للجميع.</p>
+                </div>
+
+                <div id="slide3" class="intro-slide">
+                    <div class="intro-icon-circle">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h2>نادي الـ 250 مؤسس</h2>
+                    <p>بمبادرتك بالتسجيل الآن، ستكون ضمن أول 250 عضو مؤسس، مما يمنحك شارة "سفير الخير" الدائمة في ملفك الشخصي.</p>
+                    <button class="get-started-btn" onclick="closeIntro()">ابدأ رحلة العطاء</button>
                 </div>
             </div>
 
-            <div class="auth-tabs">
-                <button id="loginTab" class="tab-btn active" onclick="toggleAuth('login')">
-                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-                </button>
-                <button id="signupTab" class="tab-btn" onclick="toggleAuth('signup')">
-                    <i class="fas fa-user-plus"></i> إنشاء سيادة
-                </button>
+            <div class="slider-navigation">
+                <span class="nav-dot active" onclick="jumpToSlide(1)"></span>
+                <span class="nav-dot" onclick="jumpToSlide(2)"></span>
+                <span class="nav-dot" onclick="jumpToSlide(3)"></span>
+            </div>
+        </div>
+    </div>
+
+    <header class="global-announcement">
+        <div class="container">
+            <div class="counter-box">
+                <i class="fas fa-users-viewfinder"></i>
+                <span>متبقي <strong id="userLimitCount">250</strong> مكان للحصول على العضوية التأسيسية</span>
+                <div class="mini-progress">
+                    <div id="limitProgressBar" class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div id="authContainer" class="glass-card main-auth-box">
+            
+            <div id="statusMessage" class="status-msg-area hidden"></div>
+
+            <div class="brand-section">
+                <div class="logo-container">
+                    <img src="icon.png" alt="AZRAD LOGO" id="mainAppLogo" class="app-logo">
+                </div>
+                <h1 class="app-name">AZRAD</h1>
+                <p class="app-slogan">منصة المساعدات والتمكين الرقمي</p>
             </div>
 
-            <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
-                <div class="input-group">
-                    <div class="input-field">
+            <nav class="auth-nav">
+                <button id="loginTab" class="nav-item active" onclick="switchAuthTab('login')">
+                    <i class="fas fa-door-open"></i> دخول الأعضاء
+                </button>
+                <button id="signupTab" class="nav-item" onclick="switchAuthTab('signup')">
+                    <i class="fas fa-user-plus"></i> انضمام كشريك خير
+                </button>
+            </nav>
+
+            <form id="loginForm" class="auth-form-body" onsubmit="executeLogin(event)">
+                <div class="form-group">
+                    <label for="logEmail">البريد الإلكتروني</label>
+                    <div class="input-wrapper">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="logEmail" placeholder="البريد الإلكتروني" required autocomplete="email">
+                        <input type="email" id="logEmail" placeholder="example@mail.com" required>
                     </div>
                 </div>
-                <div class="input-group">
-                    <div class="input-field">
+                <div class="form-group">
+                    <label for="logPass">كلمة المرور</label>
+                    <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="logPass" placeholder="كلمة المرور" required autocomplete="current-password">
+                        <input type="password" id="logPass" placeholder="••••••••" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-submit">
-                    <span class="btn-text">دخول آمن</span>
-                    <i class="fas fa-shield-halved"></i>
+                <button type="submit" class="main-btn btn-login">
+                    <span>دخول آمن للوحة التحكم</span>
+                    <i class="fas fa-shield-check"></i>
                 </button>
-                <div class="form-footer">
-                    <button type="button" onclick="handleReset()" class="link-btn">نسيت مفتاح الوصول؟</button>
+                <div class="auth-extra-links">
+                    <button type="button" onclick="triggerPasswordReset()" class="text-btn">فقدت كلمة السر؟</button>
                 </div>
             </form>
 
-            <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
-                <div class="input-field">
-                    <i class="fas fa-id-card"></i>
-                    <input type="text" id="newName" placeholder="الاسم الرباعي الكامل" required>
+            <form id="signupForm" class="auth-form-body hidden" onsubmit="executeSignup(event)">
+                <div class="form-group">
+                    <label for="newName">الاسم الرباعي (للتوثيق الرسمي)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="newName" placeholder="اكتب اسمك كما في الهوية" required>
+                    </div>
                 </div>
-                <div class="input-field">
-                    <i class="fas fa-at"></i>
-                    <input type="email" id="newEmail" placeholder="البريد الإلكتروني الرسمي" required>
+                <div class="form-group">
+                    <label for="newEmail">البريد الإلكتروني</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-at"></i>
+                        <input type="email" id="newEmail" placeholder="سيصلك عليه رابط التفعيل" required>
+                    </div>
                 </div>
-                <div class="input-field">
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="newPass" placeholder="كلمة مرور صخرية (8+)" oninput="checkStrength(this.value)" required>
-                </div>
-                
-                <div class="strength-meter-container">
-                    <div class="meter-label">قوة التشفير:</div>
-                    <div class="strength-meter">
-                        <div id="strengthBar"></div>
+                <div class="form-group">
+                    <label for="newPass">إنشاء كلمة مرور</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="newPass" placeholder="8 رموز على الأقل" oninput="monitorStrength(this.value)" required>
+                    </div>
+                    <div class="password-strength-box">
+                        <div id="strengthMeterBar"></div>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn-submit btn-signup">
-                    <span class="btn-text">بدء عملية التوثيق</span>
-                    <i class="fas fa-paper-plane"></i>
+                <button type="submit" class="main-btn btn-signup">
+                    <span>تسجيل وتفعيل العضوية</span>
+                    <i class="fas fa-user-check"></i>
                 </button>
+                <p class="terms-text">بتسجيلك، أنت توافق على ميثاق شرف AZRAD للمساعدات.</p>
             </form>
 
-            <div class="social-divider">
-                <span>أو الارتباط عبر</span>
+            <div class="divider">
+                <span>أو المتابعة من خلال</span>
             </div>
 
-            <button class="google-auth-btn" onclick="handleGoogle()">
-                <img src="https://developers.google.com/static/identity/images/g-logo.png" alt="Google">
-                <span>التحقق عبر Google</span>
+            <button class="btn-google-login" onclick="executeGoogleAuth()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                المزامنة مع حساب Google
             </button>
 
             <div id="recaptcha-container"></div>
         </div>
 
         <div id="appContainer" class="glass-card hidden">
-            <div class="app-header">
-                <div class="success-animation">
-                    <i class="fas fa-check-circle pulse"></i>
+            <div class="success-screen">
+                <div class="celebration-icon">
+                    <i class="fas fa-check-double pulse"></i>
                 </div>
-                <h2 id="welcomeName">مرحباً بك</h2>
-                <div class="verification-badge">
-                    <i class="fas fa-user-check"></i> هوية موثقة رقمياً
+                <h2 class="welcome-title">أهلاً بك في أسرة AZRAD</h2>
+                <p class="user-id-text">كود الموثوقية: <span id="displayMemberUID">جاري التحميل...</span></p>
+                
+                <div class="app-dashboard-preview">
+                    <p>تم تفعيل حسابك كعضو مؤسس بنجاح. يمكنك الآن البدء في تصفح طلبات المساعدة أو تقديم الدعم.</p>
                 </div>
-            </div>
-            
-            <div class="app-body">
-                <p>لقد اجتزت بروتوكولات الأمان بنجاح. بريدك الآن مرتبط بنظام AZRAD المركزي.</p>
-            </div>
 
-            <button onclick="handleLogout()" class="btn-logout">
-                <i class="fas fa-power-off"></i>
-                تسجيل الخروج الآمن
-            </button>
+                <button onclick="executeLogout()" class="btn-exit">
+                    <i class="fas fa-power-off"></i> تسجيل خروج آمن
+                </button>
+            </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>© 2026 AZRAD | جميع الحقوق محفوظة لمنصة المساعدات الرقمية</p>
+    </footer>
 
     <script src="config.js"></script>
     <script src="auth.js"></script>
