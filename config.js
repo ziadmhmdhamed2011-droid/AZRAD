@@ -16,12 +16,11 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// تعريف الأدوات (القلب النابض للنظام)
+// التعديل الصحيح للربط
 const auth = firebase.auth();
-const db = firebase.firestore(); // لاستخدام قاعدة بيانات Firestore
-const rtdb = firebase.database(); // لاستخدام الـ Realtime Database اللي عندك
+const db = firebase.firestore();
+const rtdb = firebase.database(); // دي اللي كانت عاملة Error
 const googleProvider = new firebase.auth.GoogleAuthProvider();
-
 // إعداد حماية "أنا لست روبوت" (Invisible reCAPTCHA)
 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
     'size': 'invisible',
