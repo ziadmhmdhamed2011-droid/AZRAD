@@ -62,14 +62,15 @@ window.handleSignup = async function(e) {
         await user.updateProfile({ displayName: name });
 
         // 3. تخزين بيانات المستخدم في Firestore (قاعدة بيانات المشاكل)
-        await db.collection('users').doc(user.uid).set({
-            fullName: name,
-            email: email,
-            role: currentCount < 250 ? "عضو مؤسس" : "عضو",
-            joinDate: firebase.firestore.FieldValue.serverTimestamp(),
-            isVerified: false,
-            points: 100 // نقاط ترحيبية لبدء المساعدة
-        });
+ // استبدل السطر اللي بيبدأ بـ await db.collection بالكود ده:
+await db.ref('users/' + user.uid).set({
+    fullName: name,
+    email: email,
+    role: currentCount < 250 ? "عضو مؤسس" : "عضو",
+    joinDate: firebase.database.ServerValue.TIMESTAMP,
+    isVerified: false,
+    points: 100
+});
 
         // 4. 🔥 الإجراء الأهم: إرسال رابط تفعيل الإيميل (Email Verification)
         await user.sendEmailVerification();
