@@ -1,215 +1,178 @@
-/* الهوية البصرية لمنصة AZRAD للمساعدات v5.0 */
+/**
+ * 🌿 AZRAD GLOBAL DESIGN SYSTEM v6.0
+ * تصميم منصة التكافل الاجتماعي وحل المشكلات
+ */
+
 :root {
-    --primary-green: #1b5e20; /* أخضر ملكي للوقار */
-    --accent-green: #2e7d32;  /* أخضر للتفاعل */
-    --light-green: #e8f5e9;   /* خلفية مريحة */
-    --gold-member: #fbc02d;   /* لون العضوية التأسيسية */
-    --pure-white: #ffffff;
-    --text-dark: #2c3e50;
-    --glass-effect: rgba(255, 255, 255, 0.92);
-    --shadow-lux: 0 20px 60px rgba(0, 0, 0, 0.1);
-    --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --royal-green: #1b5e20; /* الأخضر الملكي */
+    --emerald: #2e7d32;     /* الزمردي للتفاعل */
+    --light-bg: #f8faf9;    /* خلفية بيضاء مريحة */
+    --gold-accent: #fbc02d; /* ذهبي للأعضاء المؤسسين */
+    --warning-red: #d32f2f; /* أحمر للتحذيرات */
+    --glass: rgba(255, 255, 255, 0.94);
+    --shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    --radius: 20px;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #f1f8e9 0%, #ffffff 50%, #e8f5e9 100%);
+    background: var(--light-bg);
+    background-image: radial-gradient(#d1e7d3 0.5px, transparent 0.5px);
+    background-size: 20px 20px; /* خلفية منقطة خفيفة جداً للفخامة */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: var(--text-dark);
 }
 
-/* [1] الإعلان التعريفي (Intro Overlay) */
+/* [1] نظام الإعلان التعريفي (Overlay) */
 .intro-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .intro-card {
-    background: var(--pure-white);
-    width: 90%;
+    background: white;
+    width: 100%;
     max-width: 500px;
-    padding: 40px;
     border-radius: 30px;
+    padding: 40px;
     text-align: center;
     position: relative;
-    box-shadow: 0 30px 100px rgba(0,0,0,0.5);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
 }
 
-.close-intro-btn {
+.close-x {
     position: absolute;
     top: 20px;
     right: 20px;
-    background: #f5f5f5;
+    font-size: 2rem;
+    background: none;
     border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
     cursor: pointer;
-    font-size: 1.2rem;
-    color: #666;
-    transition: var(--transition-smooth);
+    color: #999;
 }
 
-.close-intro-btn:hover { background: #eee; color: var(--primary-green); }
+.icon-box {
+    font-size: 3.5rem;
+    color: var(--royal-green);
+    margin-bottom: 20px;
+}
 
-.intro-slide { display: none; animation: fadeIn 0.5s ease-out; }
+.intro-slide { display: none; animation: slideFade 0.5s ease; }
 .intro-slide.active { display: block; }
 
-.intro-icon-circle {
-    width: 80px;
-    height: 80px;
-    background: var(--light-green);
-    color: var(--primary-green);
+@keyframes slideFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dots-nav { margin-top: 30px; display: flex; justify-content: center; gap: 8px; }
+.dot { width: 10px; height: 10px; background: #ddd; border-radius: 50%; cursor: pointer; }
+.dot.active { background: var(--royal-green); width: 30px; border-radius: 5px; }
+
+/* [2] شريط العداد العلوي */
+.top-announcement {
+    width: 100%;
+    background: var(--royal-green);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 0.9rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.counter-wrap { display: flex; align-items: center; justify-content: center; gap: 15px; }
+.progress-mini { width: 100px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; }
+#limitProgressBar { height: 100%; background: var(--gold-accent); width: 0%; transition: width 1s; }
+
+/* [3] الكارت الزجاجي الرئيسي */
+.auth-wrapper { padding: 60px 20px; width: 100%; max-width: 450px; }
+
+.glass-card {
+    background: var(--glass);
+    padding: 45px 35px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,0.5);
+    text-align: center;
+}
+
+.logo-circle {
+    width: 85px;
+    height: 85px;
+    background: white;
+    margin: 0 auto 20px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 2.5rem;
+    border: 2px solid var(--royal-green);
+    padding: 15px;
 }
+.logo-circle img { width: 100%; object-fit: contain; }
 
-.get-started-btn {
-    background: var(--primary-green);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 20px;
-}
+h1 { color: var(--royal-green); font-size: 2.4rem; font-weight: 800; letter-spacing: -1px; }
+.tagline { color: #666; font-size: 0.9rem; margin-bottom: 30px; }
 
-.slider-navigation { margin-top: 25px; display: flex; justify-content: center; gap: 10px; }
-.nav-dot { width: 10px; height: 10px; background: #ddd; border-radius: 50%; cursor: pointer; }
-.nav-dot.active { background: var(--primary-green); width: 25px; border-radius: 5px; }
+/* التبويبات */
+.auth-tabs { display: flex; background: #f0f2f1; padding: 6px; border-radius: 15px; margin-bottom: 30px; }
+.tab-link { flex: 1; padding: 12px; border: none; background: none; font-weight: 700; color: #888; cursor: pointer; transition: 0.3s; }
+.tab-link.active { background: white; color: var(--royal-green); border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-/* [2] شريط العداد (Counter Bar) */
-.global-announcement {
+/* المدخلات */
+.input-group { position: relative; margin-bottom: 18px; }
+.input-group i { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--royal-green); }
+.input-group input {
     width: 100%;
-    background: var(--primary-green);
-    color: white;
-    padding: 12px 0;
-    text-align: center;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 15px rgba(27, 94, 32, 0.2);
-}
-
-.counter-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-}
-
-.mini-progress {
-    width: 150px;
-    height: 8px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill { height: 100%; background: var(--gold-member); transition: width 1s ease-in-out; }
-
-/* [3] الكارت الزجاجي والمدخلات */
-.main-content { padding: 40px 20px; width: 100%; max-width: 450px; }
-
-.glass-card {
-    background: var(--glass-effect);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 35px;
-    padding: 40px;
-    box-shadow: var(--shadow-lux);
-}
-
-.app-logo { width: 70px; margin-bottom: 10px; }
-.app-name { color: var(--primary-green); font-size: 2.2rem; font-weight: 900; }
-.app-slogan { font-size: 0.85rem; color: #7f8c8d; margin-bottom: 30px; }
-
-.auth-nav {
-    display: flex;
-    background: #f0f4f1;
+    padding: 15px 50px 15px 15px;
     border-radius: 15px;
-    padding: 5px;
-    margin-bottom: 30px;
-}
-
-.nav-item {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-weight: 700;
-    color: #95a5a6;
-    transition: var(--transition-smooth);
-}
-
-.nav-item.active { background: var(--primary-green); color: white; border-radius: 12px; }
-
-.form-group { text-align: right; margin-bottom: 18px; }
-.form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; color: #444; }
-
-.input-wrapper { position: relative; }
-.input-wrapper i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-green); }
-
-.input-wrapper input {
-    width: 100%;
-    padding: 14px 45px 14px 15px;
-    border: 2px solid #eee;
-    border-radius: 15px;
+    border: 2px solid #edf0ee;
     outline: none;
-    transition: var(--transition-smooth);
+    font-size: 1rem;
+    transition: 0.3s;
 }
+.input-group input:focus { border-color: var(--royal-green); background: white; }
 
-.input-wrapper input:focus { border-color: var(--primary-green); background: #fff; }
-
-.main-btn {
+/* الأزرار */
+.btn-primary {
     width: 100%;
     padding: 16px;
-    background: var(--primary-green);
+    background: var(--royal-green);
     color: white;
     border: none;
     border-radius: 15px;
-    font-weight: 800;
+    font-size: 1.1rem;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    transition: var(--transition-smooth);
-    margin-top: 10px;
+    gap: 12px;
+    transition: 0.3s;
 }
+.btn-primary:hover { background: var(--emerald); transform: translateY(-3px); }
 
-.main-btn:hover { background: var(--accent-green); transform: translateY(-3px); }
-
-.password-strength-box { height: 5px; background: #eee; border-radius: 3px; margin-top: 8px; overflow: hidden; }
-#strengthMeterBar { height: 100%; width: 0; background: #ff5252; transition: width 0.4s ease; }
-
-.btn-google-login {
+.btn-google {
     width: 100%;
     padding: 12px;
     background: white;
-    border: 1px solid #ddd;
+    border: 1.5px solid #ddd;
     border-radius: 15px;
     margin-top: 20px;
     cursor: pointer;
@@ -217,13 +180,31 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
-.status-msg-area { padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 0.85rem; font-weight: bold; text-align: center; }
-.hidden { display: none !important; }
+/* [4] شريط التحذير من النصب (Anti-Scam Bar) */
+.scam-warning {
+    width: 100%;
+    background: #fff8e1;
+    color: #b75e00;
+    padding: 15px;
+    font-size: 0.8rem;
+    text-align: center;
+    border-top: 1px solid #ffe082;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.scam-warning i { color: var(--warning-red); font-size: 1.2rem; }
 
-/* الانيميشن */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.anim-slide-up { animation: slideUp 0.8s ease-out forwards; }
-@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+/* حالات النظام */
+.hidden { display: none !important; }
+.status-msg-area { padding: 12px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; }
+.msg-error { background: #ffebee; color: var(--warning-red); border: 1px solid #ffcdd2; }
+.msg-success { background: #e8f5e9; color: var(--emerald); border: 1px solid #c8e6c9; }
+
+.strength-box { height: 5px; background: #eee; border-radius: 3px; margin-top: -10px; margin-bottom: 15px; overflow: hidden; }
+#strengthBar { height: 100%; width: 0%; transition: 0.3s; }
