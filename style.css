@@ -1,283 +1,229 @@
-/* الهوية البصرية لـ AZRAD - السيادة الخضراء */
+/* الهوية البصرية لمنصة AZRAD للمساعدات v5.0 */
 :root {
-    --primary-green: #1b5e20; /* أخضر ملكي غامق */
-    --accent-green: #2e7d32;  /* أخضر متوسط للتفاعلات */
-    --light-green: #c8e6c9;   /* أخضر هادئ للخلفيات */
-    --neon-green: #4caf50;    /* أخضر ساطع للنجاح */
-    --glass-bg: rgba(255, 255, 255, 0.9);
+    --primary-green: #1b5e20; /* أخضر ملكي للوقار */
+    --accent-green: #2e7d32;  /* أخضر للتفاعل */
+    --light-green: #e8f5e9;   /* خلفية مريحة */
+    --gold-member: #fbc02d;   /* لون العضوية التأسيسية */
     --pure-white: #ffffff;
-    --text-main: #212121;
-    --error-red: #d32f2f;
-    --shadow-deep: 0 20px 50px rgba(27, 94, 32, 0.15);
-    --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --text-dark: #2c3e50;
+    --glass-effect: rgba(255, 255, 255, 0.92);
+    --shadow-lux: 0 20px 60px rgba(0, 0, 0, 0.1);
+    --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 50%, #c8e6c9 100%);
-    background-attachment: fixed;
-    height: 100vh;
+    background: linear-gradient(135deg, #f1f8e9 0%, #ffffff 50%, #e8f5e9 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-dark);
+}
+
+/* [1] الإعلان التعريفي (Intro Overlay) */
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    color: var(--text-main);
 }
 
-/* الحاوية الرئيسية مع تأثير الزجاج */
-.main-container {
-    width: 100%;
-    max-width: 480px;
-    padding: 20px;
-    z-index: 10;
-}
-
-.glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+.intro-card {
+    background: var(--pure-white);
+    width: 90%;
+    max-width: 500px;
+    padding: 40px;
     border-radius: 30px;
-    padding: 45px 35px;
-    box-shadow: var(--shadow-deep);
     text-align: center;
     position: relative;
-    overflow: hidden;
+    box-shadow: 0 30px 100px rgba(0,0,0,0.5);
 }
 
-/* اللوجو والعنوان بنظام فخم */
-.brand-header {
-    margin-bottom: 35px;
+.close-intro-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #f5f5f5;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #666;
+    transition: var(--transition-smooth);
 }
 
-.logo-wrapper {
-    background: var(--pure-white);
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 15px;
+.close-intro-btn:hover { background: #eee; color: var(--primary-green); }
+
+.intro-slide { display: none; animation: fadeIn 0.5s ease-out; }
+.intro-slide.active { display: block; }
+
+.intro-icon-circle {
+    width: 80px;
+    height: 80px;
+    background: var(--light-green);
+    color: var(--primary-green);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 20px rgba(27, 94, 32, 0.1);
-    border: 3px solid var(--primary-green);
-    animation: pulse 2s infinite;
+    margin: 0 auto 20px;
+    font-size: 2.5rem;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(27, 94, 32, 0.4); }
-    70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(27, 94, 32, 0); }
-    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(27, 94, 32, 0); }
+.get-started-btn {
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
 }
 
-.brand-header h1 {
-    font-size: 2.8rem;
-    color: var(--primary-green);
-    letter-spacing: -1px;
-    font-weight: 900;
-}
+.slider-navigation { margin-top: 25px; display: flex; justify-content: center; gap: 10px; }
+.nav-dot { width: 10px; height: 10px; background: #ddd; border-radius: 50%; cursor: pointer; }
+.nav-dot.active { background: var(--primary-green); width: 25px; border-radius: 5px; }
 
-.subtitle {
+/* [2] شريط العداد (Counter Bar) */
+.global-announcement {
+    width: 100%;
+    background: var(--primary-green);
+    color: white;
+    padding: 12px 0;
+    text-align: center;
     font-size: 0.9rem;
-    color: #666;
-    margin-top: 5px;
-    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(27, 94, 32, 0.2);
 }
 
-/* التبويبات Tabs بنظام سلايد */
-.auth-tabs {
+.counter-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.mini-progress {
+    width: 150px;
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill { height: 100%; background: var(--gold-member); transition: width 1s ease-in-out; }
+
+/* [3] الكارت الزجاجي والمدخلات */
+.main-content { padding: 40px 20px; width: 100%; max-width: 450px; }
+
+.glass-card {
+    background: var(--glass-effect);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 35px;
+    padding: 40px;
+    box-shadow: var(--shadow-lux);
+}
+
+.app-logo { width: 70px; margin-bottom: 10px; }
+.app-name { color: var(--primary-green); font-size: 2.2rem; font-weight: 900; }
+.app-slogan { font-size: 0.85rem; color: #7f8c8d; margin-bottom: 30px; }
+
+.auth-nav {
     display: flex;
     background: #f0f4f1;
-    padding: 6px;
     border-radius: 15px;
+    padding: 5px;
     margin-bottom: 30px;
 }
 
-.tab-btn {
+.nav-item {
     flex: 1;
     padding: 12px;
     border: none;
     background: none;
     cursor: pointer;
     font-weight: 700;
-    color: #888;
-    transition: var(--transition);
+    color: #95a5a6;
+    transition: var(--transition-smooth);
 }
 
-.tab-btn.active {
-    background: var(--primary-green);
-    color: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(27, 94, 32, 0.3);
-}
+.nav-item.active { background: var(--primary-green); color: white; border-radius: 12px; }
 
-/* المدخلات Input Fields بنظام أيقوني */
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
+.form-group { text-align: right; margin-bottom: 18px; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; color: #444; }
 
-.input-field {
-    position: relative;
+.input-wrapper { position: relative; }
+.input-wrapper i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-green); }
+
+.input-wrapper input {
     width: 100%;
-}
-
-.input-field i {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--primary-green);
-    font-size: 1.1rem;
-}
-
-.input-field input {
-    width: 100%;
-    padding: 16px 45px 16px 20px;
-    border: 2px solid #e0e0e0;
-    border-radius: 15px;
-    outline: none;
-    font-size: 1rem;
-    background: #fafafa;
-    transition: var(--transition);
-}
-
-.input-field input:focus {
-    border-color: var(--accent-green);
-    background: white;
-    box-shadow: 0 0 15px rgba(46, 125, 50, 0.1);
-}
-
-/* شريط قوة الباسورد */
-.strength-meter {
-    height: 6px;
-    background: #eee;
-    border-radius: 3px;
-    margin-top: -10px;
-    overflow: hidden;
-}
-
-#strengthBar {
-    height: 100%;
-    width: 0;
-    transition: width 0.5s ease;
-    background: var(--error-red);
-}
-
-/* الأزرار العملاقة */
-.btn-submit {
-    background: var(--primary-green);
-    color: white;
-    padding: 18px;
-    border: none;
-    border-radius: 15px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: var(--transition);
-}
-
-.btn-submit:hover {
-    background: var(--neon-green);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(27, 94, 32, 0.3);
-}
-
-.google-auth-btn {
-    width: 100%;
-    padding: 14px;
-    background: white;
+    padding: 14px 45px 14px 15px;
     border: 2px solid #eee;
     border-radius: 15px;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.input-wrapper input:focus { border-color: var(--primary-green); background: #fff; }
+
+.main-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-weight: 800;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    cursor: pointer;
-    font-weight: 700;
-    transition: var(--transition);
-}
-
-.google-auth-btn:hover {
-    background: #f9f9f9;
-    border-color: #ddd;
-}
-
-.google-auth-btn img {
-    width: 22px;
-}
-
-/* واجهة التطبيق بعد التفعيل */
-.verified-icon {
-    font-size: 4rem;
-    color: var(--neon-green);
-    margin-bottom: 20px;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 6px 15px;
-    background: var(--light-green);
-    color: var(--primary-green);
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 800;
+    transition: var(--transition-smooth);
     margin-top: 10px;
 }
 
-.btn-logout {
-    margin-top: 30px;
-    background: #fef2f2;
-    color: var(--error-red);
-    border: 1px solid #fee2e2;
-    padding: 12px 25px;
-    border-radius: 12px;
+.main-btn:hover { background: var(--accent-green); transform: translateY(-3px); }
+
+.password-strength-box { height: 5px; background: #eee; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+#strengthMeterBar { height: 100%; width: 0; background: #ff5252; transition: width 0.4s ease; }
+
+.btn-google-login {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-top: 20px;
     cursor: pointer;
-    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    width: 100%;
+    gap: 10px;
+    font-weight: bold;
 }
 
-/* الحالات الخاصة */
+.status-msg-area { padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 0.85rem; font-weight: bold; text-align: center; }
 .hidden { display: none !important; }
 
-.social-divider {
-    margin: 25px 0;
-    position: relative;
-    border-top: 1px solid #eee;
-}
-
-.social-divider span {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--glass-bg);
-    padding: 0 15px;
-    font-size: 0.8rem;
-    color: #999;
-}
-
-/* انميشن الدخول */
-.anim-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+/* الانيميشن */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.anim-slide-up { animation: slideUp 0.8s ease-out forwards; }
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
