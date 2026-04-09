@@ -3,89 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZRAD | تسجيل الدخول | السيادة الرقمية</title>
+    <title>AZRAD | نظام التوثيق السيادي</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
 
-<div class="auth-wrapper">
-    <div id="authContainer" class="auth-container card-shadow">
-        <div class="logo-area">
-            <img src="icon.png" alt="AZRAD Logo" class="logo-img">
-            <h1>AZRAD</h1>
-            <p>السيادة الرقمية تبدأ من هنا</p>
+    <div class="main-container">
+        <div id="authContainer" class="glass-card">
+            <div class="brand-header">
+                <div class="logo-wrapper">
+                    <img src="icon.png" alt="AZRAD" id="mainLogo">
+                </div>
+                <h1>AZRAD</h1>
+                <p class="subtitle">نظام التوثيق المتعدد الطبقات</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button id="loginTab" class="tab-btn active" onclick="toggleAuth('login')">تسجيل الدخول</button>
+                <button id="signupTab" class="tab-btn" onclick="toggleAuth('signup')">إنشاء سيادة</button>
+            </div>
+
+            <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="input-field">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="logEmail" placeholder="البريد الإلكتروني" required>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="logPass" placeholder="كلمة المرور" required>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <span>دخول آمن</span>
+                    <i class="fas fa-shield-halved"></i>
+                </button>
+                <div class="form-footer">
+                    <a href="#" onclick="handleReset()">نسيت كلمة السر؟</a>
+                </div>
+            </form>
+
+            <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="newName" placeholder="الاسم الرباعي" required>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="newEmail" placeholder="البريد الإلكتروني" required>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="newPass" placeholder="كلمة المرور (8 أحرف فأكثر)" oninput="checkStrength(this.value)" required>
+                </div>
+                <div class="strength-meter">
+                    <div id="strengthBar"></div>
+                </div>
+                
+                <button type="submit" class="btn-submit btn-signup">
+                    <span>إنشاء حساب موثق</span>
+                    <i class="fas fa-user-plus"></i>
+                </button>
+            </form>
+
+            <div class="social-divider">
+                <span>أو المتابعة عبر</span>
+            </div>
+
+            <button class="google-auth-btn" onclick="handleGoogle()">
+                <img src="https://developers.google.com/static/identity/images/g-logo.png" alt="Google">
+                <span>الارتباط بحساب Google</span>
+            </button>
+
+            <div id="recaptcha-container"></div>
         </div>
 
-        <div class="tabs">
-            <button id="loginTab" class="active" onclick="showAuthTab('login')">تسجيل دخول</button>
-            <button id="signupTab" onclick="showAuthTab('signup')">إنشاء حساب</button>
+        <div id="appContainer" class="glass-card hidden">
+            <div class="app-header">
+                <i class="fas fa-circle-check verified-icon"></i>
+                <h2 id="welcomeName">مرحباً بك</h2>
+                <div class="status-badge">هوية موثقة رقمياً</div>
+            </div>
+            
+            <div class="app-content">
+                <p>لقد اجتزت نظام التحقق بنجاح. بريدك الإلكتروني الآن مرتبط بـ AZRAD.</p>
+            </div>
+
+            <button onclick="handleLogout()" class="btn-logout">
+                <i class="fas fa-right-from-bracket"></i>
+                تسجيل الخروج
+            </button>
         </div>
-
-        <form id="loginForm" class="auth-form anim-slide-in">
-            <div class="input-group">
-                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
-                <i class="fas fa-envelope"></i>
-            </div>
-            <div class="input-group">
-                <input type="password" id="loginPass" placeholder="كلمة المرور" required>
-                <i class="fas fa-lock"></i>
-            </div>
-            <div class="form-options">
-                <a href="#" class="forgot-pass" onclick="resetPassword()">نسيت كلمة المرور؟</a>
-            </div>
-            <button type="submit" id="btnLogin" class="btn-main">دخول</button>
-        </form>
-
-        <form id="signupForm" class="auth-form hidden anim-slide-in">
-            <div class="input-group">
-                <input type="text" id="newName" placeholder="الاسم الكامل" required>
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="input-group">
-                <input type="email" id="newEmail" placeholder="البريد الإلكتروني" required>
-                <i class="fas fa-envelope"></i>
-            </div>
-            <div class="input-group">
-                <input type="password" id="newPass" placeholder="كلمة مرور قوية" oninput="checkPassStrength(this.value)" required>
-                <i class="fas fa-lock"></i>
-                <div class="strength-bar"><div id="passStrengthIndicator"></div></div>
-            </div>
-            <button type="submit" id="btnSignup" class="btn-main">إنشاء الحساب</button>
-        </form>
-
-        <div class="divider"><span>أو</span></div>
-
-     <button class="btn-google" onclick="initSignInWithGoogle()">
-    <img src="https://developers.google.com/static/identity/images/g-logo.png" alt="Google" style="width:20px; margin-left:10px;">
-    الدخول بواسطة جوجل
-</button>
-        <div id="recaptcha-container" style="margin: 10px auto;"></div>
-        
-        <div id="recaptcha-container"></div>
     </div>
 
-    <div id="appContainer" class="app-container hidden card-shadow">
-        <div class="user-profile">
-            <img src="" alt="User Avatar" id="userAvatar">
-            <h2>مرحباً، <span id="userNamePlaceholder"></span></h2>
-            <p id="userEmailPlaceholder"></p>
-        </div>
-        <button onclick="initSignOut()" class="btn-logout">تسجيل خروج</button>
-    </div>
-</div>
-
-
-<script src="config.js"></script>
-<script src="auth.js"></script>
-<script src="ui.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="ui.js"></script>
 </body>
 </html>
