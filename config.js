@@ -23,12 +23,15 @@ var googleProvider = new firebase.auth.GoogleAuthProvider();
 
 // إعداد رمز التحقق (reCAPTCHA)
 // خليناه "مرئي" دلوقتي عشان تتأكد إنه شغال
+// إعداد حماية "أنا لست روبوت" غير مرئية واحترافية
 window.onload = function() {
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        'size': 'normal', // لو عايزه يختفي بعدين خليها 'invisible'
+        'size': 'invisible', // كدة هيبقى مخفي وشكله أشيك
         'callback': (response) => {
-            console.log("تم التحقق من الإنسان بنجاح ✅");
+            console.log("تم التحقق في الخلفية ✅");
         }
+    });
+};
     });
     window.recaptchaVerifier.render();
 };
