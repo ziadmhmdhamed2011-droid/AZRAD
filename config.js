@@ -1,11 +1,11 @@
 /**
- * نظام الربط السيادي لـ AZRAD v3.0
- * تم الربط باستخدام بيانات المشروع الحقيقية: azrad-global
- * تم معالجة أخطاء التعريف (Definitions) لضمان العمل في البيئات المتعددة
+ * 🔒 AZRAD CONNECTIVITY CORE v6.0
+ * نظام الربط السيادي لمنصة التكافل وحل المشكلات
+ * هذا الملف هو المحرك الذي يربط الواجهة بقاعدة بيانات Firebase العالمية.
  */
 
-// بياناتك الرسمية اللي بعتها (ممنوع تغيير أي حرف فيها)
-const AZRAD_FIREBASE_DATA = {
+// إعدادات المشروع (تأكد أن هذه البيانات مطابقة لمشروعك في Firebase Console)
+const firebaseConfig = {
     apiKey: "AIzaSyBDWT4ygUDklmueK6EXcyigkeNyQNCfTjw",
     authDomain: "azrad-global.firebaseapp.com",
     databaseURL: "https://azrad-global-default-rtdb.firebaseio.com",
@@ -16,53 +16,44 @@ const AZRAD_FIREBASE_DATA = {
     measurementId: "G-9JFDZRN5MD"
 };
 
-// 1. بدء تشغيل المحرك (Initialization) مع فحص الأخطاء
+// --- [1] تشغيل المحرك (Initialization) ---
 try {
+    // نمنع تكرار التشغيل في حالة عمل Refresh سريع للمتصفح
     if (!firebase.apps.length) {
-        firebase.initializeApp(AZRAD_FIREBASE_DATA);
-        console.log("%c AZRAD: تم تفعيل محرك الفايربيز بنجاح ✅ ", "background: #1b5e20; color: #fff; padding: 5px;");
+        firebase.initializeApp(firebaseConfig);
+        console.log("%c AZRAD: بوابات الاتصال مفتوحة الآن.. جاهزون لنشر الخير 🟢 ", "background: #1b5e20; color: #fff; padding: 5px; border-radius: 5px;");
     }
 } catch (error) {
-    console.error("خطأ حرج في بدء تشغيل الفايربيز:", error);
-    alert("حدث خطأ في الاتصال بالسيرفر، يرجى تحديث الصفحة.");
+    console.error("خطأ حرج في تهيئة النظام الإنساني:", error);
 }
 
-// 2. تصدير الأدوات كمتغيرات عالمية (Global Variables) 
-// استخدمنا var هنا تحديداً عشان نتفادى خطأ "Not Defined" في الملفات التانية
+// --- [2] تعريف الأدوات الأساسية (Global Assets) ---
 var auth = firebase.auth();
-var db = firebase.firestore();
+var db = firebase.firestore(); // قاعدة البيانات اللي هنخزن فيها المشاكل والدردشات
 var googleProvider = new firebase.auth.GoogleAuthProvider();
 
-// 3. إعداد نظام الـ reCAPTCHA المتطور (Invisible Mode)
-// ده اللي بيخلي التحقق "أسطوري" ومخفي عشان ميخربش التصميم الملكي
-window.setupRecaptcha = function() {
+// إجبار النظام على استخدام اللغة العربية في رسائل التحقق والدخول
+auth.languageCode = 'ar';
+
+// --- [3] إعداد نظام الحماية من الروبوتات (reCAPTCHA) ---
+// نظام Invisible يعمل في الخلفية لحماية "المشكلات المعروضة" من البوتات
+window.setupSecurityGuard = function() {
     if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible', // مخفي تماماً - بيظهر بس لو شاكك في المستخدم
+            'size': 'invisible',
             'callback': (response) => {
-                console.log("reCAPTCHA Verified: تم إثبات الهوية البشرية ✅");
-            },
-            'expired-callback': () => {
-                console.warn("reCAPTCHA Expired: انتهت صلاحية التحقق، أعد المحاولة.");
-                window.recaptchaVerifier.render();
+                console.log("تم التأكد من أن المستخدم بشري ✅");
             }
-        });
-        
-        // تنفيذ العرض المبدئي في الخلفية
-        window.recaptchaVerifier.render().then((widgetId) => {
-            window.recaptchaWidgetId = widgetId;
         });
     }
 };
 
-// تشغيل التحقق فور تحميل الصفحة
-window.addEventListener('load', () => {
-    window.setupRecaptcha();
-});
+// تشغيل نظام الحماية فور تحميل الملف
+window.setupSecurityGuard();
 
 /**
- * نصيحة تقنية لضمان الأمان:
- * نظام الـ Invisible reCAPTCHA اللي في الكود فوق ده 
- * بيشتغل بذكاء اصطناعي من جوجل.. لو اليوزر طبيعي مش هيحس بحاجة،
- * ولو اليوزر "بوت" هيطلعله صور فجأة يحلها. كدة إحنا أمنا التطبيق 100%.
+ * 💡 ملاحظة تقنية:
+ * هذا الملف هو "المدير". تم تجهيزه ليدعم Firestore (قاعدة بيانات المشاكل)
+ * و Auth (إدارة المستخدمين). 
+ * تأكد من تفعيل (Email/Password) و (Google) في لوحة تحكم Firebase لديك.
  */
