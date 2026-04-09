@@ -1,70 +1,82 @@
-// --- نظام إدارة الهوية الرقمية لـ AZRAD ---
+// --- محرك الأمان والتحقق لتطبيق AZRAD ---
 
-// 1. إنشاء حساب جديد بالإيميل والباسورد
+// 1. إنشاء الحساب مع إرسال رابط تحقق للإيميل (Verification)
 document.getElementById('signupForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('newEmail').value;
     const pass = document.getElementById('newPass').value;
     const name = document.getElementById('newName').value;
 
+    // تفعيل حماية الروبوت
+    const appVerifier = window.recaptchaVerifier;
+
     auth.createUserWithEmailAndPassword(email, pass)
     .then((userCredential) => {
-        return userCredential.user.updateProfile({ displayName: name });
+        const user = userCredential.user;
+        // تحديث اسم المستخدم في سجلات فايربيز
+        user.updateProfile({ displayName: name });
+        
+        // --- السحر هنا: إرسال رابط التحقق للإيميل ---
+        user.sendEmailVerification().then(() => {
+            alert("تم إنشاء الحساب بنجاح! 📧 أرسلنا رابط تحقق لبريدك الإلكتروني. يرجى تفعيله قبل تسجيل الدخول.");
+            auth.signOut(); // نخرجه عشان ميدخلش إلا لما يفعل
+        });
     })
-    .then(() => {
-        auth.currentUser.sendEmailVerification();
-        alert("أهلاً بك في AZRAD! تفقد بريدك لتفعيل الحساب.");
-        saveToDB(auth.currentUser);
-    })
-    .catch((error) => alert(error.message));
+    .catch((error) => alert("خطأ في الإنشاء: " + error.message));
 });
 
-// 2. تسجيل الدخول العادي
+// 2. تسجيل الدخول (مع شرط إن الإيميل يكون متفعل)
 document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const pass = document.getElementById('loginPass').value;
 
     auth.signInWithEmailAndPassword(email, pass)
-    .then(() => console.log("تم الدخول بنجاح"))
-    .catch((error) => alert("خطأ: " + error.message));
+    .then((userCredential) => {
+        const user = userCredential.user;
+        
+        // فحص: هل المستخدم ضغط على الرابط في إيميله؟
+        if (user.emailVerified) {
+            console.log("تم الدخول بنجاح! الإيميل موثق ✅");
+            // هنا التطبيق هيفتح أوتوماتيك
+        } else {
+            alert("الحساب غير مفعل! ⚠️ يرجى الضغط على الرابط المرسل لبريدك الإلكتروني أولاً.");
+            auth.signOut();
+        }
+    })
+    .catch((error) => alert("خطأ في الدخول: " + error.message));
 });
 
-// 3. الدخول بواسطة جوجل
-function initSignInWithGoogle() {
+// 3. دالة استعادة كلمة المرور (عشان نصلح الـ Error اللي ظهرلك)
+window.resetPassword = function() {
+    const email = prompt("أدخل بريدك الإلكتروني لإرسال رابط تعيين كلمة مرور جديدة:");
+    if (email) {
+        auth.sendPasswordResetEmail(email)
+        .then(() => alert("تم إرسال الرابط! تفقد بريدك الوارد."))
+        .catch((error) => alert(error.message));
+    }
+};
+
+// 4. الدخول بواسطة جوجل (موثق تلقائياً)
+window.initSignInWithGoogle = function() {
     auth.signInWithPopup(googleProvider)
-    .then((result) => saveToDB(result.user))
-    .catch((error) => alert(error.message));
-}
+    .then((result) => {
+        console.log("تم الدخول بجوجل بنجاح");
+    }).catch((error) => alert(error.message));
+};
 
-// 4. حفظ البيانات في الـ Database بتاعتك
-function saveToDB(user) {
-    const userRef = db.collection("users").doc(user.uid);
-    userRef.set({
-        uid: user.uid,
-        name: user.displayName,
-        email: user.email,
-        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
-}
-
-// 5. مراقب الحالة (تحويل الشاشات)
+// 5. مراقب حالة المستخدم (Auth Observer)
 auth.onAuthStateChanged((user) => {
     const authBox = document.getElementById('authContainer');
     const appBox = document.getElementById('appContainer');
 
-    if (user) {
+    // لا يفتح التطبيق إلا لو المستخدم موجود "ومفعل الإيميل"
+    if (user && user.emailVerified) {
         authBox.classList.add('hidden');
         appBox.classList.remove('hidden');
-        document.getElementById('userNamePlaceholder').innerText = user.displayName;
-        document.getElementById('userEmailPlaceholder').innerText = user.email;
-        document.getElementById('userAvatar').src = user.photoURL || 'https://via.placeholder.com/100/1b5e20/ffffff?text=A';
+        document.getElementById('userNamePlaceholder').innerText = user.displayName || "مستخدم أزرد";
     } else {
         authBox.classList.remove('hidden');
         appBox.classList.add('hidden');
     }
 });
-
-function initSignOut() {
-    auth.signOut().then(() => location.reload());
-}
