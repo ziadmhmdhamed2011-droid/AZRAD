@@ -29,7 +29,7 @@ try {
 
 // --- [2] تعريف الأدوات الأساسية (Global Assets) ---
 var auth = firebase.auth();
-var db = firebase.firestore(); // قاعدة البيانات اللي هنخزن فيها المشاكل والدردشات
+var db = firebase.database(); // بدلاً من firebase.firestore()قاعدة البيانات اللي هنخزن فيها المشاكل والدردشات
 var googleProvider = new firebase.auth.GoogleAuthProvider();
 
 // إجبار النظام على استخدام اللغة العربية في رسائل التحقق والدخول
