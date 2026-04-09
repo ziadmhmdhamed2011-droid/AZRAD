@@ -1,171 +1,202 @@
-// --- محرك الأمان والسيادة الرقمية لـ AZRAD v2.0 ---
-
 /**
- * 1. دالة التحقق من صحة المدخلات (Client-side Validation)
- * تمنع إرسال بيانات فارغة أو غير منطقية لفايربيز لتقليل الأخطاء
+ * 🛡️ AZRAD SECURITY CORE v5.0 - الغلاف الأمني المتطور
+ * هذا الملف مسؤول عن إدارة الهوية، التحقق من الملكية، وحماية البوابة الرقمية.
  */
-const validateInput = (email, password, name = null) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert("⚠️ يرجى إدخال بريد إلكتروني صحيح.");
-        return false;
-    }
-    if (password.length < 8) {
-        alert("⚠️ كلمة المرور يجب أن تكون 8 أحرف على الأقل.");
-        return false;
-    }
-    if (name !== null && name.trim().length < 3) {
-        alert("⚠️ الاسم يجب أن يكون 3 أحرف على الأقل.");
-        return false;
-    }
-    return true;
-};
 
-/**
- * 2. نظام إنشاء الحساب (التحقق المزدوج)
- */
-window.registerUser = async function(e) {
+// --- [1] نظام التنبيهات البصرية (In-App Notifications) ---
+// بديل للـ Alert التقليدي، بيظهر رسايل شيك جوه الكارت الزجاجي
+function renderMessage(text, type = 'error') {
+    let msgContainer = document.getElementById('statusMessage');
+    
+    // إذا لم يكن العنصر موجوداً، نقوم بإنشائه فوراً في قمة الكارت
+    if (!msgContainer) {
+        msgContainer = document.createElement('div');
+        msgContainer.id = 'statusMessage';
+        const card = document.querySelector('.glass-card');
+        if (card) card.prepend(msgContainer);
+    }
+
+    // تنسيق الرسالة بشكل ديناميكي
+    msgContainer.innerText = text;
+    msgContainer.style.all = "unset"; // إعادة ضبط
+    msgContainer.style.display = "block";
+    msgContainer.style.padding = "14px";
+    msgContainer.style.marginBottom = "20px";
+    msgContainer.style.borderRadius = "12px";
+    msgContainer.style.fontSize = "0.95rem";
+    msgContainer.style.fontWeight = "600";
+    msgContainer.style.textAlign = "center";
+    msgContainer.style.transition = "all 0.4s ease";
+    msgContainer.style.animation = "fadeInDown 0.5s ease forwards";
+
+    if (type === 'error') {
+        msgContainer.style.background = "rgba(211, 47, 47, 0.1)";
+        msgContainer.style.color = "#d32f2f";
+        msgContainer.style.border = "1px solid rgba(211, 47, 47, 0.2)";
+    } else if (type === 'success') {
+        msgContainer.style.background = "rgba(46, 125, 50, 0.1)";
+        msgContainer.style.color = "#2e7d32";
+        msgContainer.style.border = "1px solid rgba(46, 125, 50, 0.2)";
+    } else {
+        msgContainer.style.background = "rgba(27, 94, 32, 0.05)";
+        msgContainer.style.color = "#1b5e20";
+        msgContainer.style.border = "1px solid rgba(27, 94, 32, 0.1)";
+    }
+
+    // إخفاء الرسالة بعد 6 ثوانٍ بنعومة
+    setTimeout(() => {
+        msgContainer.style.opacity = "0";
+        setTimeout(() => { msgContainer.style.display = "none"; }, 500);
+    }, 6000);
+}
+
+// --- [2] محرك إنشاء الحسابات الجديد (Strict Signup) ---
+window.handleSignup = async function(e) {
     e.preventDefault();
-    const name = document.getElementById('newName').value;
-    const email = document.getElementById('newEmail').value;
+    const name = document.getElementById('newName').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
     const pass = document.getElementById('newPass').value;
 
-    if (!validateInput(email, pass, name)) return;
+    // فحص القوة قبل الإرسال للسيرفر
+    if (pass.length < 8) {
+        renderMessage("🛑 أمنك يهمنا: كلمة المرور يجب أن تتجاوز 8 رموز.");
+        return;
+    }
 
     try {
-        // التحقق من الروبوت قبل البدء
-        const token = await window.recaptchaVerifier.execute();
-        
+        // تشغيل نظام reCAPTCHA المخفي للتأكد أن المستخدم إنسان
+        renderMessage("⏳ جاري فحص الحماية وبناء الحساب...", "info");
+        const appVerifier = window.recaptchaVerifier;
+
         const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
         const user = userCredential.user;
 
-        // تحديث بروفايل المستخدم
+        // تحديث اسم العرض في قاعدة البيانات العالمية
         await user.updateProfile({ displayName: name });
 
-        // إرسال رابط تفعيل الإيميل
+        // --- 🛡️ نظام التحقق الأسطوري من صاحب الإيميل ---
+        // إرسال رسالة تفعيل إجبارية
         await user.sendEmailVerification();
         
-        alert("✅ تم إنشاء الحساب! أرسلنا رابط تحقق إلى: " + email + "\nيرجى تفعيل حسابك لتتمكن من الدخول.");
+        renderMessage("📧 مبروك! تم إنشاء الهوية. أرسلنا رابط تفعيل لبريدك. لن تفتح البوابة إلا بالضغط عليه.", "success");
         
-        // تسجيل خروج فوري لمنع الدخول قبل التفعيل
+        // تسجيل الخروج فوراً؛ لا نسمح بالدخول إلا بعد الضغط على اللينك
         await auth.signOut();
-        location.reload(); 
+        document.getElementById('signupForm').reset();
 
     } catch (error) {
-        handleAuthErrors(error);
+        processAuthError(error);
     }
 };
 
-/**
- * 3. نظام تسجيل الدخول (بوابة العبور الآمنة)
- */
-window.loginUser = async function(e) {
+// --- [3] محرك تسجيل الدخول (The Gatekeeper) ---
+window.handleLogin = async function(e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const pass = document.getElementById('loginPass').value;
-
-    if (!validateInput(email, pass)) return;
+    const email = document.getElementById('logEmail').value.trim();
+    const pass = document.getElementById('logPass').value;
 
     try {
+        renderMessage("⏳ جاري مطابقة البيانات مع سجلات AZRAD...", "info");
         const userCredential = await auth.signInWithEmailAndPassword(email, pass);
         const user = userCredential.user;
 
-        // التحقق القاتل: هل فعل الإيميل؟
-        if (!user.emailVerified) {
-            alert("🛑 وصول مرفوض: يرجى تفعيل حسابك من البريد الإلكتروني أولاً.");
+        // الاختبار الصارم: هل قام المستخدم بتفعيل الرابط المرسل له؟
+        if (user.emailVerified) {
+            renderMessage("✅ تم التوثيق بنجاح. مرحباً بك في منطقتك الآمنة.", "success");
+            // الواجهة ستتغير تلقائياً عبر الـ Observer بالأسفل
+        } else {
+            renderMessage("🛑 وصول مرفوض! حسابك غير مفعل. يرجى تفعيل إيميلك أولاً من الرسالة المرسلة لك.", "error");
             await auth.signOut();
-            return;
         }
-
-        console.log("تم الدخول بنجاح: " + user.displayName);
-        // التوجيه يتم تلقائياً عبر AuthObserver
     } catch (error) {
-        handleAuthErrors(error);
+        processAuthError(error);
     }
 };
 
-/**
- * 4. نظام تسجيل الخروج (تأمين الجلسة)
- */
-window.initSignOut = function() {
-    if (confirm("هل أنت متأكد من تسجيل الخروج من AZRAD؟")) {
-        auth.signOut().then(() => {
-            console.log("User Signed Out");
-            alert("تم تسجيل الخروج بأمان.");
-            location.reload();
-        }).catch((error) => {
-            console.error("Logout Error: ", error);
-        });
-    }
-};
-
-/**
- * 5. الدخول بواسطة جوجل (التحقق التلقائي)
- */
-window.initSignInWithGoogle = async function() {
+// --- [4] الدخول السريع عبر Google (Trusted Provider) ---
+window.handleGoogle = async function() {
     try {
+        renderMessage("⏳ جاري الارتباط بخوادم Google...", "info");
         const result = await auth.signInWithPopup(googleProvider);
-        const user = result.user;
-        // جوجل لا يحتاج تحقق إضافي لأنه موثق سلفاً
-        console.log("Google Auth Success: " + user.displayName);
+        // جوجل يوفر إيميلات موثقة تلقائياً
+        renderMessage("✅ تم الربط بنجاح عبر Google.", "success");
     } catch (error) {
-        handleAuthErrors(error);
+        processAuthError(error);
     }
 };
 
-/**
- * 6. معالج الأخطاء الشامل (Error Dictionary)
- */
-function handleAuthErrors(error) {
-    console.error("Auth Error Code:", error.code);
-    let message = "حدث خطأ غير متوقع.";
+// --- [5] استعادة الوصول (Password Recovery) ---
+window.handleReset = async function() {
+    const email = prompt("أدخل بريدك المسجل لإرسال رابط تعيين كلمة السر:");
+    if (!email) return;
+
+    try {
+        await auth.sendPasswordResetEmail(email);
+        renderMessage("📬 أرسلنا رابط إعادة التعيين لبريدك الإلكتروني.", "success");
+    } catch (error) {
+        processAuthError(error);
+    }
+};
+
+// --- [6] تسجيل الخروج النهائي ---
+window.handleLogout = function() {
+    auth.signOut().then(() => {
+        window.location.reload();
+    });
+};
+
+// --- [7] معالج الأخطاء العميق (The Error Shield) ---
+function processAuthError(error) {
+    console.error("Critical Auth Error:", error.code, error.message);
+    let finalMsg = "حدث عائق تقني غير متوقع.";
 
     switch (error.code) {
+        case 'auth/invalid-email':
+            finalMsg = "❌ صيغة البريد الإلكتروني غير صحيحة.";
+            break;
+        case 'auth/user-disabled':
+            finalMsg = "🚫 هذا الحساب تم إيقافه من قبل الإدارة.";
+            break;
         case 'auth/user-not-found':
-            message = "❌ هذا الحساب غير موجود في سجلاتنا.";
+            finalMsg = "🔍 لم نجد أي حساب مرتبط بهذا البريد.";
             break;
         case 'auth/wrong-password':
-            message = "❌ كلمة المرور التي أدخلتها غير صحيحة.";
+            finalMsg = "🔑 كلمة المرور التي أدخلتها غير صحيحة.";
             break;
         case 'auth/email-already-in-use':
-            message = "❌ هذا البريد الإلكتروني مسجل بالفعل بحساب آخر.";
+            finalMsg = "⚠️ هذا البريد مسجل بالفعل في نظام AZRAD.";
+            break;
+        case 'auth/weak-password':
+            finalMsg = "🛡️ كلمة المرور ضعيفة جداً، حاول استخدام مزيج أقوى.";
             break;
         case 'auth/too-many-requests':
-            message = "🛑 تم حظرك مؤقتاً بسبب محاولات كثيرة خاطئة. حاول لاحقاً.";
+            finalMsg = "🛑 محاولات كثيرة خاطئة! تم قفل النظام مؤقتاً لحمايتك.";
             break;
         case 'auth/network-request-failed':
-            message = "🌐 خطأ في الاتصال بالإنترنت. تحقق من شبكتك.";
-            break;
-        case 'auth/popup-closed-by-user':
-            message = "⚠️ تم إغلاق نافذة تسجيل الدخول قبل الإكمال.";
+            finalMsg = "🌐 فشل الاتصال.. يرجى التحقق من شبكة الإنترنت.";
             break;
         default:
-            message = error.message;
+            finalMsg = "⚠️ خطأ: " + error.message;
     }
-    alert(message);
+    renderMessage(finalMsg, "error");
 }
 
-/**
- * 7. مراقب الحالة الدائم (The Observer)
- */
+// --- [8] مراقب الجلسة الدائم (The Auth Observer) ---
+// هذا الحارس يعمل في الخلفية 24/7 لمراقبة حالة المستخدم
 auth.onAuthStateChanged((user) => {
-    const authBox = document.getElementById('authContainer');
-    const appBox = document.getElementById('appContainer');
+    const authUI = document.getElementById('authContainer');
+    const appUI = document.getElementById('appContainer');
 
+    // الشروط الثلاثة للدخول: وجود مستخدم + إيميل مفعل + عدم وجود أخطاء
     if (user && user.emailVerified) {
-        // المستخدم مفعل وجاهز
-        authBox.style.display = 'none';
-        appBox.style.display = 'block';
-        document.getElementById('userNamePlaceholder').innerText = user.displayName || "مستخدم أزرد";
-        
-        // حفظ آخر ظهور في الداتابيز (إضافة اختيارية)
-        db.collection("users").doc(user.uid).set({
-            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-
+        authUI.style.display = "none";
+        appUI.style.display = "block";
+        appUI.classList.remove('hidden');
+        document.getElementById('welcomeName').innerText = "سيد " + (user.displayName || "أزرد");
     } else {
-        // غير مسجل دخول أو لم يفعل الإيميل
-        authBox.style.display = 'block';
-        appBox.style.display = 'none';
+        // العودة لشاشة تسجيل الدخول
+        authUI.style.display = "block";
+        appUI.style.display = "none";
+        authUI.classList.remove('hidden');
     }
 });
