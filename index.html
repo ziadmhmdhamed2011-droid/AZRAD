@@ -14,69 +14,89 @@
 </head>
 <body>
 
+    <div class="bg-animate"></div>
+
     <div class="main-container">
-        <div id="authContainer" class="glass-card">
+        <div id="authContainer" class="glass-card anim-slide-up">
+            
+            <div id="statusMessage" class="hidden"></div>
+
             <div class="brand-header">
                 <div class="logo-wrapper">
-                    <img src="icon.png" alt="AZRAD" id="mainLogo">
+                    <img src="icon.png" alt="AZRAD" id="mainLogo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/5968/5968204.png'">
                 </div>
                 <h1>AZRAD</h1>
-                <p class="subtitle">نظام التوثيق المتعدد الطبقات</p>
+                <div class="security-tag">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>نظام التوثيق المتعدد الطبقات</span>
+                </div>
             </div>
 
             <div class="auth-tabs">
-                <button id="loginTab" class="tab-btn active" onclick="toggleAuth('login')">تسجيل الدخول</button>
-                <button id="signupTab" class="tab-btn" onclick="toggleAuth('signup')">إنشاء سيادة</button>
+                <button id="loginTab" class="tab-btn active" onclick="toggleAuth('login')">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+                <button id="signupTab" class="tab-btn" onclick="toggleAuth('signup')">
+                    <i class="fas fa-user-plus"></i> إنشاء سيادة
+                </button>
             </div>
 
             <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
-                <div class="input-field">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="logEmail" placeholder="البريد الإلكتروني" required>
+                <div class="input-group">
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="logEmail" placeholder="البريد الإلكتروني" required autocomplete="email">
+                    </div>
                 </div>
-                <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="logPass" placeholder="كلمة المرور" required>
+                <div class="input-group">
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="logPass" placeholder="كلمة المرور" required autocomplete="current-password">
+                    </div>
                 </div>
                 <button type="submit" class="btn-submit">
-                    <span>دخول آمن</span>
+                    <span class="btn-text">دخول آمن</span>
                     <i class="fas fa-shield-halved"></i>
                 </button>
                 <div class="form-footer">
-                    <a href="#" onclick="handleReset()">نسيت كلمة السر؟</a>
+                    <button type="button" onclick="handleReset()" class="link-btn">نسيت مفتاح الوصول؟</button>
                 </div>
             </form>
 
             <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
                 <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="newName" placeholder="الاسم الرباعي" required>
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="newName" placeholder="الاسم الرباعي الكامل" required>
                 </div>
                 <div class="input-field">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="newEmail" placeholder="البريد الإلكتروني" required>
+                    <i class="fas fa-at"></i>
+                    <input type="email" id="newEmail" placeholder="البريد الإلكتروني الرسمي" required>
                 </div>
                 <div class="input-field">
                     <i class="fas fa-key"></i>
-                    <input type="password" id="newPass" placeholder="كلمة المرور (8 أحرف فأكثر)" oninput="checkStrength(this.value)" required>
+                    <input type="password" id="newPass" placeholder="كلمة مرور صخرية (8+)" oninput="checkStrength(this.value)" required>
                 </div>
-                <div class="strength-meter">
-                    <div id="strengthBar"></div>
+                
+                <div class="strength-meter-container">
+                    <div class="meter-label">قوة التشفير:</div>
+                    <div class="strength-meter">
+                        <div id="strengthBar"></div>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn-submit btn-signup">
-                    <span>إنشاء حساب موثق</span>
-                    <i class="fas fa-user-plus"></i>
+                    <span class="btn-text">بدء عملية التوثيق</span>
+                    <i class="fas fa-paper-plane"></i>
                 </button>
             </form>
 
             <div class="social-divider">
-                <span>أو المتابعة عبر</span>
+                <span>أو الارتباط عبر</span>
             </div>
 
             <button class="google-auth-btn" onclick="handleGoogle()">
                 <img src="https://developers.google.com/static/identity/images/g-logo.png" alt="Google">
-                <span>الارتباط بحساب Google</span>
+                <span>التحقق عبر Google</span>
             </button>
 
             <div id="recaptcha-container"></div>
@@ -84,18 +104,22 @@
 
         <div id="appContainer" class="glass-card hidden">
             <div class="app-header">
-                <i class="fas fa-circle-check verified-icon"></i>
+                <div class="success-animation">
+                    <i class="fas fa-check-circle pulse"></i>
+                </div>
                 <h2 id="welcomeName">مرحباً بك</h2>
-                <div class="status-badge">هوية موثقة رقمياً</div>
+                <div class="verification-badge">
+                    <i class="fas fa-user-check"></i> هوية موثقة رقمياً
+                </div>
             </div>
             
-            <div class="app-content">
-                <p>لقد اجتزت نظام التحقق بنجاح. بريدك الإلكتروني الآن مرتبط بـ AZRAD.</p>
+            <div class="app-body">
+                <p>لقد اجتزت بروتوكولات الأمان بنجاح. بريدك الآن مرتبط بنظام AZRAD المركزي.</p>
             </div>
 
             <button onclick="handleLogout()" class="btn-logout">
-                <i class="fas fa-right-from-bracket"></i>
-                تسجيل الخروج
+                <i class="fas fa-power-off"></i>
+                تسجيل الخروج الآمن
             </button>
         </div>
     </div>
